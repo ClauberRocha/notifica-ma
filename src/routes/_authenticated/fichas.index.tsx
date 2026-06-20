@@ -49,6 +49,12 @@ const agravos = [
     to: "/fichas/rubeola" as const,
     color: "bg-chart-1/10 text-chart-1 border-chart-1/20 hover:bg-chart-1/15",
   },
+  {
+    label: "Febre Amarela",
+    desc: "Fichas cadastradas de febre amarela",
+    to: "/fichas/febre-amarela" as const,
+    color: "bg-amber-500/10 text-amber-700 border-amber-500/20 hover:bg-amber-500/15",
+  },
 ];
 
 function SelectAgravoListPage() {
