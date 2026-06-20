@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
+import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
 import {
   TIPO_IDADE,
   SEXO,
@@ -53,7 +54,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "populacoes" | "doencas";
+  custom?: "populacoes" | "doencas" | "antecedentes_epi";
 };
 
 const STEPS: Step[] = [
@@ -158,6 +159,7 @@ const STEPS: Step[] = [
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
   },
+  { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
 ];
 
 type FormState = Record<string, string>;
@@ -293,6 +295,10 @@ function NovaFichaTuberculosePage() {
             <CheckGrid items={DOENCAS_KEYS} values={doencas} onChange={setDoencas} />
           </div>
         )}
+        {current.custom === "antecedentes_epi" && (
+          <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
+        )}
+
       </div>
 
       <div className="flex justify-between mt-6">
