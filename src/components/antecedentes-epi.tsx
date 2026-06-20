@@ -160,19 +160,6 @@ export function AntecedentesEpidemiologicosPanel({
           })}
         </div>
 
-        <div className="mt-3">
-          <Label className="text-xs">Outras (descrever)</Label>
-          <Input
-            placeholder="Ex: Lúpus, fibrose cística..."
-            value={doencaOutra}
-            onChange={(e) => {
-              const v = e.target.value.toUpperCase();
-              setDoencaOutra(v);
-              setForm((p) => ({ ...p, antecedentes_doencas_outras: v }));
-            }}
-            className="mt-1"
-          />
-        </div>
       </section>
 
       {/* VACINAS */}
