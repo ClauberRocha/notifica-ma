@@ -73,7 +73,14 @@ const agravos = [
     to: "/fichas/outras-meningites" as const,
     color: "bg-sky-500/10 text-sky-700 border-sky-500/20 hover:bg-sky-500/15",
   },
+  {
+    label: "Raiva Humana",
+    desc: "Fichas cadastradas de raiva humana",
+    to: "/fichas/raiva-humana" as const,
+    color: "bg-red-600/10 text-red-700 border-red-600/20 hover:bg-red-600/15",
+  },
 ];
+
 
 
 

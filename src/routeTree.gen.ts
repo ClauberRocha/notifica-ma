@@ -18,6 +18,7 @@ import { Route as AuthenticatedNovaFichaIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedFichasIndexRouteImport } from './routes/_authenticated/fichas.index'
 import { Route as AuthenticatedNovaFichaSarampoRouteImport } from './routes/_authenticated/nova-ficha.sarampo'
 import { Route as AuthenticatedNovaFichaRubeolaRouteImport } from './routes/_authenticated/nova-ficha.rubeola'
+import { Route as AuthenticatedNovaFichaRaivaHumanaRouteImport } from './routes/_authenticated/nova-ficha.raiva-humana'
 import { Route as AuthenticatedNovaFichaOutrasMeningitesRouteImport } from './routes/_authenticated/nova-ficha.outras-meningites'
 import { Route as AuthenticatedNovaFichaHanseniaseRouteImport } from './routes/_authenticated/nova-ficha.hanseniase'
 import { Route as AuthenticatedNovaFichaFebreAmarelaRouteImport } from './routes/_authenticated/nova-ficha.febre-amarela'
@@ -29,6 +30,7 @@ import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_
 import { Route as AuthenticatedNovaFichaChikungunyaRouteImport } from './routes/_authenticated/nova-ficha.chikungunya'
 import { Route as AuthenticatedFichasSarampoRouteImport } from './routes/_authenticated/fichas.sarampo'
 import { Route as AuthenticatedFichasRubeolaRouteImport } from './routes/_authenticated/fichas.rubeola'
+import { Route as AuthenticatedFichasRaivaHumanaRouteImport } from './routes/_authenticated/fichas.raiva-humana'
 import { Route as AuthenticatedFichasOutrasMeningitesRouteImport } from './routes/_authenticated/fichas.outras-meningites'
 import { Route as AuthenticatedFichasHanseniaseRouteImport } from './routes/_authenticated/fichas.hanseniase'
 import { Route as AuthenticatedFichasFebreAmarelaRouteImport } from './routes/_authenticated/fichas.febre-amarela'
@@ -85,6 +87,12 @@ const AuthenticatedNovaFichaRubeolaRoute =
   AuthenticatedNovaFichaRubeolaRouteImport.update({
     id: '/nova-ficha/rubeola',
     path: '/nova-ficha/rubeola',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNovaFichaRaivaHumanaRoute =
+  AuthenticatedNovaFichaRaivaHumanaRouteImport.update({
+    id: '/nova-ficha/raiva-humana',
+    path: '/nova-ficha/raiva-humana',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedNovaFichaOutrasMeningitesRoute =
@@ -151,6 +159,12 @@ const AuthenticatedFichasRubeolaRoute =
   AuthenticatedFichasRubeolaRouteImport.update({
     id: '/fichas/rubeola',
     path: '/fichas/rubeola',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasRaivaHumanaRoute =
+  AuthenticatedFichasRaivaHumanaRouteImport.update({
+    id: '/fichas/raiva-humana',
+    path: '/fichas/raiva-humana',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasOutrasMeningitesRoute =
@@ -222,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
   '/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRoute
   '/fichas/outras-meningites': typeof AuthenticatedFichasOutrasMeningitesRoute
+  '/fichas/raiva-humana': typeof AuthenticatedFichasRaivaHumanaRoute
   '/fichas/rubeola': typeof AuthenticatedFichasRubeolaRoute
   '/fichas/sarampo': typeof AuthenticatedFichasSarampoRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
@@ -233,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/nova-ficha/febre-amarela': typeof AuthenticatedNovaFichaFebreAmarelaRoute
   '/nova-ficha/hanseniase': typeof AuthenticatedNovaFichaHanseniaseRoute
   '/nova-ficha/outras-meningites': typeof AuthenticatedNovaFichaOutrasMeningitesRoute
+  '/nova-ficha/raiva-humana': typeof AuthenticatedNovaFichaRaivaHumanaRoute
   '/nova-ficha/rubeola': typeof AuthenticatedNovaFichaRubeolaRoute
   '/nova-ficha/sarampo': typeof AuthenticatedNovaFichaSarampoRoute
   '/fichas/': typeof AuthenticatedFichasIndexRoute
@@ -252,6 +268,7 @@ export interface FileRoutesByTo {
   '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
   '/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRoute
   '/fichas/outras-meningites': typeof AuthenticatedFichasOutrasMeningitesRoute
+  '/fichas/raiva-humana': typeof AuthenticatedFichasRaivaHumanaRoute
   '/fichas/rubeola': typeof AuthenticatedFichasRubeolaRoute
   '/fichas/sarampo': typeof AuthenticatedFichasSarampoRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
@@ -263,6 +280,7 @@ export interface FileRoutesByTo {
   '/nova-ficha/febre-amarela': typeof AuthenticatedNovaFichaFebreAmarelaRoute
   '/nova-ficha/hanseniase': typeof AuthenticatedNovaFichaHanseniaseRoute
   '/nova-ficha/outras-meningites': typeof AuthenticatedNovaFichaOutrasMeningitesRoute
+  '/nova-ficha/raiva-humana': typeof AuthenticatedNovaFichaRaivaHumanaRoute
   '/nova-ficha/rubeola': typeof AuthenticatedNovaFichaRubeolaRoute
   '/nova-ficha/sarampo': typeof AuthenticatedNovaFichaSarampoRoute
   '/fichas': typeof AuthenticatedFichasIndexRoute
@@ -284,6 +302,7 @@ export interface FileRoutesById {
   '/_authenticated/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
   '/_authenticated/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRoute
   '/_authenticated/fichas/outras-meningites': typeof AuthenticatedFichasOutrasMeningitesRoute
+  '/_authenticated/fichas/raiva-humana': typeof AuthenticatedFichasRaivaHumanaRoute
   '/_authenticated/fichas/rubeola': typeof AuthenticatedFichasRubeolaRoute
   '/_authenticated/fichas/sarampo': typeof AuthenticatedFichasSarampoRoute
   '/_authenticated/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
@@ -295,6 +314,7 @@ export interface FileRoutesById {
   '/_authenticated/nova-ficha/febre-amarela': typeof AuthenticatedNovaFichaFebreAmarelaRoute
   '/_authenticated/nova-ficha/hanseniase': typeof AuthenticatedNovaFichaHanseniaseRoute
   '/_authenticated/nova-ficha/outras-meningites': typeof AuthenticatedNovaFichaOutrasMeningitesRoute
+  '/_authenticated/nova-ficha/raiva-humana': typeof AuthenticatedNovaFichaRaivaHumanaRoute
   '/_authenticated/nova-ficha/rubeola': typeof AuthenticatedNovaFichaRubeolaRoute
   '/_authenticated/nova-ficha/sarampo': typeof AuthenticatedNovaFichaSarampoRoute
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
@@ -316,6 +336,7 @@ export interface FileRouteTypes {
     | '/fichas/febre-amarela'
     | '/fichas/hanseniase'
     | '/fichas/outras-meningites'
+    | '/fichas/raiva-humana'
     | '/fichas/rubeola'
     | '/fichas/sarampo'
     | '/nova-ficha/chikungunya'
@@ -327,6 +348,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/febre-amarela'
     | '/nova-ficha/hanseniase'
     | '/nova-ficha/outras-meningites'
+    | '/nova-ficha/raiva-humana'
     | '/nova-ficha/rubeola'
     | '/nova-ficha/sarampo'
     | '/fichas/'
@@ -346,6 +368,7 @@ export interface FileRouteTypes {
     | '/fichas/febre-amarela'
     | '/fichas/hanseniase'
     | '/fichas/outras-meningites'
+    | '/fichas/raiva-humana'
     | '/fichas/rubeola'
     | '/fichas/sarampo'
     | '/nova-ficha/chikungunya'
@@ -357,6 +380,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/febre-amarela'
     | '/nova-ficha/hanseniase'
     | '/nova-ficha/outras-meningites'
+    | '/nova-ficha/raiva-humana'
     | '/nova-ficha/rubeola'
     | '/nova-ficha/sarampo'
     | '/fichas'
@@ -377,6 +401,7 @@ export interface FileRouteTypes {
     | '/_authenticated/fichas/febre-amarela'
     | '/_authenticated/fichas/hanseniase'
     | '/_authenticated/fichas/outras-meningites'
+    | '/_authenticated/fichas/raiva-humana'
     | '/_authenticated/fichas/rubeola'
     | '/_authenticated/fichas/sarampo'
     | '/_authenticated/nova-ficha/chikungunya'
@@ -388,6 +413,7 @@ export interface FileRouteTypes {
     | '/_authenticated/nova-ficha/febre-amarela'
     | '/_authenticated/nova-ficha/hanseniase'
     | '/_authenticated/nova-ficha/outras-meningites'
+    | '/_authenticated/nova-ficha/raiva-humana'
     | '/_authenticated/nova-ficha/rubeola'
     | '/_authenticated/nova-ficha/sarampo'
     | '/_authenticated/fichas/'
@@ -462,6 +488,13 @@ declare module '@tanstack/react-router' {
       path: '/nova-ficha/rubeola'
       fullPath: '/nova-ficha/rubeola'
       preLoaderRoute: typeof AuthenticatedNovaFichaRubeolaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nova-ficha/raiva-humana': {
+      id: '/_authenticated/nova-ficha/raiva-humana'
+      path: '/nova-ficha/raiva-humana'
+      fullPath: '/nova-ficha/raiva-humana'
+      preLoaderRoute: typeof AuthenticatedNovaFichaRaivaHumanaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/nova-ficha/outras-meningites': {
@@ -539,6 +572,13 @@ declare module '@tanstack/react-router' {
       path: '/fichas/rubeola'
       fullPath: '/fichas/rubeola'
       preLoaderRoute: typeof AuthenticatedFichasRubeolaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas/raiva-humana': {
+      id: '/_authenticated/fichas/raiva-humana'
+      path: '/fichas/raiva-humana'
+      fullPath: '/fichas/raiva-humana'
+      preLoaderRoute: typeof AuthenticatedFichasRaivaHumanaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/outras-meningites': {
@@ -620,6 +660,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFichasFebreAmarelaRoute: typeof AuthenticatedFichasFebreAmarelaRoute
   AuthenticatedFichasHanseniaseRoute: typeof AuthenticatedFichasHanseniaseRoute
   AuthenticatedFichasOutrasMeningitesRoute: typeof AuthenticatedFichasOutrasMeningitesRoute
+  AuthenticatedFichasRaivaHumanaRoute: typeof AuthenticatedFichasRaivaHumanaRoute
   AuthenticatedFichasRubeolaRoute: typeof AuthenticatedFichasRubeolaRoute
   AuthenticatedFichasSarampoRoute: typeof AuthenticatedFichasSarampoRoute
   AuthenticatedNovaFichaChikungunyaRoute: typeof AuthenticatedNovaFichaChikungunyaRoute
@@ -631,6 +672,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNovaFichaFebreAmarelaRoute: typeof AuthenticatedNovaFichaFebreAmarelaRoute
   AuthenticatedNovaFichaHanseniaseRoute: typeof AuthenticatedNovaFichaHanseniaseRoute
   AuthenticatedNovaFichaOutrasMeningitesRoute: typeof AuthenticatedNovaFichaOutrasMeningitesRoute
+  AuthenticatedNovaFichaRaivaHumanaRoute: typeof AuthenticatedNovaFichaRaivaHumanaRoute
   AuthenticatedNovaFichaRubeolaRoute: typeof AuthenticatedNovaFichaRubeolaRoute
   AuthenticatedNovaFichaSarampoRoute: typeof AuthenticatedNovaFichaSarampoRoute
   AuthenticatedFichasIndexRoute: typeof AuthenticatedFichasIndexRoute
@@ -652,6 +694,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFichasHanseniaseRoute: AuthenticatedFichasHanseniaseRoute,
   AuthenticatedFichasOutrasMeningitesRoute:
     AuthenticatedFichasOutrasMeningitesRoute,
+  AuthenticatedFichasRaivaHumanaRoute: AuthenticatedFichasRaivaHumanaRoute,
   AuthenticatedFichasRubeolaRoute: AuthenticatedFichasRubeolaRoute,
   AuthenticatedFichasSarampoRoute: AuthenticatedFichasSarampoRoute,
   AuthenticatedNovaFichaChikungunyaRoute:
@@ -667,6 +710,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNovaFichaHanseniaseRoute: AuthenticatedNovaFichaHanseniaseRoute,
   AuthenticatedNovaFichaOutrasMeningitesRoute:
     AuthenticatedNovaFichaOutrasMeningitesRoute,
+  AuthenticatedNovaFichaRaivaHumanaRoute:
+    AuthenticatedNovaFichaRaivaHumanaRoute,
   AuthenticatedNovaFichaRubeolaRoute: AuthenticatedNovaFichaRubeolaRoute,
   AuthenticatedNovaFichaSarampoRoute: AuthenticatedNovaFichaSarampoRoute,
   AuthenticatedFichasIndexRoute: AuthenticatedFichasIndexRoute,
