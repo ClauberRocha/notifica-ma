@@ -165,6 +165,7 @@ function NovaFichaHanseniasePage() {
   };
 
   const validateStep = (): boolean => {
+    if (!current.fields) return true;
     for (const f of current.fields) {
       if ("required" in f && f.required && !form[f.name]?.trim()) {
         toast.error(`Preencha: ${f.label}`);
