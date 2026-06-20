@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsuariosRouteImport } from './routes/usuarios'
+import { Route as PainelRouteImport } from './routes/painel'
+import { Route as NovaFichaRouteImport } from './routes/nova-ficha'
+import { Route as FichasRouteImport } from './routes/fichas'
 import { Route as IndexRouteImport } from './routes/index'
 
+const UsuariosRoute = UsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NovaFichaRoute = NovaFichaRouteImport.update({
+  id: '/nova-ficha',
+  path: '/nova-ficha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FichasRoute = FichasRouteImport.update({
+  id: '/fichas',
+  path: '/fichas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,72 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/fichas': typeof FichasRoute
+  '/nova-ficha': typeof NovaFichaRoute
+  '/painel': typeof PainelRoute
+  '/usuarios': typeof UsuariosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/fichas': typeof FichasRoute
+  '/nova-ficha': typeof NovaFichaRoute
+  '/painel': typeof PainelRoute
+  '/usuarios': typeof UsuariosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/fichas': typeof FichasRoute
+  '/nova-ficha': typeof NovaFichaRoute
+  '/painel': typeof PainelRoute
+  '/usuarios': typeof UsuariosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
+  id: '__root__' | '/' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FichasRoute: typeof FichasRoute
+  NovaFichaRoute: typeof NovaFichaRoute
+  PainelRoute: typeof PainelRoute
+  UsuariosRoute: typeof UsuariosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/usuarios': {
+      id: '/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof UsuariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nova-ficha': {
+      id: '/nova-ficha'
+      path: '/nova-ficha'
+      fullPath: '/nova-ficha'
+      preLoaderRoute: typeof NovaFichaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fichas': {
+      id: '/fichas'
+      path: '/fichas'
+      fullPath: '/fichas'
+      preLoaderRoute: typeof FichasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +121,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FichasRoute: FichasRoute,
+  NovaFichaRoute: NovaFichaRoute,
+  PainelRoute: PainelRoute,
+  UsuariosRoute: UsuariosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
