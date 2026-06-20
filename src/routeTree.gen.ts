@@ -14,7 +14,11 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedNovaFichaIndexRouteImport } from './routes/_authenticated/nova-ficha.index'
+import { Route as AuthenticatedFichasIndexRouteImport } from './routes/_authenticated/fichas.index'
+import { Route as AuthenticatedNovaFichaDengueChikungunyaRouteImport } from './routes/_authenticated/nova-ficha.dengue-chikungunya'
 import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_authenticated/nova-ficha.coqueluche'
+import { Route as AuthenticatedFichasDengueChikungunyaRouteImport } from './routes/_authenticated/fichas.dengue-chikungunya'
 import { Route as AuthenticatedFichasCoquelucheRouteImport } from './routes/_authenticated/fichas.coqueluche'
 
 const AuthRoute = AuthRouteImport.update({
@@ -41,10 +45,34 @@ const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNovaFichaIndexRoute =
+  AuthenticatedNovaFichaIndexRouteImport.update({
+    id: '/nova-ficha/',
+    path: '/nova-ficha/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasIndexRoute =
+  AuthenticatedFichasIndexRouteImport.update({
+    id: '/fichas/',
+    path: '/fichas/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNovaFichaDengueChikungunyaRoute =
+  AuthenticatedNovaFichaDengueChikungunyaRouteImport.update({
+    id: '/nova-ficha/dengue-chikungunya',
+    path: '/nova-ficha/dengue-chikungunya',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedNovaFichaCoquelucheRoute =
   AuthenticatedNovaFichaCoquelucheRouteImport.update({
     id: '/nova-ficha/coqueluche',
     path: '/nova-ficha/coqueluche',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasDengueChikungunyaRoute =
+  AuthenticatedFichasDengueChikungunyaRouteImport.update({
+    id: '/fichas/dengue-chikungunya',
+    path: '/fichas/dengue-chikungunya',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasCoquelucheRoute =
@@ -60,7 +88,11 @@ export interface FileRoutesByFullPath {
   '/painel': typeof AuthenticatedPainelRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/fichas/dengue-chikungunya': typeof AuthenticatedFichasDengueChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
+  '/nova-ficha/dengue-chikungunya': typeof AuthenticatedNovaFichaDengueChikungunyaRoute
+  '/fichas/': typeof AuthenticatedFichasIndexRoute
+  '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -68,7 +100,11 @@ export interface FileRoutesByTo {
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/': typeof AuthenticatedIndexRoute
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/fichas/dengue-chikungunya': typeof AuthenticatedFichasDengueChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
+  '/nova-ficha/dengue-chikungunya': typeof AuthenticatedNovaFichaDengueChikungunyaRoute
+  '/fichas': typeof AuthenticatedFichasIndexRoute
+  '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,7 +114,11 @@ export interface FileRoutesById {
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/_authenticated/fichas/dengue-chikungunya': typeof AuthenticatedFichasDengueChikungunyaRoute
   '/_authenticated/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
+  '/_authenticated/nova-ficha/dengue-chikungunya': typeof AuthenticatedNovaFichaDengueChikungunyaRoute
+  '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
+  '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -88,7 +128,11 @@ export interface FileRouteTypes {
     | '/painel'
     | '/usuarios'
     | '/fichas/coqueluche'
+    | '/fichas/dengue-chikungunya'
     | '/nova-ficha/coqueluche'
+    | '/nova-ficha/dengue-chikungunya'
+    | '/fichas/'
+    | '/nova-ficha/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -96,7 +140,11 @@ export interface FileRouteTypes {
     | '/usuarios'
     | '/'
     | '/fichas/coqueluche'
+    | '/fichas/dengue-chikungunya'
     | '/nova-ficha/coqueluche'
+    | '/nova-ficha/dengue-chikungunya'
+    | '/fichas'
+    | '/nova-ficha'
   id:
     | '__root__'
     | '/_authenticated'
@@ -105,7 +153,11 @@ export interface FileRouteTypes {
     | '/_authenticated/usuarios'
     | '/_authenticated/'
     | '/_authenticated/fichas/coqueluche'
+    | '/_authenticated/fichas/dengue-chikungunya'
     | '/_authenticated/nova-ficha/coqueluche'
+    | '/_authenticated/nova-ficha/dengue-chikungunya'
+    | '/_authenticated/fichas/'
+    | '/_authenticated/nova-ficha/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -150,11 +202,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/nova-ficha/': {
+      id: '/_authenticated/nova-ficha/'
+      path: '/nova-ficha'
+      fullPath: '/nova-ficha/'
+      preLoaderRoute: typeof AuthenticatedNovaFichaIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas/': {
+      id: '/_authenticated/fichas/'
+      path: '/fichas'
+      fullPath: '/fichas/'
+      preLoaderRoute: typeof AuthenticatedFichasIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nova-ficha/dengue-chikungunya': {
+      id: '/_authenticated/nova-ficha/dengue-chikungunya'
+      path: '/nova-ficha/dengue-chikungunya'
+      fullPath: '/nova-ficha/dengue-chikungunya'
+      preLoaderRoute: typeof AuthenticatedNovaFichaDengueChikungunyaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/nova-ficha/coqueluche': {
       id: '/_authenticated/nova-ficha/coqueluche'
       path: '/nova-ficha/coqueluche'
       fullPath: '/nova-ficha/coqueluche'
       preLoaderRoute: typeof AuthenticatedNovaFichaCoquelucheRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas/dengue-chikungunya': {
+      id: '/_authenticated/fichas/dengue-chikungunya'
+      path: '/fichas/dengue-chikungunya'
+      fullPath: '/fichas/dengue-chikungunya'
+      preLoaderRoute: typeof AuthenticatedFichasDengueChikungunyaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/coqueluche': {
@@ -172,7 +252,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRoute
+  AuthenticatedFichasDengueChikungunyaRoute: typeof AuthenticatedFichasDengueChikungunyaRoute
   AuthenticatedNovaFichaCoquelucheRoute: typeof AuthenticatedNovaFichaCoquelucheRoute
+  AuthenticatedNovaFichaDengueChikungunyaRoute: typeof AuthenticatedNovaFichaDengueChikungunyaRoute
+  AuthenticatedFichasIndexRoute: typeof AuthenticatedFichasIndexRoute
+  AuthenticatedNovaFichaIndexRoute: typeof AuthenticatedNovaFichaIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -180,7 +264,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedFichasCoquelucheRoute: AuthenticatedFichasCoquelucheRoute,
+  AuthenticatedFichasDengueChikungunyaRoute:
+    AuthenticatedFichasDengueChikungunyaRoute,
   AuthenticatedNovaFichaCoquelucheRoute: AuthenticatedNovaFichaCoquelucheRoute,
+  AuthenticatedNovaFichaDengueChikungunyaRoute:
+    AuthenticatedNovaFichaDengueChikungunyaRoute,
+  AuthenticatedFichasIndexRoute: AuthenticatedFichasIndexRoute,
+  AuthenticatedNovaFichaIndexRoute: AuthenticatedNovaFichaIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
