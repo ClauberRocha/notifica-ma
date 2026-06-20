@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dialog";
 import { UserPlus, Pencil, Lock, Unlock, Search, Users } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { createUser } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
@@ -86,9 +88,11 @@ function UsuariosPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<UserRow | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const createUserFn = useServerFn(createUser);
 
   useEffect(() => {
     (async () => {
@@ -177,13 +181,8 @@ function UsuariosPage() {
         </div>
         {isAdmin && (
           <Button
-            variant="outline"
             className="gap-2 w-full sm:w-auto"
-            onClick={() =>
-              toast.info(
-                "Novos usuários se cadastram pela página de login. Depois você pode promovê-los aqui.",
-              )
-            }
+            onClick={() => setCreateOpen(true)}
           >
             <UserPlus className="w-4 h-4" /> Adicionar Usuário
           </Button>
@@ -314,6 +313,34 @@ function UsuariosPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="max-w-md mx-4 sm:mx-auto">
+          <DialogHeader>
+            <DialogTitle>Adicionar Novo Usuário</DialogTitle>
+          </DialogHeader>
+          <CreateUserForm
+            onClose={() => setCreateOpen(false)}
+            onCreate={async (form) => {
+              try {
+                await createUserFn({
+                  data: {
+                    full_name: form.full_name,
+                    email: form.email,
+                    cargo: form.cargo || null,
+                    role: form.role,
+                  },
+                });
+                toast.success("✅ Usuário criado! Um e-mail foi enviado para definir a senha.");
+                queryClient.invalidateQueries({ queryKey: ["users-list"] });
+                setCreateOpen(false);
+              } catch (e) {
+                toast.error(`❌ ${(e as Error).message}`);
+              }
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -391,6 +418,97 @@ function UserForm({
       </div>
       <DialogFooter>
         <Button variant="outline" onClick={onClose}>
+          Cancelar
+        </Button>
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? "Salvando..." : "Salvar"}
+        </Button>
+      </DialogFooter>
+    </div>
+  );
+}
+
+function CreateUserForm({
+  onClose,
+  onCreate,
+}: {
+  onClose: () => void;
+  onCreate: (f: FormState) => Promise<void> | void;
+}) {
+  const [form, setForm] = useState<FormState>({
+    full_name: "",
+    email: "",
+    cargo: "",
+    role: "user",
+  });
+  const [saving, setSaving] = useState(false);
+
+  const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
+    setForm((p) => ({ ...p, [k]: v }));
+
+  const handleSave = async () => {
+    if (!form.full_name.trim()) {
+      toast.warning("⚠️ Nome é obrigatório.");
+      return;
+    }
+    if (!form.email.trim()) {
+      toast.warning("⚠️ E-mail é obrigatório.");
+      return;
+    }
+    setSaving(true);
+    try {
+      await onCreate(form);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <Label>Nome Completo *</Label>
+        <Input
+          placeholder="Ex: João da Silva"
+          value={form.full_name}
+          onChange={(e) => set("full_name", e.target.value)}
+        />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <Label>E-mail *</Label>
+          <Input
+            type="email"
+            placeholder="email@exemplo.com"
+            value={form.email}
+            onChange={(e) => set("email", e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Cargo/Função</Label>
+          <Input
+            placeholder="Ex: Epidemiologista"
+            value={form.cargo}
+            onChange={(e) => set("cargo", e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="space-y-1">
+        <Label>Perfil de Acesso</Label>
+        <Select value={form.role} onValueChange={(v) => set("role", v as Role)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {ROLE_OPTIONS.map((r) => (
+              <SelectItem key={r.value} value={r.value}>
+                {r.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose} disabled={saving}>
           Cancelar
         </Button>
         <Button onClick={handleSave} disabled={saving}>
