@@ -8,6 +8,12 @@ export const Route = createFileRoute("/_authenticated/nova-ficha/")({
 
 const agravos = [
   {
+    label: "Chikungunya",
+    desc: "Notificação individual de chikungunya",
+    to: "/nova-ficha/chikungunya" as const,
+    color: "bg-chart-5/10 text-chart-5 border-chart-5/20 hover:bg-chart-5/15",
+  },
+  {
     label: "Coqueluche",
     desc: "Notificação individual de coqueluche",
     to: "/nova-ficha/coqueluche" as const,
@@ -20,34 +26,22 @@ const agravos = [
     color: "bg-chart-3/20 text-yellow-700 border-chart-3/30 hover:bg-chart-3/30",
   },
   {
-    label: "Chikungunya",
-    desc: "Notificação individual de chikungunya",
-    to: "/nova-ficha/chikungunya" as const,
-    color: "bg-chart-5/10 text-chart-5 border-chart-5/20 hover:bg-chart-5/15",
-  },
-  {
     label: "Difteria",
     desc: "Notificação individual de difteria",
     to: "/nova-ficha/difteria" as const,
     color: "bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/15",
   },
   {
+    label: "Doença Meningocócica",
+    desc: "Notificação individual de doença meningocócica",
+    to: "/nova-ficha/doenca-meningococica" as const,
+    color: "bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/15",
+  },
+  {
     label: "Epizootia",
     desc: "Notificação de epizootia em animais",
     to: "/nova-ficha/epizootia" as const,
     color: "bg-chart-4/10 text-chart-4 border-chart-4/20 hover:bg-chart-4/15",
-  },
-  {
-    label: "Sarampo",
-    desc: "Notificação individual de sarampo",
-    to: "/nova-ficha/sarampo" as const,
-    color: "bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/15",
-  },
-  {
-    label: "Rubéola",
-    desc: "Notificação individual de rubéola",
-    to: "/nova-ficha/rubeola" as const,
-    color: "bg-chart-1/10 text-chart-1 border-chart-1/20 hover:bg-chart-1/15",
   },
   {
     label: "Febre Amarela",
@@ -62,14 +56,8 @@ const agravos = [
     color: "bg-orange-500/10 text-orange-700 border-orange-500/20 hover:bg-orange-500/15",
   },
   {
-    label: "Doença Meningocócica",
-    desc: "Notificação individual de doença meningocócica",
-    to: "/nova-ficha/doenca-meningococica" as const,
-    color: "bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/15",
-  },
-  {
-    label: "Outras Meningites",
-    desc: "Notificação individual de outras meningites",
+    label: "Meningite",
+    desc: "Notificação individual de meningite",
     to: "/nova-ficha/outras-meningites" as const,
     color: "bg-sky-500/10 text-sky-700 border-sky-500/20 hover:bg-sky-500/15",
   },
@@ -78,6 +66,18 @@ const agravos = [
     desc: "Notificação individual de raiva humana",
     to: "/nova-ficha/raiva-humana" as const,
     color: "bg-red-600/10 text-red-700 border-red-600/20 hover:bg-red-600/15",
+  },
+  {
+    label: "Rubéola",
+    desc: "Notificação individual de rubéola",
+    to: "/nova-ficha/rubeola" as const,
+    color: "bg-chart-1/10 text-chart-1 border-chart-1/20 hover:bg-chart-1/15",
+  },
+  {
+    label: "Sarampo",
+    desc: "Notificação individual de sarampo",
+    to: "/nova-ficha/sarampo" as const,
+    color: "bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/15",
   },
   {
     label: "SRAG",
