@@ -2675,6 +2675,177 @@ export type Database = {
         }
         Relationships: []
       }
+      tuberculose_cases: {
+        Row: {
+          agravo: string
+          baciloscopia_escarro: string | null
+          bairro: string | null
+          cep: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          created_at: string
+          cultura: string | null
+          data_diagnostico: string | null
+          data_inicio_tratamento: string | null
+          data_nascimento: string | null
+          data_notificacao: string
+          doencas_agravos_associados: Json | null
+          escolaridade: string | null
+          forma: string | null
+          funcao_investigador: string | null
+          gestante: string | null
+          histopatologia: string | null
+          hiv: string | null
+          id: string
+          idade: number | null
+          logradouro: string | null
+          municipio_notificacao: string | null
+          municipio_residencia: string | null
+          municipio_unidade_investigador: string | null
+          nome_investigador: string | null
+          nome_mae: string | null
+          nome_paciente: string
+          numero_cartao_sus: string | null
+          numero_endereco: string | null
+          numero_ficha: string | null
+          numero_prontuario: string | null
+          observacoes_adicionais: string | null
+          ocupacao: string | null
+          populacoes_especiais: Json | null
+          raca_cor: string | null
+          radiografia_torax: string | null
+          se_extrapulmonar: string | null
+          sexo: string | null
+          status: string
+          telefone: string | null
+          terapia_antirretroviral: string | null
+          teste_sensibilidade: string | null
+          tipo_entrada: string | null
+          tipo_idade: string | null
+          tmr_tb: string | null
+          total_contatos_identificados: number | null
+          uf_notificacao: string | null
+          uf_residencia: string | null
+          unidade_saude: string | null
+          updated_at: string
+          user_id: string
+          zona: string | null
+        }
+        Insert: {
+          agravo?: string
+          baciloscopia_escarro?: string | null
+          bairro?: string | null
+          cep?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          cultura?: string | null
+          data_diagnostico?: string | null
+          data_inicio_tratamento?: string | null
+          data_nascimento?: string | null
+          data_notificacao: string
+          doencas_agravos_associados?: Json | null
+          escolaridade?: string | null
+          forma?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          histopatologia?: string | null
+          hiv?: string | null
+          id?: string
+          idade?: number | null
+          logradouro?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente: string
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          numero_prontuario?: string | null
+          observacoes_adicionais?: string | null
+          ocupacao?: string | null
+          populacoes_especiais?: Json | null
+          raca_cor?: string | null
+          radiografia_torax?: string | null
+          se_extrapulmonar?: string | null
+          sexo?: string | null
+          status?: string
+          telefone?: string | null
+          terapia_antirretroviral?: string | null
+          teste_sensibilidade?: string | null
+          tipo_entrada?: string | null
+          tipo_idade?: string | null
+          tmr_tb?: string | null
+          total_contatos_identificados?: number | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id: string
+          zona?: string | null
+        }
+        Update: {
+          agravo?: string
+          baciloscopia_escarro?: string | null
+          bairro?: string | null
+          cep?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          cultura?: string | null
+          data_diagnostico?: string | null
+          data_inicio_tratamento?: string | null
+          data_nascimento?: string | null
+          data_notificacao?: string
+          doencas_agravos_associados?: Json | null
+          escolaridade?: string | null
+          forma?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          histopatologia?: string | null
+          hiv?: string | null
+          id?: string
+          idade?: number | null
+          logradouro?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente?: string
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          numero_prontuario?: string | null
+          observacoes_adicionais?: string | null
+          ocupacao?: string | null
+          populacoes_especiais?: Json | null
+          raca_cor?: string | null
+          radiografia_torax?: string | null
+          se_extrapulmonar?: string | null
+          sexo?: string | null
+          status?: string
+          telefone?: string | null
+          terapia_antirretroviral?: string | null
+          teste_sensibilidade?: string | null
+          tipo_entrada?: string | null
+          tipo_idade?: string | null
+          tmr_tb?: string | null
+          total_contatos_identificados?: number | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id?: string
+          zona?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

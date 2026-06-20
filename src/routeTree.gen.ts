@@ -16,6 +16,7 @@ import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNovaFichaIndexRouteImport } from './routes/_authenticated/nova-ficha.index'
 import { Route as AuthenticatedFichasIndexRouteImport } from './routes/_authenticated/fichas.index'
+import { Route as AuthenticatedNovaFichaTuberculoseRouteImport } from './routes/_authenticated/nova-ficha.tuberculose'
 import { Route as AuthenticatedNovaFichaTetanoNeonatalRouteImport } from './routes/_authenticated/nova-ficha.tetano-neonatal'
 import { Route as AuthenticatedNovaFichaTetanoAcidentalRouteImport } from './routes/_authenticated/nova-ficha.tetano-acidental'
 import { Route as AuthenticatedNovaFichaSurtoDtaRouteImport } from './routes/_authenticated/nova-ficha.surto-dta'
@@ -32,6 +33,7 @@ import { Route as AuthenticatedNovaFichaDifteriaRouteImport } from './routes/_au
 import { Route as AuthenticatedNovaFichaDengueRouteImport } from './routes/_authenticated/nova-ficha.dengue'
 import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_authenticated/nova-ficha.coqueluche'
 import { Route as AuthenticatedNovaFichaChikungunyaRouteImport } from './routes/_authenticated/nova-ficha.chikungunya'
+import { Route as AuthenticatedFichasTuberculoseRouteImport } from './routes/_authenticated/fichas.tuberculose'
 import { Route as AuthenticatedFichasTetanoNeonatalRouteImport } from './routes/_authenticated/fichas.tetano-neonatal'
 import { Route as AuthenticatedFichasTetanoAcidentalRouteImport } from './routes/_authenticated/fichas.tetano-acidental'
 import { Route as AuthenticatedFichasSurtoDtaRouteImport } from './routes/_authenticated/fichas.surto-dta'
@@ -83,6 +85,12 @@ const AuthenticatedFichasIndexRoute =
   AuthenticatedFichasIndexRouteImport.update({
     id: '/fichas/',
     path: '/fichas/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNovaFichaTuberculoseRoute =
+  AuthenticatedNovaFichaTuberculoseRouteImport.update({
+    id: '/nova-ficha/tuberculose',
+    path: '/nova-ficha/tuberculose',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedNovaFichaTetanoNeonatalRoute =
@@ -179,6 +187,12 @@ const AuthenticatedNovaFichaChikungunyaRoute =
   AuthenticatedNovaFichaChikungunyaRouteImport.update({
     id: '/nova-ficha/chikungunya',
     path: '/nova-ficha/chikungunya',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasTuberculoseRoute =
+  AuthenticatedFichasTuberculoseRouteImport.update({
+    id: '/fichas/tuberculose',
+    path: '/fichas/tuberculose',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasTetanoNeonatalRoute =
@@ -298,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRoute
   '/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRoute
+  '/fichas/tuberculose': typeof AuthenticatedFichasTuberculoseRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -314,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/nova-ficha/tetano-acidental': typeof AuthenticatedNovaFichaTetanoAcidentalRoute
   '/nova-ficha/tetano-neonatal': typeof AuthenticatedNovaFichaTetanoNeonatalRoute
+  '/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/fichas/': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -338,6 +354,7 @@ export interface FileRoutesByTo {
   '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRoute
   '/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRoute
+  '/fichas/tuberculose': typeof AuthenticatedFichasTuberculoseRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -354,6 +371,7 @@ export interface FileRoutesByTo {
   '/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/nova-ficha/tetano-acidental': typeof AuthenticatedNovaFichaTetanoAcidentalRoute
   '/nova-ficha/tetano-neonatal': typeof AuthenticatedNovaFichaTetanoNeonatalRoute
+  '/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/fichas': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -380,6 +398,7 @@ export interface FileRoutesById {
   '/_authenticated/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/_authenticated/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRoute
   '/_authenticated/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRoute
+  '/_authenticated/fichas/tuberculose': typeof AuthenticatedFichasTuberculoseRoute
   '/_authenticated/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/_authenticated/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/_authenticated/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -396,6 +415,7 @@ export interface FileRoutesById {
   '/_authenticated/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/_authenticated/nova-ficha/tetano-acidental': typeof AuthenticatedNovaFichaTetanoAcidentalRoute
   '/_authenticated/nova-ficha/tetano-neonatal': typeof AuthenticatedNovaFichaTetanoNeonatalRoute
+  '/_authenticated/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
   '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -422,6 +442,7 @@ export interface FileRouteTypes {
     | '/fichas/surto-dta'
     | '/fichas/tetano-acidental'
     | '/fichas/tetano-neonatal'
+    | '/fichas/tuberculose'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -438,6 +459,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/surto-dta'
     | '/nova-ficha/tetano-acidental'
     | '/nova-ficha/tetano-neonatal'
+    | '/nova-ficha/tuberculose'
     | '/fichas/'
     | '/nova-ficha/'
   fileRoutesByTo: FileRoutesByTo
@@ -462,6 +484,7 @@ export interface FileRouteTypes {
     | '/fichas/surto-dta'
     | '/fichas/tetano-acidental'
     | '/fichas/tetano-neonatal'
+    | '/fichas/tuberculose'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -478,6 +501,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/surto-dta'
     | '/nova-ficha/tetano-acidental'
     | '/nova-ficha/tetano-neonatal'
+    | '/nova-ficha/tuberculose'
     | '/fichas'
     | '/nova-ficha'
   id:
@@ -503,6 +527,7 @@ export interface FileRouteTypes {
     | '/_authenticated/fichas/surto-dta'
     | '/_authenticated/fichas/tetano-acidental'
     | '/_authenticated/fichas/tetano-neonatal'
+    | '/_authenticated/fichas/tuberculose'
     | '/_authenticated/nova-ficha/chikungunya'
     | '/_authenticated/nova-ficha/coqueluche'
     | '/_authenticated/nova-ficha/dengue'
@@ -519,6 +544,7 @@ export interface FileRouteTypes {
     | '/_authenticated/nova-ficha/surto-dta'
     | '/_authenticated/nova-ficha/tetano-acidental'
     | '/_authenticated/nova-ficha/tetano-neonatal'
+    | '/_authenticated/nova-ficha/tuberculose'
     | '/_authenticated/fichas/'
     | '/_authenticated/nova-ficha/'
   fileRoutesById: FileRoutesById
@@ -577,6 +603,13 @@ declare module '@tanstack/react-router' {
       path: '/fichas'
       fullPath: '/fichas/'
       preLoaderRoute: typeof AuthenticatedFichasIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nova-ficha/tuberculose': {
+      id: '/_authenticated/nova-ficha/tuberculose'
+      path: '/nova-ficha/tuberculose'
+      fullPath: '/nova-ficha/tuberculose'
+      preLoaderRoute: typeof AuthenticatedNovaFichaTuberculoseRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/nova-ficha/tetano-neonatal': {
@@ -689,6 +722,13 @@ declare module '@tanstack/react-router' {
       path: '/nova-ficha/chikungunya'
       fullPath: '/nova-ficha/chikungunya'
       preLoaderRoute: typeof AuthenticatedNovaFichaChikungunyaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas/tuberculose': {
+      id: '/_authenticated/fichas/tuberculose'
+      path: '/fichas/tuberculose'
+      fullPath: '/fichas/tuberculose'
+      preLoaderRoute: typeof AuthenticatedFichasTuberculoseRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/tetano-neonatal': {
@@ -826,6 +866,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFichasSurtoDtaRoute: typeof AuthenticatedFichasSurtoDtaRoute
   AuthenticatedFichasTetanoAcidentalRoute: typeof AuthenticatedFichasTetanoAcidentalRoute
   AuthenticatedFichasTetanoNeonatalRoute: typeof AuthenticatedFichasTetanoNeonatalRoute
+  AuthenticatedFichasTuberculoseRoute: typeof AuthenticatedFichasTuberculoseRoute
   AuthenticatedNovaFichaChikungunyaRoute: typeof AuthenticatedNovaFichaChikungunyaRoute
   AuthenticatedNovaFichaCoquelucheRoute: typeof AuthenticatedNovaFichaCoquelucheRoute
   AuthenticatedNovaFichaDengueRoute: typeof AuthenticatedNovaFichaDengueRoute
@@ -842,6 +883,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNovaFichaSurtoDtaRoute: typeof AuthenticatedNovaFichaSurtoDtaRoute
   AuthenticatedNovaFichaTetanoAcidentalRoute: typeof AuthenticatedNovaFichaTetanoAcidentalRoute
   AuthenticatedNovaFichaTetanoNeonatalRoute: typeof AuthenticatedNovaFichaTetanoNeonatalRoute
+  AuthenticatedNovaFichaTuberculoseRoute: typeof AuthenticatedNovaFichaTuberculoseRoute
   AuthenticatedFichasIndexRoute: typeof AuthenticatedFichasIndexRoute
   AuthenticatedNovaFichaIndexRoute: typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -870,6 +912,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedFichasTetanoAcidentalRoute,
   AuthenticatedFichasTetanoNeonatalRoute:
     AuthenticatedFichasTetanoNeonatalRoute,
+  AuthenticatedFichasTuberculoseRoute: AuthenticatedFichasTuberculoseRoute,
   AuthenticatedNovaFichaChikungunyaRoute:
     AuthenticatedNovaFichaChikungunyaRoute,
   AuthenticatedNovaFichaCoquelucheRoute: AuthenticatedNovaFichaCoquelucheRoute,
@@ -893,6 +936,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedNovaFichaTetanoAcidentalRoute,
   AuthenticatedNovaFichaTetanoNeonatalRoute:
     AuthenticatedNovaFichaTetanoNeonatalRoute,
+  AuthenticatedNovaFichaTuberculoseRoute:
+    AuthenticatedNovaFichaTuberculoseRoute,
   AuthenticatedFichasIndexRoute: AuthenticatedFichasIndexRoute,
   AuthenticatedNovaFichaIndexRoute: AuthenticatedNovaFichaIndexRoute,
 }
