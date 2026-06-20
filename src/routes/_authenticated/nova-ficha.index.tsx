@@ -79,6 +79,12 @@ const agravos = [
     to: "/nova-ficha/raiva-humana" as const,
     color: "bg-red-600/10 text-red-700 border-red-600/20 hover:bg-red-600/15",
   },
+  {
+    label: "SRAG",
+    desc: "Síndrome Respiratória Aguda Grave / Influenza",
+    to: "/nova-ficha/srag" as const,
+    color: "bg-teal-500/10 text-teal-700 border-teal-500/20 hover:bg-teal-500/15",
+  },
 ];
 
 
