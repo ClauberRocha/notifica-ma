@@ -20,33 +20,49 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
+import { ROLE_BADGE_CLASSES, ROLE_LABELS, type Permission } from "@/lib/rbac";
 
-const items = [
+type NavItem = {
+  title: string;
+  url: string;
+  icon: typeof LayoutGrid;
+  permission?: Permission;
+};
+
+const items: NavItem[] = [
   { title: "Início", url: "/", icon: LayoutGrid },
-  { title: "Nova Ficha", url: "/nova-ficha", icon: FilePlus },
-  { title: "Fichas", url: "/fichas", icon: List },
-  { title: "Painel", url: "/painel", icon: BarChart3 },
-  { title: "Usuários", url: "/usuarios", icon: Users },
-  { title: "Logs", url: "/logs", icon: ClipboardList },
-] as const;
+  { title: "Nova Ficha", url: "/nova-ficha", icon: FilePlus, permission: "fichas.create" },
+  { title: "Fichas", url: "/fichas", icon: List, permission: "fichas.view" },
+  { title: "Painel", url: "/painel", icon: BarChart3, permission: "reports.view" },
+  { title: "Usuários", url: "/usuarios", icon: Users, permission: "users.view" },
+  { title: "Logs", url: "/logs", icon: ClipboardList, permission: "logs.view" },
+];
 
 function initials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("") || "U";
+  return (
+    name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((p) => p[0]?.toUpperCase() ?? "")
+      .join("") || "U"
+  );
 }
 
 export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { user, signOut } = useAuth();
+  const { user, signOut, role, can } = useAuth();
 
   const isActive = (url: string) =>
-    url === "/" ? pathname === "/" : pathname === url || pathname.startsWith(`${url}/`);
+    url === "/"
+      ? pathname === "/"
+      : pathname === url || pathname.startsWith(`${url}/`);
+
+  const visibleItems = items.filter((it) => !it.permission || can(it.permission));
+  const roleLabel = role ? ROLE_LABELS[role] : "Sem perfil";
+  const roleClass = role ? ROLE_BADGE_CLASSES[role] : "bg-muted text-muted-foreground border-border";
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
@@ -72,11 +88,16 @@ export function AppSidebar() {
             {initials(user?.full_name ?? "U")}
           </div>
           {!collapsed && (
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-sidebar-foreground">
                 {user?.full_name ?? "Usuário"}
               </p>
-              <p className="truncate text-xs text-sidebar-foreground/60">Administrador</p>
+              <span
+                className={`mt-0.5 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${roleClass}`}
+                title={`Perfil: ${roleLabel}`}
+              >
+                {roleLabel}
+              </span>
             </div>
           )}
         </div>
@@ -84,7 +105,7 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 py-3">
         <SidebarMenu className="gap-1">
-          {items.map((item) => {
+          {visibleItems.map((item) => {
             const active = isActive(item.url);
             return (
               <SidebarMenuItem key={item.url}>
