@@ -1,13 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FilePlus, List, LayoutDashboard, Users } from "lucide-react";
+import { FilePlus, List, LayoutDashboard, Users, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Início — Sistema de Notificação de Agravos" },
-      { name: "description", content: "Registre, consulte e analise fichas de notificação de agravos em um único lugar." },
-      { property: "og:title", content: "Início — Sistema de Notificação de Agravos" },
-      { property: "og:description", content: "Registre, consulte e analise fichas de notificação de agravos em um único lugar." },
+      { name: "description", content: "Registre, consulte e analise fichas de notificação de agravos." },
     ],
   }),
   component: Home,
@@ -28,18 +27,19 @@ const shortcuts = [
 ] as const;
 
 function Home() {
-  const firstName = "Usuário";
+  const { user, loading, signOut } = useAuth();
+  const firstName = (user?.full_name?.trim().split(/\s+/)[0]) || "Usuário";
   const greeting = getGreeting();
 
   return (
     <div className="min-h-[80vh] flex flex-col justify-center">
-      <div className="max-w-2xl mx-auto w-full px-2">
+      <div className="max-w-2xl mx-auto w-full px-2 py-8">
         <div className="mb-8 text-center">
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-primary">
             {firstName[0].toUpperCase()}
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-            {greeting}, {firstName}!
+            {loading ? "Carregando..." : `${greeting}, ${firstName}!`}
           </h1>
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             O que você deseja fazer hoje?
@@ -65,6 +65,15 @@ function Home() {
               </div>
             </Link>
           ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => signOut()}
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <LogOut className="w-4 h-4" /> Sair
+          </button>
         </div>
       </div>
     </div>
