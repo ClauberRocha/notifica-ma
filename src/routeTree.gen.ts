@@ -16,6 +16,7 @@ import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNovaFichaIndexRouteImport } from './routes/_authenticated/nova-ficha.index'
 import { Route as AuthenticatedFichasIndexRouteImport } from './routes/_authenticated/fichas.index'
+import { Route as AuthenticatedNovaFichaTetanoNeonatalRouteImport } from './routes/_authenticated/nova-ficha.tetano-neonatal'
 import { Route as AuthenticatedNovaFichaTetanoAcidentalRouteImport } from './routes/_authenticated/nova-ficha.tetano-acidental'
 import { Route as AuthenticatedNovaFichaSurtoDtaRouteImport } from './routes/_authenticated/nova-ficha.surto-dta'
 import { Route as AuthenticatedNovaFichaSragRouteImport } from './routes/_authenticated/nova-ficha.srag'
@@ -31,6 +32,7 @@ import { Route as AuthenticatedNovaFichaDifteriaRouteImport } from './routes/_au
 import { Route as AuthenticatedNovaFichaDengueRouteImport } from './routes/_authenticated/nova-ficha.dengue'
 import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_authenticated/nova-ficha.coqueluche'
 import { Route as AuthenticatedNovaFichaChikungunyaRouteImport } from './routes/_authenticated/nova-ficha.chikungunya'
+import { Route as AuthenticatedFichasTetanoNeonatalRouteImport } from './routes/_authenticated/fichas.tetano-neonatal'
 import { Route as AuthenticatedFichasTetanoAcidentalRouteImport } from './routes/_authenticated/fichas.tetano-acidental'
 import { Route as AuthenticatedFichasSurtoDtaRouteImport } from './routes/_authenticated/fichas.surto-dta'
 import { Route as AuthenticatedFichasSragRouteImport } from './routes/_authenticated/fichas.srag'
@@ -81,6 +83,12 @@ const AuthenticatedFichasIndexRoute =
   AuthenticatedFichasIndexRouteImport.update({
     id: '/fichas/',
     path: '/fichas/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNovaFichaTetanoNeonatalRoute =
+  AuthenticatedNovaFichaTetanoNeonatalRouteImport.update({
+    id: '/nova-ficha/tetano-neonatal',
+    path: '/nova-ficha/tetano-neonatal',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedNovaFichaTetanoAcidentalRoute =
@@ -171,6 +179,12 @@ const AuthenticatedNovaFichaChikungunyaRoute =
   AuthenticatedNovaFichaChikungunyaRouteImport.update({
     id: '/nova-ficha/chikungunya',
     path: '/nova-ficha/chikungunya',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasTetanoNeonatalRoute =
+  AuthenticatedFichasTetanoNeonatalRouteImport.update({
+    id: '/fichas/tetano-neonatal',
+    path: '/fichas/tetano-neonatal',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasTetanoAcidentalRoute =
@@ -283,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/fichas/srag': typeof AuthenticatedFichasSragRoute
   '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRoute
+  '/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -298,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/nova-ficha/srag': typeof AuthenticatedNovaFichaSragRoute
   '/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/nova-ficha/tetano-acidental': typeof AuthenticatedNovaFichaTetanoAcidentalRoute
+  '/nova-ficha/tetano-neonatal': typeof AuthenticatedNovaFichaTetanoNeonatalRoute
   '/fichas/': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -321,6 +337,7 @@ export interface FileRoutesByTo {
   '/fichas/srag': typeof AuthenticatedFichasSragRoute
   '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRoute
+  '/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -336,6 +353,7 @@ export interface FileRoutesByTo {
   '/nova-ficha/srag': typeof AuthenticatedNovaFichaSragRoute
   '/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/nova-ficha/tetano-acidental': typeof AuthenticatedNovaFichaTetanoAcidentalRoute
+  '/nova-ficha/tetano-neonatal': typeof AuthenticatedNovaFichaTetanoNeonatalRoute
   '/fichas': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -361,6 +379,7 @@ export interface FileRoutesById {
   '/_authenticated/fichas/srag': typeof AuthenticatedFichasSragRoute
   '/_authenticated/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/_authenticated/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRoute
+  '/_authenticated/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRoute
   '/_authenticated/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/_authenticated/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/_authenticated/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -376,6 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/nova-ficha/srag': typeof AuthenticatedNovaFichaSragRoute
   '/_authenticated/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/_authenticated/nova-ficha/tetano-acidental': typeof AuthenticatedNovaFichaTetanoAcidentalRoute
+  '/_authenticated/nova-ficha/tetano-neonatal': typeof AuthenticatedNovaFichaTetanoNeonatalRoute
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
   '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -401,6 +421,7 @@ export interface FileRouteTypes {
     | '/fichas/srag'
     | '/fichas/surto-dta'
     | '/fichas/tetano-acidental'
+    | '/fichas/tetano-neonatal'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -416,6 +437,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/srag'
     | '/nova-ficha/surto-dta'
     | '/nova-ficha/tetano-acidental'
+    | '/nova-ficha/tetano-neonatal'
     | '/fichas/'
     | '/nova-ficha/'
   fileRoutesByTo: FileRoutesByTo
@@ -439,6 +461,7 @@ export interface FileRouteTypes {
     | '/fichas/srag'
     | '/fichas/surto-dta'
     | '/fichas/tetano-acidental'
+    | '/fichas/tetano-neonatal'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -454,6 +477,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/srag'
     | '/nova-ficha/surto-dta'
     | '/nova-ficha/tetano-acidental'
+    | '/nova-ficha/tetano-neonatal'
     | '/fichas'
     | '/nova-ficha'
   id:
@@ -478,6 +502,7 @@ export interface FileRouteTypes {
     | '/_authenticated/fichas/srag'
     | '/_authenticated/fichas/surto-dta'
     | '/_authenticated/fichas/tetano-acidental'
+    | '/_authenticated/fichas/tetano-neonatal'
     | '/_authenticated/nova-ficha/chikungunya'
     | '/_authenticated/nova-ficha/coqueluche'
     | '/_authenticated/nova-ficha/dengue'
@@ -493,6 +518,7 @@ export interface FileRouteTypes {
     | '/_authenticated/nova-ficha/srag'
     | '/_authenticated/nova-ficha/surto-dta'
     | '/_authenticated/nova-ficha/tetano-acidental'
+    | '/_authenticated/nova-ficha/tetano-neonatal'
     | '/_authenticated/fichas/'
     | '/_authenticated/nova-ficha/'
   fileRoutesById: FileRoutesById
@@ -551,6 +577,13 @@ declare module '@tanstack/react-router' {
       path: '/fichas'
       fullPath: '/fichas/'
       preLoaderRoute: typeof AuthenticatedFichasIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nova-ficha/tetano-neonatal': {
+      id: '/_authenticated/nova-ficha/tetano-neonatal'
+      path: '/nova-ficha/tetano-neonatal'
+      fullPath: '/nova-ficha/tetano-neonatal'
+      preLoaderRoute: typeof AuthenticatedNovaFichaTetanoNeonatalRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/nova-ficha/tetano-acidental': {
@@ -656,6 +689,13 @@ declare module '@tanstack/react-router' {
       path: '/nova-ficha/chikungunya'
       fullPath: '/nova-ficha/chikungunya'
       preLoaderRoute: typeof AuthenticatedNovaFichaChikungunyaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas/tetano-neonatal': {
+      id: '/_authenticated/fichas/tetano-neonatal'
+      path: '/fichas/tetano-neonatal'
+      fullPath: '/fichas/tetano-neonatal'
+      preLoaderRoute: typeof AuthenticatedFichasTetanoNeonatalRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/tetano-acidental': {
@@ -785,6 +825,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFichasSragRoute: typeof AuthenticatedFichasSragRoute
   AuthenticatedFichasSurtoDtaRoute: typeof AuthenticatedFichasSurtoDtaRoute
   AuthenticatedFichasTetanoAcidentalRoute: typeof AuthenticatedFichasTetanoAcidentalRoute
+  AuthenticatedFichasTetanoNeonatalRoute: typeof AuthenticatedFichasTetanoNeonatalRoute
   AuthenticatedNovaFichaChikungunyaRoute: typeof AuthenticatedNovaFichaChikungunyaRoute
   AuthenticatedNovaFichaCoquelucheRoute: typeof AuthenticatedNovaFichaCoquelucheRoute
   AuthenticatedNovaFichaDengueRoute: typeof AuthenticatedNovaFichaDengueRoute
@@ -800,6 +841,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNovaFichaSragRoute: typeof AuthenticatedNovaFichaSragRoute
   AuthenticatedNovaFichaSurtoDtaRoute: typeof AuthenticatedNovaFichaSurtoDtaRoute
   AuthenticatedNovaFichaTetanoAcidentalRoute: typeof AuthenticatedNovaFichaTetanoAcidentalRoute
+  AuthenticatedNovaFichaTetanoNeonatalRoute: typeof AuthenticatedNovaFichaTetanoNeonatalRoute
   AuthenticatedFichasIndexRoute: typeof AuthenticatedFichasIndexRoute
   AuthenticatedNovaFichaIndexRoute: typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -826,6 +868,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFichasSurtoDtaRoute: AuthenticatedFichasSurtoDtaRoute,
   AuthenticatedFichasTetanoAcidentalRoute:
     AuthenticatedFichasTetanoAcidentalRoute,
+  AuthenticatedFichasTetanoNeonatalRoute:
+    AuthenticatedFichasTetanoNeonatalRoute,
   AuthenticatedNovaFichaChikungunyaRoute:
     AuthenticatedNovaFichaChikungunyaRoute,
   AuthenticatedNovaFichaCoquelucheRoute: AuthenticatedNovaFichaCoquelucheRoute,
@@ -847,6 +891,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNovaFichaSurtoDtaRoute: AuthenticatedNovaFichaSurtoDtaRoute,
   AuthenticatedNovaFichaTetanoAcidentalRoute:
     AuthenticatedNovaFichaTetanoAcidentalRoute,
+  AuthenticatedNovaFichaTetanoNeonatalRoute:
+    AuthenticatedNovaFichaTetanoNeonatalRoute,
   AuthenticatedFichasIndexRoute: AuthenticatedFichasIndexRoute,
   AuthenticatedNovaFichaIndexRoute: AuthenticatedNovaFichaIndexRoute,
 }
