@@ -25,6 +25,7 @@ import {
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -44,13 +45,14 @@ import {
   Pencil,
   Lock,
   Unlock,
+  Trash2,
   Search,
   Users,
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { createUser, updateUser } from "@/lib/users.functions";
+import { createUser, updateUser, deleteUser } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
@@ -167,6 +169,7 @@ function UsuariosPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<UserRow | null>(null);
+  const [deleting, setDeleting] = useState<UserRow | null>(null);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmInfo, setConfirmInfo] = useState<{
@@ -179,6 +182,7 @@ function UsuariosPage() {
 
   const createUserFn = useServerFn(createUser);
   const updateUserFn = useServerFn(updateUser);
+  const deleteUserFn = useServerFn(deleteUser);
 
   useEffect(() => {
     (async () => {
@@ -253,6 +257,16 @@ function UsuariosPage() {
       setEditOpen(false);
       setEditing(null);
       toast.success("✅ Usuário atualizado com sucesso!");
+    },
+    onError: (e: Error) => toast.error(`❌ ${e.message}`),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteUserFn({ data: { id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users-list"] });
+      setDeleting(null);
+      toast.success("✅ Usuário excluído com sucesso.");
     },
     onError: (e: Error) => toast.error(`❌ ${e.message}`),
   });
@@ -416,6 +430,15 @@ function UsuariosPage() {
                             <Lock className="w-3.5 h-3.5" />
                           )}
                         </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="w-8 h-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => setDeleting(u)}
+                          title="Excluir"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
                       </>
                     )}
                   </div>
@@ -547,6 +570,46 @@ function UsuariosPage() {
               }}
             >
               Fechar e recarregar lista
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete confirmation */}
+      <AlertDialog
+        open={!!deleting}
+        onOpenChange={(o) => !o && setDeleting(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir usuário?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação é permanente. O usuário{" "}
+              <strong>{deleting?.full_name || deleting?.email}</strong> será
+              removido definitivamente, incluindo seu acesso ao sistema. Esta
+              operação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteMutation.isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                if (deleting) deleteMutation.mutate(deleting.id);
+              }}
+            >
+              {deleteMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                "Excluir definitivamente"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
