@@ -46,7 +46,7 @@ type FieldDef =
   | { name: string; label: string; type: "text" | "date" | "number" | "textarea"; required?: boolean; col?: 1 | 2 | 3 }
   | { name: string; label: string; type: "select"; options: Opt[]; required?: boolean; col?: 1 | 2 | 3 };
 
-type Step = { title: string; description?: string; fields?: FieldDef[]; custom?: "sintomas" };
+type Step = { title: string; description?: string; fields?: FieldDef[]; custom?: "sintomas" | "antecedentes_epi" };
 
 const STEPS: Step[] = [
   {
