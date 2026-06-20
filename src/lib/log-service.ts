@@ -39,7 +39,9 @@ export async function logAction(input: LogInput): Promise<void> {
       u?.email?.split("@")[0] ||
       null;
 
-    await supabase.from("system_logs" as never).insert({
+    await (supabase.from("system_logs" as never) as unknown as {
+      insert: (row: Record<string, unknown>) => Promise<unknown>;
+    }).insert({
       action: input.action,
       description: input.description ?? null,
       user_id: u?.id ?? null,
