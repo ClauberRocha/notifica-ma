@@ -50,6 +50,7 @@ import { Route as AuthenticatedFichasDifteriaRouteImport } from './routes/_authe
 import { Route as AuthenticatedFichasDengueRouteImport } from './routes/_authenticated/fichas.dengue'
 import { Route as AuthenticatedFichasCoquelucheRouteImport } from './routes/_authenticated/fichas.coqueluche'
 import { Route as AuthenticatedFichasChikungunyaRouteImport } from './routes/_authenticated/fichas.chikungunya'
+import { Route as AuthenticatedFichasDoencaMeningococicaIdRouteImport } from './routes/_authenticated/fichas.doenca-meningococica.$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -290,6 +291,12 @@ const AuthenticatedFichasChikungunyaRoute =
     path: '/fichas/chikungunya',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedFichasDoencaMeningococicaIdRoute =
+  AuthenticatedFichasDoencaMeningococicaIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedFichasDoencaMeningococicaRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -300,7 +307,7 @@ export interface FileRoutesByFullPath {
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
   '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
-  '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRoute
+  '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   '/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRoute
   '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
   '/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRoute
@@ -332,6 +339,7 @@ export interface FileRoutesByFullPath {
   '/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/fichas/': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
+  '/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -342,7 +350,7 @@ export interface FileRoutesByTo {
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
   '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
-  '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRoute
+  '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   '/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRoute
   '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
   '/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRoute
@@ -374,6 +382,7 @@ export interface FileRoutesByTo {
   '/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/fichas': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
+  '/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -386,7 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
   '/_authenticated/fichas/dengue': typeof AuthenticatedFichasDengueRoute
   '/_authenticated/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
-  '/_authenticated/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRoute
+  '/_authenticated/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   '/_authenticated/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRoute
   '/_authenticated/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
   '/_authenticated/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRoute
@@ -418,6 +427,7 @@ export interface FileRoutesById {
   '/_authenticated/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
   '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
+  '/_authenticated/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -462,6 +472,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/tuberculose'
     | '/fichas/'
     | '/nova-ficha/'
+    | '/fichas/doenca-meningococica/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -504,6 +515,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/tuberculose'
     | '/fichas'
     | '/nova-ficha'
+    | '/fichas/doenca-meningococica/$id'
   id:
     | '__root__'
     | '/_authenticated'
@@ -547,6 +559,7 @@ export interface FileRouteTypes {
     | '/_authenticated/nova-ficha/tuberculose'
     | '/_authenticated/fichas/'
     | '/_authenticated/nova-ficha/'
+    | '/_authenticated/fichas/doenca-meningococica/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -843,8 +856,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFichasChikungunyaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/fichas/doenca-meningococica/$id': {
+      id: '/_authenticated/fichas/doenca-meningococica/$id'
+      path: '/$id'
+      fullPath: '/fichas/doenca-meningococica/$id'
+      preLoaderRoute: typeof AuthenticatedFichasDoencaMeningococicaIdRouteImport
+      parentRoute: typeof AuthenticatedFichasDoencaMeningococicaRoute
+    }
   }
 }
+
+interface AuthenticatedFichasDoencaMeningococicaRouteChildren {
+  AuthenticatedFichasDoencaMeningococicaIdRoute: typeof AuthenticatedFichasDoencaMeningococicaIdRoute
+}
+
+const AuthenticatedFichasDoencaMeningococicaRouteChildren: AuthenticatedFichasDoencaMeningococicaRouteChildren =
+  {
+    AuthenticatedFichasDoencaMeningococicaIdRoute:
+      AuthenticatedFichasDoencaMeningococicaIdRoute,
+  }
+
+const AuthenticatedFichasDoencaMeningococicaRouteWithChildren =
+  AuthenticatedFichasDoencaMeningococicaRoute._addFileChildren(
+    AuthenticatedFichasDoencaMeningococicaRouteChildren,
+  )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
@@ -854,7 +889,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRoute
   AuthenticatedFichasDengueRoute: typeof AuthenticatedFichasDengueRoute
   AuthenticatedFichasDifteriaRoute: typeof AuthenticatedFichasDifteriaRoute
-  AuthenticatedFichasDoencaMeningococicaRoute: typeof AuthenticatedFichasDoencaMeningococicaRoute
+  AuthenticatedFichasDoencaMeningococicaRoute: typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   AuthenticatedFichasEpizootiaRoute: typeof AuthenticatedFichasEpizootiaRoute
   AuthenticatedFichasFebreAmarelaRoute: typeof AuthenticatedFichasFebreAmarelaRoute
   AuthenticatedFichasHanseniaseRoute: typeof AuthenticatedFichasHanseniaseRoute
@@ -897,7 +932,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFichasDengueRoute: AuthenticatedFichasDengueRoute,
   AuthenticatedFichasDifteriaRoute: AuthenticatedFichasDifteriaRoute,
   AuthenticatedFichasDoencaMeningococicaRoute:
-    AuthenticatedFichasDoencaMeningococicaRoute,
+    AuthenticatedFichasDoencaMeningococicaRouteWithChildren,
   AuthenticatedFichasEpizootiaRoute: AuthenticatedFichasEpizootiaRoute,
   AuthenticatedFichasFebreAmarelaRoute: AuthenticatedFichasFebreAmarelaRoute,
   AuthenticatedFichasHanseniaseRoute: AuthenticatedFichasHanseniaseRoute,
@@ -952,13 +987,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
