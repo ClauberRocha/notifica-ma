@@ -340,3 +340,55 @@ export const deleteUser = createServerFn({ method: "POST" })
     );
     return { id: data.id };
   });
+
+/**
+ * Reenvia o convite (link de recuperação/definição de senha) para o usuário.
+ * Admin pode reenviar para qualquer perfil; gestor apenas para 'user'.
+ */
+export const resendInvite = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => ResendInviteSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
+    );
+
+    const { data: roleRows } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", data.id);
+    const targetTop = highest(
+      (roleRows ?? [])
+        .map((r: { role: string }) => r.role as Role)
+        .filter((r): r is Role => r === "admin" || r === "gestor" || r === "user"),
+    );
+    const { actorTop } = await ensureCanManage(
+      context.supabase,
+      context.userId,
+      targetTop,
+      data.id,
+    );
+
+    const { data: authUser, error: gErr } =
+      await supabaseAdmin.auth.admin.getUserById(data.id);
+    if (gErr || !authUser.user?.email) {
+      throw new Error(gErr?.message || "Usuário não encontrado.");
+    }
+    const email = authUser.user.email;
+
+    const { error: linkErr } = await supabaseAdmin.auth.admin.generateLink({
+      type: "recovery",
+      email,
+    });
+    if (linkErr) throw new Error(linkErr.message);
+
+    await audit(
+      "resend_invite",
+      `Reenviou convite para ${email}`,
+      { id: context.userId, email: context.claims?.email ?? null, role: actorTop },
+      data.id,
+      { email },
+    );
+
+    return { id: data.id, email };
+  });
