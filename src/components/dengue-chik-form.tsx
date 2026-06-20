@@ -47,7 +47,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "sinais" | "doencas";
+  custom?: "sinais" | "doencas" | "antecedentes_epi";
 };
 
 function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {

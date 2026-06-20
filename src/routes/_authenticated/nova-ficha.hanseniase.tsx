@@ -49,6 +49,7 @@ type Step = {
   title: string;
   description?: string;
   fields: FieldDef[];
+  custom?: "antecedentes_epi";
 };
 
 const STEPS: Step[] = [
