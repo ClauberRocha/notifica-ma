@@ -373,8 +373,7 @@ function PainelPage() {
                 return (
                   <Link
                     key={`${c._slug}-${c.id}`}
-                    to="/fichas/$slug"
-                    params={{ slug: c._slug }}
+                    to={`/fichas/${c._slug}` as "/fichas"}
                     className="flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
