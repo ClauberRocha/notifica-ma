@@ -1049,6 +1049,246 @@ export type Database = {
         }
         Relationships: []
       }
+      febre_amarela_cases: {
+        Row: {
+          agravo: string
+          alt_tgp: number | null
+          ast_tgo: number | null
+          atividade_local_infeccao: string | null
+          bairro: string | null
+          bilirrubina_direta: number | null
+          bilirrubina_total: number | null
+          caso_autoctone: string | null
+          cep: string | null
+          classificacao_final: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          complemento: string | null
+          created_at: string
+          criterio_confirmacao: string | null
+          data_coleta_isolamento: string | null
+          data_coleta_s1: string | null
+          data_coleta_s2: string | null
+          data_encerramento: string | null
+          data_internacao: string | null
+          data_investigacao: string | null
+          data_nascimento: string | null
+          data_notificacao: string
+          data_obito: string | null
+          data_primeiros_sintomas: string | null
+          data_vacinacao: string | null
+          doenca_relacionada_trabalho: string | null
+          escolaridade: string | null
+          evolucao: string | null
+          funcao_investigador: string | null
+          gestante: string | null
+          histopatologia: string | null
+          id: string
+          idade: number | null
+          imunohistoquimica: string | null
+          isolamento_virus_mosquitos: string | null
+          logradouro: string | null
+          material_coletado_isolamento: string | null
+          municipio_hospital: string | null
+          municipio_notificacao: string | null
+          municipio_residencia: string | null
+          municipio_unidade_investigador: string | null
+          municipio_vacinacao: string | null
+          nome_hospital: string | null
+          nome_investigador: string | null
+          nome_mae: string | null
+          nome_paciente: string
+          numero_cartao_sus: string | null
+          numero_endereco: string | null
+          numero_ficha: string | null
+          observacoes_adicionais: string | null
+          ocorrencia_epizootias: string | null
+          ocorreu_hospitalizacao: string | null
+          ocupacao: string | null
+          presenca_mosquito_aedes: string | null
+          raca_cor: string | null
+          resultado_isolamento: string | null
+          resultado_s1: string | null
+          resultado_s2: string | null
+          rt_pcr_data: string | null
+          rt_pcr_resultado: string | null
+          sexo: string | null
+          sinais_sintomas: Json | null
+          status: string
+          telefone: string | null
+          tipo_idade: string | null
+          uf_hospital: string | null
+          uf_notificacao: string | null
+          uf_residencia: string | null
+          uf_vacinacao: string | null
+          unidade_saude: string | null
+          unidade_saude_vacinacao: string | null
+          updated_at: string
+          user_id: string
+          vacinado_febre_amarela: string | null
+          zona: string | null
+        }
+        Insert: {
+          agravo?: string
+          alt_tgp?: number | null
+          ast_tgo?: number | null
+          atividade_local_infeccao?: string | null
+          bairro?: string | null
+          bilirrubina_direta?: number | null
+          bilirrubina_total?: number | null
+          caso_autoctone?: string | null
+          cep?: string | null
+          classificacao_final?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          complemento?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_coleta_isolamento?: string | null
+          data_coleta_s1?: string | null
+          data_coleta_s2?: string | null
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          data_vacinacao?: string | null
+          doenca_relacionada_trabalho?: string | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          histopatologia?: string | null
+          id?: string
+          idade?: number | null
+          imunohistoquimica?: string | null
+          isolamento_virus_mosquitos?: string | null
+          logradouro?: string | null
+          material_coletado_isolamento?: string | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          municipio_vacinacao?: string | null
+          nome_hospital?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente: string
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorrencia_epizootias?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          presenca_mosquito_aedes?: string | null
+          raca_cor?: string | null
+          resultado_isolamento?: string | null
+          resultado_s1?: string | null
+          resultado_s2?: string | null
+          rt_pcr_data?: string | null
+          rt_pcr_resultado?: string | null
+          sexo?: string | null
+          sinais_sintomas?: Json | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          uf_vacinacao?: string | null
+          unidade_saude?: string | null
+          unidade_saude_vacinacao?: string | null
+          updated_at?: string
+          user_id: string
+          vacinado_febre_amarela?: string | null
+          zona?: string | null
+        }
+        Update: {
+          agravo?: string
+          alt_tgp?: number | null
+          ast_tgo?: number | null
+          atividade_local_infeccao?: string | null
+          bairro?: string | null
+          bilirrubina_direta?: number | null
+          bilirrubina_total?: number | null
+          caso_autoctone?: string | null
+          cep?: string | null
+          classificacao_final?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          complemento?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_coleta_isolamento?: string | null
+          data_coleta_s1?: string | null
+          data_coleta_s2?: string | null
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao?: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          data_vacinacao?: string | null
+          doenca_relacionada_trabalho?: string | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          histopatologia?: string | null
+          id?: string
+          idade?: number | null
+          imunohistoquimica?: string | null
+          isolamento_virus_mosquitos?: string | null
+          logradouro?: string | null
+          material_coletado_isolamento?: string | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          municipio_vacinacao?: string | null
+          nome_hospital?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente?: string
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorrencia_epizootias?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          presenca_mosquito_aedes?: string | null
+          raca_cor?: string | null
+          resultado_isolamento?: string | null
+          resultado_s1?: string | null
+          resultado_s2?: string | null
+          rt_pcr_data?: string | null
+          rt_pcr_resultado?: string | null
+          sexo?: string | null
+          sinais_sintomas?: Json | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          uf_vacinacao?: string | null
+          unidade_saude?: string | null
+          unidade_saude_vacinacao?: string | null
+          updated_at?: string
+          user_id?: string
+          vacinado_febre_amarela?: string | null
+          zona?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
