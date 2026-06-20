@@ -289,14 +289,14 @@ function FieldRenderer({
           id={field.name}
           type={field.type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(field.type === "text" || field.type === "textarea" ? e.target.value.toUpperCase() : e.target.value)}
           className="mt-1"
         />
       ) : field.type === "textarea" ? (
         <Textarea
           id={field.name}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(field.type === "text" || field.type === "textarea" ? e.target.value.toUpperCase() : e.target.value)}
           rows={3}
           className="mt-1"
         />
