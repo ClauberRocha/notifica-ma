@@ -2306,6 +2306,186 @@ export type Database = {
         }
         Relationships: []
       }
+      tetano_acidental_cases: {
+        Row: {
+          agravo: string
+          bairro: string | null
+          caso_autoctone: string | null
+          cep: string | null
+          classificacao_final: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          created_at: string
+          data_encerramento: string | null
+          data_internacao: string | null
+          data_investigacao: string | null
+          data_nascimento: string | null
+          data_notificacao: string
+          data_obito: string | null
+          data_primeiros_sintomas: string | null
+          data_ultima_dose: string | null
+          escolaridade: string | null
+          evolucao: string | null
+          funcao_investigador: string | null
+          gestante: string | null
+          id: string
+          idade: number | null
+          local_fonte_infeccao: string | null
+          local_lesao: string | null
+          logradouro: string | null
+          manifestacoes_clinicas: Json | null
+          medidas_controle: Json | null
+          municipio_hospital: string | null
+          municipio_notificacao: string | null
+          municipio_residencia: string | null
+          municipio_unidade_investigador: string | null
+          nome_investigador: string | null
+          nome_mae: string | null
+          nome_paciente: string
+          numero_cartao_sus: string | null
+          numero_endereco: string | null
+          numero_ficha: string | null
+          observacoes_adicionais: string | null
+          ocorreu_hospitalizacao: string | null
+          ocupacao: string | null
+          origem_caso: string | null
+          possivel_causa: string | null
+          profilaxia_pos_ferimento: Json | null
+          raca_cor: string | null
+          sexo: string | null
+          situacao_vacinal_doses: string | null
+          status: string
+          telefone: string | null
+          tipo_idade: string | null
+          uf_hospital: string | null
+          uf_notificacao: string | null
+          uf_residencia: string | null
+          unidade_saude: string | null
+          updated_at: string
+          user_id: string
+          zona: string | null
+        }
+        Insert: {
+          agravo?: string
+          bairro?: string | null
+          caso_autoctone?: string | null
+          cep?: string | null
+          classificacao_final?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          data_ultima_dose?: string | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          id?: string
+          idade?: number | null
+          local_fonte_infeccao?: string | null
+          local_lesao?: string | null
+          logradouro?: string | null
+          manifestacoes_clinicas?: Json | null
+          medidas_controle?: Json | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente: string
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          origem_caso?: string | null
+          possivel_causa?: string | null
+          profilaxia_pos_ferimento?: Json | null
+          raca_cor?: string | null
+          sexo?: string | null
+          situacao_vacinal_doses?: string | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id: string
+          zona?: string | null
+        }
+        Update: {
+          agravo?: string
+          bairro?: string | null
+          caso_autoctone?: string | null
+          cep?: string | null
+          classificacao_final?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao?: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          data_ultima_dose?: string | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          id?: string
+          idade?: number | null
+          local_fonte_infeccao?: string | null
+          local_lesao?: string | null
+          logradouro?: string | null
+          manifestacoes_clinicas?: Json | null
+          medidas_controle?: Json | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente?: string
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          origem_caso?: string | null
+          possivel_causa?: string | null
+          profilaxia_pos_ferimento?: Json | null
+          raca_cor?: string | null
+          sexo?: string | null
+          situacao_vacinal_doses?: string | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id?: string
+          zona?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
