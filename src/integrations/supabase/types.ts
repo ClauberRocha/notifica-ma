@@ -458,6 +458,255 @@ export type Database = {
         }
         Relationships: []
       }
+      difteria_cases: {
+        Row: {
+          agravo: string
+          bairro: string | null
+          casos_secundarios_confirmados: string | null
+          cep: string | null
+          classificacao_final: string | null
+          codigo_hospital: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_ibge_residencia: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          coleta_material_comunicantes: string | null
+          complemento: string | null
+          complicacoes: Json | null
+          contato_caso_suspeito: string | null
+          created_at: string
+          criterio_confirmacao: string | null
+          data_adm_antibiotico: string | null
+          data_aplicacao_soro: string | null
+          data_coleta: string | null
+          data_encerramento: string | null
+          data_internacao: string | null
+          data_investigacao: string | null
+          data_nascimento: string | null
+          data_notificacao: string
+          data_obito: string | null
+          data_primeiros_sintomas: string | null
+          data_ultima_dose: string | null
+          distrito: string | null
+          doenca_relacionada_trabalho: string | null
+          doses_vacina: string | null
+          endereco_contato: string | null
+          escolaridade: string | null
+          evolucao: string | null
+          funcao_investigador: string | null
+          gestante: string | null
+          id: string
+          idade: number | null
+          identificacao_comunicantes: string | null
+          localizacao_pseudomembrana: Json | null
+          logradouro: string | null
+          material_coletado: string | null
+          medidas_prevencao: string | null
+          municipio_hospital: string | null
+          municipio_notificacao: string | null
+          municipio_residencia: string | null
+          municipio_unidade_investigador: string | null
+          nome_contato: string | null
+          nome_hospital: string | null
+          nome_investigador: string | null
+          nome_mae: string | null
+          nome_paciente: string
+          numero_cartao_sus: string | null
+          numero_comunicantes: number | null
+          numero_endereco: string | null
+          numero_ficha: string | null
+          observacoes_adicionais: string | null
+          ocorreu_hospitalizacao: string | null
+          ocupacao: string | null
+          pais: string | null
+          ponto_referencia: string | null
+          portadores_identificados: number | null
+          provas_toxigenicidade: string | null
+          quantidade_comunicantes_coleta: number | null
+          raca_cor: string | null
+          resultado_cultura: string | null
+          sexo: string | null
+          sinais_sintomas: Json | null
+          status: string
+          telefone: string | null
+          temperatura_corporal: number | null
+          tipo_idade: string | null
+          tipo_notificacao: string | null
+          uf_hospital: string | null
+          uf_notificacao: string | null
+          uf_residencia: string | null
+          unidade_saude: string | null
+          updated_at: string
+          user_id: string
+          utilizou_antibiotico: string | null
+          zona: string | null
+        }
+        Insert: {
+          agravo?: string
+          bairro?: string | null
+          casos_secundarios_confirmados?: string | null
+          cep?: string | null
+          classificacao_final?: string | null
+          codigo_hospital?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_ibge_residencia?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          coleta_material_comunicantes?: string | null
+          complemento?: string | null
+          complicacoes?: Json | null
+          contato_caso_suspeito?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_adm_antibiotico?: string | null
+          data_aplicacao_soro?: string | null
+          data_coleta?: string | null
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          data_ultima_dose?: string | null
+          distrito?: string | null
+          doenca_relacionada_trabalho?: string | null
+          doses_vacina?: string | null
+          endereco_contato?: string | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          id?: string
+          idade?: number | null
+          identificacao_comunicantes?: string | null
+          localizacao_pseudomembrana?: Json | null
+          logradouro?: string | null
+          material_coletado?: string | null
+          medidas_prevencao?: string | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_contato?: string | null
+          nome_hospital?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente: string
+          numero_cartao_sus?: string | null
+          numero_comunicantes?: number | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          pais?: string | null
+          ponto_referencia?: string | null
+          portadores_identificados?: number | null
+          provas_toxigenicidade?: string | null
+          quantidade_comunicantes_coleta?: number | null
+          raca_cor?: string | null
+          resultado_cultura?: string | null
+          sexo?: string | null
+          sinais_sintomas?: Json | null
+          status?: string
+          telefone?: string | null
+          temperatura_corporal?: number | null
+          tipo_idade?: string | null
+          tipo_notificacao?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id: string
+          utilizou_antibiotico?: string | null
+          zona?: string | null
+        }
+        Update: {
+          agravo?: string
+          bairro?: string | null
+          casos_secundarios_confirmados?: string | null
+          cep?: string | null
+          classificacao_final?: string | null
+          codigo_hospital?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_ibge_residencia?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          coleta_material_comunicantes?: string | null
+          complemento?: string | null
+          complicacoes?: Json | null
+          contato_caso_suspeito?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_adm_antibiotico?: string | null
+          data_aplicacao_soro?: string | null
+          data_coleta?: string | null
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao?: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          data_ultima_dose?: string | null
+          distrito?: string | null
+          doenca_relacionada_trabalho?: string | null
+          doses_vacina?: string | null
+          endereco_contato?: string | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          id?: string
+          idade?: number | null
+          identificacao_comunicantes?: string | null
+          localizacao_pseudomembrana?: Json | null
+          logradouro?: string | null
+          material_coletado?: string | null
+          medidas_prevencao?: string | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_contato?: string | null
+          nome_hospital?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente?: string
+          numero_cartao_sus?: string | null
+          numero_comunicantes?: number | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          pais?: string | null
+          ponto_referencia?: string | null
+          portadores_identificados?: number | null
+          provas_toxigenicidade?: string | null
+          quantidade_comunicantes_coleta?: number | null
+          raca_cor?: string | null
+          resultado_cultura?: string | null
+          sexo?: string | null
+          sinais_sintomas?: Json | null
+          status?: string
+          telefone?: string | null
+          temperatura_corporal?: number | null
+          tipo_idade?: string | null
+          tipo_notificacao?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id?: string
+          utilizou_antibiotico?: string | null
+          zona?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
