@@ -85,6 +85,12 @@ const agravos = [
     to: "/fichas/srag" as const,
     color: "bg-teal-500/10 text-teal-700 border-teal-500/20 hover:bg-teal-500/15",
   },
+  {
+    label: "Surto DTA",
+    desc: "Fichas cadastradas de surtos de DTA",
+    to: "/fichas/surto-dta" as const,
+    color: "bg-lime-500/10 text-lime-700 border-lime-500/20 hover:bg-lime-500/15",
+  },
 ];
 
 

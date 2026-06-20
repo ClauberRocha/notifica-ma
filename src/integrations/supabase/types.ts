@@ -2126,6 +2126,186 @@ export type Database = {
         }
         Relationships: []
       }
+      surto_dta_cases: {
+        Row: {
+          agente_etiologico: string | null
+          agravo: string
+          alimento_causador: string | null
+          bairro: string | null
+          cep: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          coletadas_amostras_alimentos: string | null
+          coletadas_amostras_clinicas: string | null
+          complemento: string | null
+          created_at: string
+          criterio_confirmacao: string | null
+          data_1os_sintomas_1o_caso: string | null
+          data_encerramento: string | null
+          data_investigacao: string | null
+          data_notificacao: string
+          fatores_causais: Json | null
+          funcao_investigador: string | null
+          id: string
+          local_ingestao: string | null
+          local_inicial_ocorrencia: string | null
+          local_producao_preparacao: string | null
+          logradouro: string | null
+          mediana_periodo_incubacao: number | null
+          medidas_adotadas: string | null
+          modo_transmissao: string | null
+          municipio_notificacao: string
+          municipio_ocorrencia: string | null
+          municipio_unidade_investigador: string | null
+          nome_investigador: string | null
+          numero_amostras_alimentos: number | null
+          numero_amostras_clinicas: number | null
+          numero_casos_suspeitos: number | null
+          numero_doentes_entrevistados: number | null
+          numero_endereco: string | null
+          numero_entrevistados: number | null
+          numero_ficha: string | null
+          numero_obitos: number | null
+          numero_total_doentes: number | null
+          numero_total_hospitalizados: number | null
+          observacoes: string | null
+          periodo_incubacao_maximo: number | null
+          periodo_incubacao_minimo: number | null
+          resultado_bromatologico_1: string | null
+          resultado_clinico_1: string | null
+          resultado_clinico_2: string | null
+          sinais_sintomas: Json | null
+          status: string
+          telefone: string | null
+          uf_notificacao: string | null
+          uf_ocorrencia: string | null
+          unidade_saude: string | null
+          updated_at: string
+          user_id: string
+          veiculo_transmissao: string | null
+          zona: string | null
+        }
+        Insert: {
+          agente_etiologico?: string | null
+          agravo?: string
+          alimento_causador?: string | null
+          bairro?: string | null
+          cep?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          coletadas_amostras_alimentos?: string | null
+          coletadas_amostras_clinicas?: string | null
+          complemento?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_1os_sintomas_1o_caso?: string | null
+          data_encerramento?: string | null
+          data_investigacao?: string | null
+          data_notificacao: string
+          fatores_causais?: Json | null
+          funcao_investigador?: string | null
+          id?: string
+          local_ingestao?: string | null
+          local_inicial_ocorrencia?: string | null
+          local_producao_preparacao?: string | null
+          logradouro?: string | null
+          mediana_periodo_incubacao?: number | null
+          medidas_adotadas?: string | null
+          modo_transmissao?: string | null
+          municipio_notificacao: string
+          municipio_ocorrencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          numero_amostras_alimentos?: number | null
+          numero_amostras_clinicas?: number | null
+          numero_casos_suspeitos?: number | null
+          numero_doentes_entrevistados?: number | null
+          numero_endereco?: string | null
+          numero_entrevistados?: number | null
+          numero_ficha?: string | null
+          numero_obitos?: number | null
+          numero_total_doentes?: number | null
+          numero_total_hospitalizados?: number | null
+          observacoes?: string | null
+          periodo_incubacao_maximo?: number | null
+          periodo_incubacao_minimo?: number | null
+          resultado_bromatologico_1?: string | null
+          resultado_clinico_1?: string | null
+          resultado_clinico_2?: string | null
+          sinais_sintomas?: Json | null
+          status?: string
+          telefone?: string | null
+          uf_notificacao?: string | null
+          uf_ocorrencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id: string
+          veiculo_transmissao?: string | null
+          zona?: string | null
+        }
+        Update: {
+          agente_etiologico?: string | null
+          agravo?: string
+          alimento_causador?: string | null
+          bairro?: string | null
+          cep?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          coletadas_amostras_alimentos?: string | null
+          coletadas_amostras_clinicas?: string | null
+          complemento?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_1os_sintomas_1o_caso?: string | null
+          data_encerramento?: string | null
+          data_investigacao?: string | null
+          data_notificacao?: string
+          fatores_causais?: Json | null
+          funcao_investigador?: string | null
+          id?: string
+          local_ingestao?: string | null
+          local_inicial_ocorrencia?: string | null
+          local_producao_preparacao?: string | null
+          logradouro?: string | null
+          mediana_periodo_incubacao?: number | null
+          medidas_adotadas?: string | null
+          modo_transmissao?: string | null
+          municipio_notificacao?: string
+          municipio_ocorrencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          numero_amostras_alimentos?: number | null
+          numero_amostras_clinicas?: number | null
+          numero_casos_suspeitos?: number | null
+          numero_doentes_entrevistados?: number | null
+          numero_endereco?: string | null
+          numero_entrevistados?: number | null
+          numero_ficha?: string | null
+          numero_obitos?: number | null
+          numero_total_doentes?: number | null
+          numero_total_hospitalizados?: number | null
+          observacoes?: string | null
+          periodo_incubacao_maximo?: number | null
+          periodo_incubacao_minimo?: number | null
+          resultado_bromatologico_1?: string | null
+          resultado_clinico_1?: string | null
+          resultado_clinico_2?: string | null
+          sinais_sintomas?: Json | null
+          status?: string
+          telefone?: string | null
+          uf_notificacao?: string | null
+          uf_ocorrencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id?: string
+          veiculo_transmissao?: string | null
+          zona?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
