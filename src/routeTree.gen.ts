@@ -16,9 +16,11 @@ import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNovaFichaIndexRouteImport } from './routes/_authenticated/nova-ficha.index'
 import { Route as AuthenticatedFichasIndexRouteImport } from './routes/_authenticated/fichas.index'
+import { Route as AuthenticatedNovaFichaDifteriaRouteImport } from './routes/_authenticated/nova-ficha.difteria'
 import { Route as AuthenticatedNovaFichaDengueRouteImport } from './routes/_authenticated/nova-ficha.dengue'
 import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_authenticated/nova-ficha.coqueluche'
 import { Route as AuthenticatedNovaFichaChikungunyaRouteImport } from './routes/_authenticated/nova-ficha.chikungunya'
+import { Route as AuthenticatedFichasDifteriaRouteImport } from './routes/_authenticated/fichas.difteria'
 import { Route as AuthenticatedFichasDengueRouteImport } from './routes/_authenticated/fichas.dengue'
 import { Route as AuthenticatedFichasCoquelucheRouteImport } from './routes/_authenticated/fichas.coqueluche'
 import { Route as AuthenticatedFichasChikungunyaRouteImport } from './routes/_authenticated/fichas.chikungunya'
@@ -59,6 +61,12 @@ const AuthenticatedFichasIndexRoute =
     path: '/fichas/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedNovaFichaDifteriaRoute =
+  AuthenticatedNovaFichaDifteriaRouteImport.update({
+    id: '/nova-ficha/difteria',
+    path: '/nova-ficha/difteria',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedNovaFichaDengueRoute =
   AuthenticatedNovaFichaDengueRouteImport.update({
     id: '/nova-ficha/dengue',
@@ -75,6 +83,12 @@ const AuthenticatedNovaFichaChikungunyaRoute =
   AuthenticatedNovaFichaChikungunyaRouteImport.update({
     id: '/nova-ficha/chikungunya',
     path: '/nova-ficha/chikungunya',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasDifteriaRoute =
+  AuthenticatedFichasDifteriaRouteImport.update({
+    id: '/fichas/difteria',
+    path: '/fichas/difteria',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasDengueRoute =
@@ -104,9 +118,11 @@ export interface FileRoutesByFullPath {
   '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
+  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
+  '/nova-ficha/difteria': typeof AuthenticatedNovaFichaDifteriaRoute
   '/fichas/': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -118,9 +134,11 @@ export interface FileRoutesByTo {
   '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
+  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
+  '/nova-ficha/difteria': typeof AuthenticatedNovaFichaDifteriaRoute
   '/fichas': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -134,9 +152,11 @@ export interface FileRoutesById {
   '/_authenticated/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
   '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
   '/_authenticated/fichas/dengue': typeof AuthenticatedFichasDengueRoute
+  '/_authenticated/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
   '/_authenticated/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/_authenticated/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/_authenticated/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
+  '/_authenticated/nova-ficha/difteria': typeof AuthenticatedNovaFichaDifteriaRoute
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
   '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -150,9 +170,11 @@ export interface FileRouteTypes {
     | '/fichas/chikungunya'
     | '/fichas/coqueluche'
     | '/fichas/dengue'
+    | '/fichas/difteria'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
+    | '/nova-ficha/difteria'
     | '/fichas/'
     | '/nova-ficha/'
   fileRoutesByTo: FileRoutesByTo
@@ -164,9 +186,11 @@ export interface FileRouteTypes {
     | '/fichas/chikungunya'
     | '/fichas/coqueluche'
     | '/fichas/dengue'
+    | '/fichas/difteria'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
+    | '/nova-ficha/difteria'
     | '/fichas'
     | '/nova-ficha'
   id:
@@ -179,9 +203,11 @@ export interface FileRouteTypes {
     | '/_authenticated/fichas/chikungunya'
     | '/_authenticated/fichas/coqueluche'
     | '/_authenticated/fichas/dengue'
+    | '/_authenticated/fichas/difteria'
     | '/_authenticated/nova-ficha/chikungunya'
     | '/_authenticated/nova-ficha/coqueluche'
     | '/_authenticated/nova-ficha/dengue'
+    | '/_authenticated/nova-ficha/difteria'
     | '/_authenticated/fichas/'
     | '/_authenticated/nova-ficha/'
   fileRoutesById: FileRoutesById
@@ -242,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFichasIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/nova-ficha/difteria': {
+      id: '/_authenticated/nova-ficha/difteria'
+      path: '/nova-ficha/difteria'
+      fullPath: '/nova-ficha/difteria'
+      preLoaderRoute: typeof AuthenticatedNovaFichaDifteriaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/nova-ficha/dengue': {
       id: '/_authenticated/nova-ficha/dengue'
       path: '/nova-ficha/dengue'
@@ -261,6 +294,13 @@ declare module '@tanstack/react-router' {
       path: '/nova-ficha/chikungunya'
       fullPath: '/nova-ficha/chikungunya'
       preLoaderRoute: typeof AuthenticatedNovaFichaChikungunyaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas/difteria': {
+      id: '/_authenticated/fichas/difteria'
+      path: '/fichas/difteria'
+      fullPath: '/fichas/difteria'
+      preLoaderRoute: typeof AuthenticatedFichasDifteriaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/dengue': {
@@ -294,9 +334,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFichasChikungunyaRoute: typeof AuthenticatedFichasChikungunyaRoute
   AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRoute
   AuthenticatedFichasDengueRoute: typeof AuthenticatedFichasDengueRoute
+  AuthenticatedFichasDifteriaRoute: typeof AuthenticatedFichasDifteriaRoute
   AuthenticatedNovaFichaChikungunyaRoute: typeof AuthenticatedNovaFichaChikungunyaRoute
   AuthenticatedNovaFichaCoquelucheRoute: typeof AuthenticatedNovaFichaCoquelucheRoute
   AuthenticatedNovaFichaDengueRoute: typeof AuthenticatedNovaFichaDengueRoute
+  AuthenticatedNovaFichaDifteriaRoute: typeof AuthenticatedNovaFichaDifteriaRoute
   AuthenticatedFichasIndexRoute: typeof AuthenticatedFichasIndexRoute
   AuthenticatedNovaFichaIndexRoute: typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -308,10 +350,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFichasChikungunyaRoute: AuthenticatedFichasChikungunyaRoute,
   AuthenticatedFichasCoquelucheRoute: AuthenticatedFichasCoquelucheRoute,
   AuthenticatedFichasDengueRoute: AuthenticatedFichasDengueRoute,
+  AuthenticatedFichasDifteriaRoute: AuthenticatedFichasDifteriaRoute,
   AuthenticatedNovaFichaChikungunyaRoute:
     AuthenticatedNovaFichaChikungunyaRoute,
   AuthenticatedNovaFichaCoquelucheRoute: AuthenticatedNovaFichaCoquelucheRoute,
   AuthenticatedNovaFichaDengueRoute: AuthenticatedNovaFichaDengueRoute,
+  AuthenticatedNovaFichaDifteriaRoute: AuthenticatedNovaFichaDifteriaRoute,
   AuthenticatedFichasIndexRoute: AuthenticatedFichasIndexRoute,
   AuthenticatedNovaFichaIndexRoute: AuthenticatedNovaFichaIndexRoute,
 }

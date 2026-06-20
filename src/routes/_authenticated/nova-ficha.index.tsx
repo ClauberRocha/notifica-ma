@@ -25,6 +25,12 @@ const agravos = [
     to: "/nova-ficha/chikungunya" as const,
     color: "bg-chart-5/10 text-chart-5 border-chart-5/20 hover:bg-chart-5/15",
   },
+  {
+    label: "Difteria",
+    desc: "Notificação individual de difteria",
+    to: "/nova-ficha/difteria" as const,
+    color: "bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/15",
+  },
 ];
 
 function SelectAgravoPage() {
