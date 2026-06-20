@@ -52,6 +52,7 @@ import { Route as AuthenticatedFichasDengueRouteImport } from './routes/_authent
 import { Route as AuthenticatedFichasCoquelucheRouteImport } from './routes/_authenticated/fichas.coqueluche'
 import { Route as AuthenticatedFichasChikungunyaRouteImport } from './routes/_authenticated/fichas.chikungunya'
 import { Route as AuthenticatedFichasDoencaMeningococicaIdRouteImport } from './routes/_authenticated/fichas.doenca-meningococica.$id'
+import { Route as AuthenticatedFichasCoquelucheIdRouteImport } from './routes/_authenticated/fichas.coqueluche.$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -303,6 +304,12 @@ const AuthenticatedFichasDoencaMeningococicaIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedFichasDoencaMeningococicaRoute,
   } as any)
+const AuthenticatedFichasCoquelucheIdRoute =
+  AuthenticatedFichasCoquelucheIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedFichasCoquelucheRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -311,7 +318,7 @@ export interface FileRoutesByFullPath {
   '/painel': typeof AuthenticatedPainelRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
-  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
   '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
   '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
@@ -346,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/fichas/': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
+  '/fichas/coqueluche/$id': typeof AuthenticatedFichasCoquelucheIdRoute
   '/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRoutesByTo {
@@ -355,7 +363,7 @@ export interface FileRoutesByTo {
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/': typeof AuthenticatedIndexRoute
   '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
-  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
   '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
   '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
@@ -390,6 +398,7 @@ export interface FileRoutesByTo {
   '/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/fichas': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
+  '/fichas/coqueluche/$id': typeof AuthenticatedFichasCoquelucheIdRoute
   '/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRoutesById {
@@ -401,7 +410,7 @@ export interface FileRoutesById {
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
-  '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
   '/_authenticated/fichas/dengue': typeof AuthenticatedFichasDengueRoute
   '/_authenticated/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
   '/_authenticated/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
@@ -436,6 +445,7 @@ export interface FileRoutesById {
   '/_authenticated/nova-ficha/tuberculose': typeof AuthenticatedNovaFichaTuberculoseRoute
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
   '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
+  '/_authenticated/fichas/coqueluche/$id': typeof AuthenticatedFichasCoquelucheIdRoute
   '/_authenticated/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRouteTypes {
@@ -482,6 +492,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/tuberculose'
     | '/fichas/'
     | '/nova-ficha/'
+    | '/fichas/coqueluche/$id'
     | '/fichas/doenca-meningococica/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -526,6 +537,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/tuberculose'
     | '/fichas'
     | '/nova-ficha'
+    | '/fichas/coqueluche/$id'
     | '/fichas/doenca-meningococica/$id'
   id:
     | '__root__'
@@ -571,6 +583,7 @@ export interface FileRouteTypes {
     | '/_authenticated/nova-ficha/tuberculose'
     | '/_authenticated/fichas/'
     | '/_authenticated/nova-ficha/'
+    | '/_authenticated/fichas/coqueluche/$id'
     | '/_authenticated/fichas/doenca-meningococica/$id'
   fileRoutesById: FileRoutesById
 }
@@ -882,8 +895,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFichasDoencaMeningococicaIdRouteImport
       parentRoute: typeof AuthenticatedFichasDoencaMeningococicaRoute
     }
+    '/_authenticated/fichas/coqueluche/$id': {
+      id: '/_authenticated/fichas/coqueluche/$id'
+      path: '/$id'
+      fullPath: '/fichas/coqueluche/$id'
+      preLoaderRoute: typeof AuthenticatedFichasCoquelucheIdRouteImport
+      parentRoute: typeof AuthenticatedFichasCoquelucheRoute
+    }
   }
 }
+
+interface AuthenticatedFichasCoquelucheRouteChildren {
+  AuthenticatedFichasCoquelucheIdRoute: typeof AuthenticatedFichasCoquelucheIdRoute
+}
+
+const AuthenticatedFichasCoquelucheRouteChildren: AuthenticatedFichasCoquelucheRouteChildren =
+  {
+    AuthenticatedFichasCoquelucheIdRoute: AuthenticatedFichasCoquelucheIdRoute,
+  }
+
+const AuthenticatedFichasCoquelucheRouteWithChildren =
+  AuthenticatedFichasCoquelucheRoute._addFileChildren(
+    AuthenticatedFichasCoquelucheRouteChildren,
+  )
 
 interface AuthenticatedFichasDoencaMeningococicaRouteChildren {
   AuthenticatedFichasDoencaMeningococicaIdRoute: typeof AuthenticatedFichasDoencaMeningococicaIdRoute
@@ -906,7 +940,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedFichasChikungunyaRoute: typeof AuthenticatedFichasChikungunyaRoute
-  AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRoute
+  AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRouteWithChildren
   AuthenticatedFichasDengueRoute: typeof AuthenticatedFichasDengueRoute
   AuthenticatedFichasDifteriaRoute: typeof AuthenticatedFichasDifteriaRoute
   AuthenticatedFichasDoencaMeningococicaRoute: typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
@@ -949,7 +983,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedFichasChikungunyaRoute: AuthenticatedFichasChikungunyaRoute,
-  AuthenticatedFichasCoquelucheRoute: AuthenticatedFichasCoquelucheRoute,
+  AuthenticatedFichasCoquelucheRoute:
+    AuthenticatedFichasCoquelucheRouteWithChildren,
   AuthenticatedFichasDengueRoute: AuthenticatedFichasDengueRoute,
   AuthenticatedFichasDifteriaRoute: AuthenticatedFichasDifteriaRoute,
   AuthenticatedFichasDoencaMeningococicaRoute:
