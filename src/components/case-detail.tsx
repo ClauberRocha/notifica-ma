@@ -300,7 +300,7 @@ export function CaseDetail({
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return (data as AnyObj) ?? null;
+      return (data as AnyObj | null) ?? null;
     },
   });
 
