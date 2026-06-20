@@ -91,6 +91,12 @@ const agravos = [
     to: "/fichas/surto-dta" as const,
     color: "bg-lime-500/10 text-lime-700 border-lime-500/20 hover:bg-lime-500/15",
   },
+  {
+    label: "Tétano Acidental",
+    desc: "Fichas cadastradas de tétano acidental",
+    to: "/fichas/tetano-acidental" as const,
+    color: "bg-indigo-500/10 text-indigo-700 border-indigo-500/20 hover:bg-indigo-500/15",
+  },
 ];
 
 
