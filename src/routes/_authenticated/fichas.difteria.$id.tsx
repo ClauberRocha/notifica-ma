@@ -225,7 +225,7 @@ function FichaDifteriaDetalhesPage() {
       : null;
 
   const seNotif = ficha.data_notificacao
-    ? `SE ${String(getSeForDate(ficha.data_notificacao as string) ?? "").padStart(2, "0")}`
+    ? `SE ${String(getSeNumber(new Date(ficha.data_notificacao as string))).padStart(2, "0")}`
     : null;
 
   return (
