@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
+import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
 import {
   SIM_NAO_IGN,
   TIPO_IDADE,
@@ -54,7 +55,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "sintomas" | "vacinas" | "doencas" | "resultados_lab" | "quimiocitologico";
+  custom?: "sintomas" | "vacinas" | "doencas" | "resultados_lab" | "quimiocitologico" | "antecedentes_epi";
 };
 
 const STEPS: Step[] = [
@@ -171,6 +172,7 @@ const STEPS: Step[] = [
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
   },
+  { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
 ];
 
 type FormState = Record<string, string>;
@@ -385,6 +387,10 @@ export function MeningiteForm({ agravo }: { agravo: MeningiteAgravo }) {
         {current.custom === "quimiocitologico" && (
           <QuimioGrid values={quimio} onChange={setQuimio} />
         )}
+        {current.custom === "antecedentes_epi" && (
+          <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
+        )}
+
       </div>
 
       <div className="flex justify-between mt-6">

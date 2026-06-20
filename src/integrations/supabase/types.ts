@@ -17,6 +17,8 @@ export type Database = {
       coqueluche_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           casos_secundarios_confirmados: string | null
           cep: string | null
@@ -96,6 +98,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           casos_secundarios_confirmados?: string | null
           cep?: string | null
@@ -175,6 +179,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           casos_secundarios_confirmados?: string | null
           cep?: string | null
@@ -257,6 +263,8 @@ export type Database = {
       dengue_chikungunya_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           caso_autoctone: string | null
           cep: string | null
@@ -324,6 +332,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           caso_autoctone?: string | null
           cep?: string | null
@@ -391,6 +401,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           caso_autoctone?: string | null
           cep?: string | null
@@ -461,6 +473,8 @@ export type Database = {
       difteria_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           casos_secundarios_confirmados: string | null
           cep: string | null
@@ -543,6 +557,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           casos_secundarios_confirmados?: string | null
           cep?: string | null
@@ -625,6 +641,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           casos_secundarios_confirmados?: string | null
           cep?: string | null
@@ -799,6 +817,8 @@ export type Database = {
           agravo: string
           ambiente: string | null
           animais_acometidos: Json | null
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           cep: string | null
           codigo_ibge_notificacao: string | null
@@ -844,6 +864,8 @@ export type Database = {
           agravo?: string
           ambiente?: string | null
           animais_acometidos?: Json | null
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           codigo_ibge_notificacao?: string | null
@@ -889,6 +911,8 @@ export type Database = {
           agravo?: string
           ambiente?: string | null
           animais_acometidos?: Json | null
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           codigo_ibge_notificacao?: string | null
@@ -935,6 +959,8 @@ export type Database = {
       exantematica_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           cep: string | null
           classificacao_final: string | null
@@ -1002,6 +1028,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           classificacao_final?: string | null
@@ -1069,6 +1097,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           classificacao_final?: string | null
@@ -1140,6 +1170,8 @@ export type Database = {
         Row: {
           agravo: string
           alt_tgp: number | null
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           ast_tgo: number | null
           atividade_local_infeccao: string | null
           bairro: string | null
@@ -1219,6 +1251,8 @@ export type Database = {
         Insert: {
           agravo?: string
           alt_tgp?: number | null
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           ast_tgo?: number | null
           atividade_local_infeccao?: string | null
           bairro?: string | null
@@ -1298,6 +1332,8 @@ export type Database = {
         Update: {
           agravo?: string
           alt_tgp?: number | null
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           ast_tgo?: number | null
           atividade_local_infeccao?: string | null
           bairro?: string | null
@@ -1379,6 +1415,8 @@ export type Database = {
       hanseniase_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           baciloscopia: string | null
           bairro: string | null
           cep: string | null
@@ -1431,6 +1469,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           baciloscopia?: string | null
           bairro?: string | null
           cep?: string | null
@@ -1483,6 +1523,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           baciloscopia?: string | null
           bairro?: string | null
           cep?: string | null
@@ -1538,6 +1580,8 @@ export type Database = {
       meningite_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           aspecto_liquor: string | null
           bairro: string | null
           caso_secundario: string | null
@@ -1615,6 +1659,8 @@ export type Database = {
         }
         Insert: {
           agravo: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           aspecto_liquor?: string | null
           bairro?: string | null
           caso_secundario?: string | null
@@ -1692,6 +1738,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           aspecto_liquor?: string | null
           bairro?: string | null
           caso_secundario?: string | null
@@ -1803,7 +1851,9 @@ export type Database = {
         Row: {
           agravo: string
           animal_vacinado: string | null
+          antecedentes_doencas: string | null
           antecedentes_tratamento_antirabico: string | null
+          antecedentes_vacinas: string | null
           aplicacao_vacina_antirabica: string | null
           bairro: string | null
           cep: string | null
@@ -1877,7 +1927,9 @@ export type Database = {
         Insert: {
           agravo?: string
           animal_vacinado?: string | null
+          antecedentes_doencas?: string | null
           antecedentes_tratamento_antirabico?: string | null
+          antecedentes_vacinas?: string | null
           aplicacao_vacina_antirabica?: string | null
           bairro?: string | null
           cep?: string | null
@@ -1951,7 +2003,9 @@ export type Database = {
         Update: {
           agravo?: string
           animal_vacinado?: string | null
+          antecedentes_doencas?: string | null
           antecedentes_tratamento_antirabico?: string | null
+          antecedentes_vacinas?: string | null
           aplicacao_vacina_antirabica?: string | null
           bairro?: string | null
           cep?: string | null
@@ -2027,6 +2081,8 @@ export type Database = {
       srag_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           cep: string | null
           classificacao_final: string | null
@@ -2091,6 +2147,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           classificacao_final?: string | null
@@ -2155,6 +2213,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           classificacao_final?: string | null
@@ -2248,6 +2308,8 @@ export type Database = {
           agente_etiologico: string | null
           agravo: string
           alimento_causador: string | null
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           cep: string | null
           codigo_ibge_notificacao: string | null
@@ -2307,6 +2369,8 @@ export type Database = {
           agente_etiologico?: string | null
           agravo?: string
           alimento_causador?: string | null
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           codigo_ibge_notificacao?: string | null
@@ -2366,6 +2430,8 @@ export type Database = {
           agente_etiologico?: string | null
           agravo?: string
           alimento_causador?: string | null
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           cep?: string | null
           codigo_ibge_notificacao?: string | null
@@ -2468,6 +2534,8 @@ export type Database = {
       tetano_acidental_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           caso_autoctone: string | null
           cep: string | null
@@ -2527,6 +2595,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           caso_autoctone?: string | null
           cep?: string | null
@@ -2586,6 +2656,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           caso_autoctone?: string | null
           cep?: string | null
@@ -2648,7 +2720,9 @@ export type Database = {
       tetano_neonatal_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
           antecedentes_vacinais_mae: string | null
+          antecedentes_vacinas: string | null
           bairro: string | null
           caso_autoctone: string | null
           cep: string | null
@@ -2710,7 +2784,9 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
           antecedentes_vacinais_mae?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           caso_autoctone?: string | null
           cep?: string | null
@@ -2772,7 +2848,9 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
           antecedentes_vacinais_mae?: string | null
+          antecedentes_vacinas?: string | null
           bairro?: string | null
           caso_autoctone?: string | null
           cep?: string | null
@@ -2837,6 +2915,8 @@ export type Database = {
       tuberculose_cases: {
         Row: {
           agravo: string
+          antecedentes_doencas: string | null
+          antecedentes_vacinas: string | null
           baciloscopia_escarro: string | null
           bairro: string | null
           cep: string | null
@@ -2893,6 +2973,8 @@ export type Database = {
         }
         Insert: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           baciloscopia_escarro?: string | null
           bairro?: string | null
           cep?: string | null
@@ -2949,6 +3031,8 @@ export type Database = {
         }
         Update: {
           agravo?: string
+          antecedentes_doencas?: string | null
+          antecedentes_vacinas?: string | null
           baciloscopia_escarro?: string | null
           bairro?: string | null
           cep?: string | null

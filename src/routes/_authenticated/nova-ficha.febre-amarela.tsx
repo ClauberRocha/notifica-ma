@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
+import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
 import {
   SIM_NAO_IGN,
   TIPO_IDADE,
@@ -45,7 +46,7 @@ type FieldDef =
   | { name: string; label: string; type: "text" | "date" | "number" | "textarea"; required?: boolean; col?: 1 | 2 | 3 }
   | { name: string; label: string; type: "select"; options: Opt[]; required?: boolean; col?: 1 | 2 | 3 };
 
-type Step = { title: string; description?: string; fields?: FieldDef[]; custom?: "sintomas" };
+type Step = { title: string; description?: string; fields?: FieldDef[]; custom?: "sintomas" | "antecedentes_epi" };
 
 const STEPS: Step[] = [
   {
@@ -174,6 +175,7 @@ const STEPS: Step[] = [
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
   },
+  { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
 ];
 
 type FormState = Record<string, string>;
@@ -322,6 +324,10 @@ function NovaFichaFebreAmarelaPage() {
             ))}
           </div>
         )}
+        {current.custom === "antecedentes_epi" && (
+          <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
+        )}
+
       </div>
 
       <div className="flex justify-between mt-6">

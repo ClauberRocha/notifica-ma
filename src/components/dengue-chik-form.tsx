@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
+import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
 import {
   SIM_NAO,
   SIM_NAO_IGN,
@@ -47,7 +48,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "sinais" | "doencas";
+  custom?: "sinais" | "doencas" | "antecedentes_epi";
 };
 
 function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
@@ -161,6 +162,7 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
     },
     { title: "Sinais clínicos", description: "Marque a presença de cada sinal.", custom: "sinais" },
     { title: "Doenças preexistentes", description: "Marque as doenças preexistentes.", custom: "doencas" },
+    { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
     { title: "Laboratório", description: "Resultados de exames.", fields: labLab },
     {
       title: "Hospitalização",
@@ -299,6 +301,9 @@ export function DengueChikForm({
 
         {current.custom === "sinais" && <SimNaoGrid items={SINAIS_CLINICOS_KEYS} values={sinais} onChange={setSinais} />}
         {current.custom === "doencas" && <SimNaoGrid items={DOENCAS_PREEXISTENTES_KEYS} values={doencas} onChange={setDoencas} />}
+        {current.custom === "antecedentes_epi" && (
+          <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
+        )}
       </div>
 
       <div className="flex justify-between mt-6">
