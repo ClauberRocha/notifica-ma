@@ -1289,6 +1289,165 @@ export type Database = {
         }
         Relationships: []
       }
+      hanseniase_cases: {
+        Row: {
+          agravo: string
+          baciloscopia: string | null
+          bairro: string | null
+          cep: string | null
+          classificacao_operacional: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          created_at: string
+          data_diagnostico: string | null
+          data_inicio_tratamento: string | null
+          data_nascimento: string | null
+          data_notificacao: string
+          escolaridade: string | null
+          esquema_terapeutico: string | null
+          forma_clinica: string | null
+          funcao_investigador: string | null
+          gestante: string | null
+          grau_incapacidade_fisica: string | null
+          id: string
+          idade: number | null
+          logradouro: string | null
+          modo_deteccao: string | null
+          modo_entrada: string | null
+          municipio_notificacao: string | null
+          municipio_residencia: string | null
+          municipio_unidade_investigador: string | null
+          nome_investigador: string | null
+          nome_mae: string | null
+          nome_paciente: string
+          numero_cartao_sus: string | null
+          numero_contatos_registrados: number | null
+          numero_endereco: string | null
+          numero_ficha: string | null
+          numero_lesoes_cutaneas: number | null
+          numero_nervos_afetados: number | null
+          numero_prontuario: string | null
+          observacoes_adicionais: string | null
+          ocupacao: string | null
+          raca_cor: string | null
+          sexo: string | null
+          status: string
+          telefone: string | null
+          tipo_idade: string | null
+          uf_notificacao: string | null
+          uf_residencia: string | null
+          unidade_saude: string | null
+          updated_at: string
+          user_id: string
+          zona: string | null
+        }
+        Insert: {
+          agravo?: string
+          baciloscopia?: string | null
+          bairro?: string | null
+          cep?: string | null
+          classificacao_operacional?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          data_diagnostico?: string | null
+          data_inicio_tratamento?: string | null
+          data_nascimento?: string | null
+          data_notificacao: string
+          escolaridade?: string | null
+          esquema_terapeutico?: string | null
+          forma_clinica?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          grau_incapacidade_fisica?: string | null
+          id?: string
+          idade?: number | null
+          logradouro?: string | null
+          modo_deteccao?: string | null
+          modo_entrada?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente: string
+          numero_cartao_sus?: string | null
+          numero_contatos_registrados?: number | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          numero_lesoes_cutaneas?: number | null
+          numero_nervos_afetados?: number | null
+          numero_prontuario?: string | null
+          observacoes_adicionais?: string | null
+          ocupacao?: string | null
+          raca_cor?: string | null
+          sexo?: string | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id: string
+          zona?: string | null
+        }
+        Update: {
+          agravo?: string
+          baciloscopia?: string | null
+          bairro?: string | null
+          cep?: string | null
+          classificacao_operacional?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          data_diagnostico?: string | null
+          data_inicio_tratamento?: string | null
+          data_nascimento?: string | null
+          data_notificacao?: string
+          escolaridade?: string | null
+          esquema_terapeutico?: string | null
+          forma_clinica?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          grau_incapacidade_fisica?: string | null
+          id?: string
+          idade?: number | null
+          logradouro?: string | null
+          modo_deteccao?: string | null
+          modo_entrada?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente?: string
+          numero_cartao_sus?: string | null
+          numero_contatos_registrados?: number | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          numero_lesoes_cutaneas?: number | null
+          numero_nervos_afetados?: number | null
+          numero_prontuario?: string | null
+          observacoes_adicionais?: string | null
+          ocupacao?: string | null
+          raca_cor?: string | null
+          sexo?: string | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id?: string
+          zona?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
