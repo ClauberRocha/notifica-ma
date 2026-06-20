@@ -254,6 +254,210 @@ export type Database = {
         }
         Relationships: []
       }
+      dengue_chikungunya_cases: {
+        Row: {
+          agravo: string
+          bairro: string | null
+          caso_autoctone: string | null
+          cep: string | null
+          classificacao: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          created_at: string
+          criterio_confirmacao: string | null
+          data_encerramento: string | null
+          data_internacao: string | null
+          data_investigacao: string | null
+          data_nascimento: string | null
+          data_notificacao: string
+          data_obito: string | null
+          data_primeiros_sintomas: string | null
+          dengue_grave: string | null
+          dengue_sinais_alarme: string | null
+          doencas_preexistentes: Json | null
+          escolaridade: string | null
+          evolucao: string | null
+          funcao_investigador: string | null
+          gestante: string | null
+          id: string
+          idade: number | null
+          logradouro: string | null
+          municipio_hospital: string | null
+          municipio_notificacao: string | null
+          municipio_residencia: string | null
+          municipio_unidade_investigador: string | null
+          nome_hospital: string | null
+          nome_investigador: string | null
+          nome_mae: string | null
+          nome_paciente: string
+          ns1_data: string | null
+          ns1_resultado: string | null
+          numero_cartao_sus: string | null
+          numero_endereco: string | null
+          numero_ficha: string | null
+          observacoes_adicionais: string | null
+          ocorreu_hospitalizacao: string | null
+          ocupacao: string | null
+          raca_cor: string | null
+          rt_pcr_data: string | null
+          rt_pcr_resultado: string | null
+          sexo: string | null
+          sinais_clinicos: Json | null
+          sorologia_chikungunya_resultado_s1: string | null
+          sorologia_chikungunya_resultado_s2: string | null
+          sorologia_chikungunya_s1_data: string | null
+          sorologia_chikungunya_s2_data: string | null
+          sorologia_dengue_data: string | null
+          sorologia_dengue_resultado: string | null
+          sorotipo: string | null
+          status: string
+          telefone: string | null
+          tipo_idade: string | null
+          uf_hospital: string | null
+          uf_notificacao: string | null
+          uf_residencia: string | null
+          unidade_saude: string | null
+          updated_at: string
+          user_id: string
+          zona: string | null
+        }
+        Insert: {
+          agravo?: string
+          bairro?: string | null
+          caso_autoctone?: string | null
+          cep?: string | null
+          classificacao?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          dengue_grave?: string | null
+          dengue_sinais_alarme?: string | null
+          doencas_preexistentes?: Json | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          id?: string
+          idade?: number | null
+          logradouro?: string | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_hospital?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente: string
+          ns1_data?: string | null
+          ns1_resultado?: string | null
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          raca_cor?: string | null
+          rt_pcr_data?: string | null
+          rt_pcr_resultado?: string | null
+          sexo?: string | null
+          sinais_clinicos?: Json | null
+          sorologia_chikungunya_resultado_s1?: string | null
+          sorologia_chikungunya_resultado_s2?: string | null
+          sorologia_chikungunya_s1_data?: string | null
+          sorologia_chikungunya_s2_data?: string | null
+          sorologia_dengue_data?: string | null
+          sorologia_dengue_resultado?: string | null
+          sorotipo?: string | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id: string
+          zona?: string | null
+        }
+        Update: {
+          agravo?: string
+          bairro?: string | null
+          caso_autoctone?: string | null
+          cep?: string | null
+          classificacao?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          created_at?: string
+          criterio_confirmacao?: string | null
+          data_encerramento?: string | null
+          data_internacao?: string | null
+          data_investigacao?: string | null
+          data_nascimento?: string | null
+          data_notificacao?: string
+          data_obito?: string | null
+          data_primeiros_sintomas?: string | null
+          dengue_grave?: string | null
+          dengue_sinais_alarme?: string | null
+          doencas_preexistentes?: Json | null
+          escolaridade?: string | null
+          evolucao?: string | null
+          funcao_investigador?: string | null
+          gestante?: string | null
+          id?: string
+          idade?: number | null
+          logradouro?: string | null
+          municipio_hospital?: string | null
+          municipio_notificacao?: string | null
+          municipio_residencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_hospital?: string | null
+          nome_investigador?: string | null
+          nome_mae?: string | null
+          nome_paciente?: string
+          ns1_data?: string | null
+          ns1_resultado?: string | null
+          numero_cartao_sus?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ocorreu_hospitalizacao?: string | null
+          ocupacao?: string | null
+          raca_cor?: string | null
+          rt_pcr_data?: string | null
+          rt_pcr_resultado?: string | null
+          sexo?: string | null
+          sinais_clinicos?: Json | null
+          sorologia_chikungunya_resultado_s1?: string | null
+          sorologia_chikungunya_resultado_s2?: string | null
+          sorologia_chikungunya_s1_data?: string | null
+          sorologia_chikungunya_s2_data?: string | null
+          sorologia_dengue_data?: string | null
+          sorologia_dengue_resultado?: string | null
+          sorotipo?: string | null
+          status?: string
+          telefone?: string | null
+          tipo_idade?: string | null
+          uf_hospital?: string | null
+          uf_notificacao?: string | null
+          uf_residencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id?: string
+          zona?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

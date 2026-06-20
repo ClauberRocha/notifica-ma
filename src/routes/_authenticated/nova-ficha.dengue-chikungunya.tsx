@@ -16,31 +16,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  SIM_NAO,
   SIM_NAO_IGN,
+  AGRAVO,
   TIPO_IDADE,
   SEXO,
   GESTANTE,
   RACA_COR,
   ESCOLARIDADE,
   ZONA,
-  CONTATO_CASO,
-  DOSES_VACINA,
-  RESULTADO_CULTURA,
-  CASOS_SECUNDARIOS,
-  MEDIDAS_PREVENCAO,
-  CLASSIFICACAO_FINAL,
+  RESULTADO_SOROLOGIA_CHIK,
+  RESULTADO_EXAME,
+  SOROTIPO,
+  CLASSIFICACAO,
   CRITERIO_CONFIRMACAO,
+  CASO_AUTOCTONE,
   EVOLUCAO,
   STATUS,
-  SINAIS_SINTOMAS_KEYS,
-  COMPLICACOES_KEYS,
-} from "@/lib/coqueluche-options";
+  SINAIS_CLINICOS_KEYS,
+  DOENCAS_PREEXISTENTES_KEYS,
+} from "@/lib/dengue-chik-options";
 
-export const Route = createFileRoute("/_authenticated/nova-ficha")({
-  head: () => ({
-    meta: [{ title: "Nova Ficha de Coqueluche" }],
-  }),
-  component: NovaFichaPage,
+export const Route = createFileRoute("/_authenticated/nova-ficha/dengue-chikungunya")({
+  head: () => ({ meta: [{ title: "Nova Ficha — Dengue / Chikungunya" }] }),
+  component: NovaFichaDengueChikPage,
 });
 
 type Opt = { value: string; label: string };
@@ -53,7 +52,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "sintomas" | "complicacoes";
+  custom?: "sinais" | "doencas";
 };
 
 const STEPS: Step[] = [
@@ -62,6 +61,7 @@ const STEPS: Step[] = [
     description: "Dados da notificação e unidade.",
     fields: [
       { name: "numero_ficha", label: "Nº da ficha", type: "text" },
+      { name: "agravo", label: "Agravo", type: "select", options: AGRAVO, required: true },
       { name: "data_notificacao", label: "Data da notificação", type: "date", required: true },
       { name: "data_primeiros_sintomas", label: "Data dos primeiros sintomas", type: "date" },
       { name: "uf_notificacao", label: "UF da notificação", type: "text" },
@@ -93,36 +93,40 @@ const STEPS: Step[] = [
     fields: [
       { name: "uf_residencia", label: "UF", type: "text" },
       { name: "municipio_residencia", label: "Município", type: "text" },
-      { name: "codigo_ibge_residencia", label: "Código IBGE", type: "text" },
-      { name: "distrito", label: "Distrito", type: "text" },
       { name: "bairro", label: "Bairro", type: "text" },
       { name: "logradouro", label: "Logradouro", type: "text", col: 2 },
       { name: "numero_endereco", label: "Número", type: "text" },
-      { name: "complemento", label: "Complemento", type: "text" },
       { name: "cep", label: "CEP", type: "text" },
-      { name: "ponto_referencia", label: "Ponto de referência", type: "text", col: 2 },
       { name: "telefone", label: "Telefone", type: "text" },
       { name: "zona", label: "Zona", type: "select", options: ZONA },
-      { name: "pais", label: "País", type: "text" },
     ],
   },
   {
-    title: "Antecedentes",
-    description: "Investigação, vacinação e contato.",
+    title: "Investigação",
     fields: [
       { name: "data_investigacao", label: "Data da investigação", type: "date" },
-      { name: "ocupacao", label: "Ocupação", type: "text" },
-      { name: "unidade_sentinela", label: "Unidade sentinela", type: "select", options: SIM_NAO_IGN },
-      { name: "contato_caso_suspeito", label: "Contato com caso suspeito", type: "select", options: CONTATO_CASO, col: 2 },
-      { name: "nome_contato", label: "Nome do contato", type: "text", col: 2 },
-      { name: "endereco_contato", label: "Endereço do contato", type: "text", col: 2 },
-      { name: "doses_vacina_triplice", label: "Doses da vacina tríplice", type: "select", options: DOSES_VACINA, col: 2 },
-      { name: "data_ultima_dose", label: "Data da última dose", type: "date" },
-      { name: "data_inicio_tosse", label: "Data de início da tosse", type: "date" },
+      { name: "ocupacao", label: "Ocupação", type: "text", col: 2 },
     ],
   },
-  { title: "Sinais e Sintomas", description: "Marque a presença de cada sinal.", custom: "sintomas" },
-  { title: "Complicações", description: "Marque as complicações observadas.", custom: "complicacoes" },
+  { title: "Sinais clínicos", description: "Marque a presença de cada sinal.", custom: "sinais" },
+  { title: "Doenças preexistentes", description: "Marque as doenças preexistentes.", custom: "doencas" },
+  {
+    title: "Laboratório",
+    description: "Resultados de exames.",
+    fields: [
+      { name: "sorologia_dengue_data", label: "Sorologia dengue — data", type: "date" },
+      { name: "sorologia_dengue_resultado", label: "Sorologia dengue — resultado", type: "select", options: RESULTADO_EXAME },
+      { name: "ns1_data", label: "NS1 — data", type: "date" },
+      { name: "ns1_resultado", label: "NS1 — resultado", type: "select", options: RESULTADO_EXAME },
+      { name: "rt_pcr_data", label: "RT-PCR — data", type: "date" },
+      { name: "rt_pcr_resultado", label: "RT-PCR — resultado", type: "select", options: RESULTADO_EXAME },
+      { name: "sorotipo", label: "Sorotipo", type: "select", options: SOROTIPO },
+      { name: "sorologia_chikungunya_s1_data", label: "Sorologia chik. S1 — data", type: "date" },
+      { name: "sorologia_chikungunya_resultado_s1", label: "Sorologia chik. S1 — resultado", type: "select", options: RESULTADO_SOROLOGIA_CHIK },
+      { name: "sorologia_chikungunya_s2_data", label: "Sorologia chik. S2 — data", type: "date" },
+      { name: "sorologia_chikungunya_resultado_s2", label: "Sorologia chik. S2 — resultado", type: "select", options: RESULTADO_SOROLOGIA_CHIK },
+    ],
+  },
   {
     title: "Hospitalização",
     fields: [
@@ -131,37 +135,17 @@ const STEPS: Step[] = [
       { name: "uf_hospital", label: "UF do hospital", type: "text" },
       { name: "municipio_hospital", label: "Município do hospital", type: "text" },
       { name: "nome_hospital", label: "Nome do hospital", type: "text", col: 2 },
-      { name: "utilizou_antibiotico", label: "Utilizou antibiótico?", type: "select", options: SIM_NAO_IGN },
-      { name: "data_adm_antibiotico", label: "Data de administração", type: "date" },
-    ],
-  },
-  {
-    title: "Laboratório",
-    fields: [
-      { name: "coleta_nasofaringe", label: "Coleta de nasofaringe", type: "select", options: SIM_NAO_IGN },
-      { name: "data_coleta_material", label: "Data da coleta", type: "date" },
-      { name: "resultado_cultura", label: "Resultado da cultura", type: "select", options: RESULTADO_CULTURA },
-    ],
-  },
-  {
-    title: "Comunicantes",
-    fields: [
-      { name: "identificacao_comunicantes", label: "Identificação de comunicantes", type: "select", options: SIM_NAO_IGN },
-      { name: "numero_comunicantes", label: "Nº de comunicantes", type: "number" },
-      { name: "casos_secundarios_confirmados", label: "Casos secundários confirmados", type: "select", options: CASOS_SECUNDARIOS },
-      { name: "coleta_nasofaringe_comunicantes", label: "Coleta nasofaringe (comunicantes)", type: "select", options: SIM_NAO_IGN },
-      { name: "quantidade_comunicantes_coleta", label: "Qtde. comunicantes c/ coleta", type: "number" },
-      { name: "comunicantes_cultura_positivo", label: "Comunicantes c/ cultura positiva", type: "number" },
-      { name: "medidas_prevencao", label: "Medidas de prevenção", type: "select", options: MEDIDAS_PREVENCAO, col: 2 },
     ],
   },
   {
     title: "Conclusão",
     description: "Classificação e encerramento.",
     fields: [
-      { name: "classificacao_final", label: "Classificação final", type: "select", options: CLASSIFICACAO_FINAL },
+      { name: "dengue_sinais_alarme", label: "Dengue com sinais de alarme?", type: "select", options: SIM_NAO },
+      { name: "dengue_grave", label: "Dengue grave?", type: "select", options: SIM_NAO },
+      { name: "classificacao", label: "Classificação", type: "select", options: CLASSIFICACAO },
       { name: "criterio_confirmacao", label: "Critério de confirmação", type: "select", options: CRITERIO_CONFIRMACAO },
-      { name: "doenca_relacionada_trabalho", label: "Doença relacionada ao trabalho", type: "select", options: SIM_NAO_IGN },
+      { name: "caso_autoctone", label: "Caso autóctone", type: "select", options: CASO_AUTOCTONE },
       { name: "evolucao", label: "Evolução", type: "select", options: EVOLUCAO },
       { name: "data_obito", label: "Data do óbito", type: "date" },
       { name: "data_encerramento", label: "Data de encerramento", type: "date" },
@@ -177,20 +161,16 @@ const STEPS: Step[] = [
 
 type FormState = Record<string, string>;
 
-function NovaFichaPage() {
+function NovaFichaDengueChikPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>({
-    tipo_notificacao: "individual",
-    agravo: "coqueluche",
+    agravo: "dengue",
     status: "em_investigacao",
-    pais: "Brasil",
   });
-  const [sintomas, setSintomas] = useState<Record<string, string>>({});
-  const [sintomasOutros, setSintomasOutros] = useState("");
-  const [complicacoes, setComplicacoes] = useState<Record<string, string>>({});
-  const [complicacoesOutros, setComplicacoesOutros] = useState("");
+  const [sinais, setSinais] = useState<Record<string, string>>({});
+  const [doencas, setDoencas] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
   const current = STEPS[step];
@@ -224,8 +204,8 @@ function NovaFichaPage() {
 
   const handleSubmit = async () => {
     if (!validateStep()) return;
-    if (!form.nome_paciente?.trim() || !form.data_notificacao?.trim()) {
-      toast.error("Nome do paciente e data da notificação são obrigatórios.");
+    if (!form.nome_paciente?.trim() || !form.data_notificacao?.trim() || !form.agravo?.trim()) {
+      toast.error("Nome do paciente, agravo e data da notificação são obrigatórios.");
       return;
     }
     if (!user) {
@@ -237,23 +217,22 @@ function NovaFichaPage() {
       const payload: Record<string, unknown> = { user_id: user.id };
       for (const [k, v] of Object.entries(form)) {
         if (v === "" || v === undefined) continue;
-        // numéricos
-        if (["idade", "numero_comunicantes", "quantidade_comunicantes_coleta", "comunicantes_cultura_positivo"].includes(k)) {
+        if (k === "idade") {
           const n = Number(v);
           if (!Number.isNaN(n)) payload[k] = n;
         } else {
           payload[k] = v;
         }
       }
-      payload.sinais_sintomas = { ...sintomas, ...(sintomasOutros ? { outros: sintomasOutros } : {}) };
-      payload.complicacoes = { ...complicacoes, ...(complicacoesOutros ? { outros: complicacoesOutros } : {}) };
+      payload.sinais_clinicos = sinais;
+      payload.doencas_preexistentes = doencas;
 
       const { error } = await supabase
-        .from("coqueluche_cases")
+        .from("dengue_chikungunya_cases")
         .insert(payload as never);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
-      navigate({ to: "/fichas" });
+      navigate({ to: "/fichas/dengue-chikungunya" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erro ao salvar ficha");
     } finally {
@@ -266,14 +245,13 @@ function NovaFichaPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">
-        <Link to="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+        <Link to="/nova-ficha" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
           <ArrowLeft className="w-4 h-4" /> Voltar
         </Link>
-        <h1 className="text-2xl font-bold mt-2">Nova ficha de Coqueluche</h1>
+        <h1 className="text-2xl font-bold mt-2">Nova ficha de Dengue / Chikungunya</h1>
         <p className="text-sm text-muted-foreground">Notificação individual</p>
       </div>
 
-      {/* Stepper */}
       <div className="mb-6">
         <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
           <span>Etapa {step + 1} de {STEPS.length}: <span className="text-foreground font-medium">{current.title}</span></span>
@@ -302,24 +280,12 @@ function NovaFichaPage() {
           </div>
         )}
 
-        {current.custom === "sintomas" && (
-          <SimNaoGrid
-            items={SINAIS_SINTOMAS_KEYS}
-            values={sintomas}
-            onChange={setSintomas}
-            outros={sintomasOutros}
-            setOutros={setSintomasOutros}
-          />
+        {current.custom === "sinais" && (
+          <SimNaoGrid items={SINAIS_CLINICOS_KEYS} values={sinais} onChange={setSinais} />
         )}
 
-        {current.custom === "complicacoes" && (
-          <SimNaoGrid
-            items={COMPLICACOES_KEYS}
-            values={complicacoes}
-            onChange={setComplicacoes}
-            outros={complicacoesOutros}
-            setOutros={setComplicacoesOutros}
-          />
+        {current.custom === "doencas" && (
+          <SimNaoGrid items={DOENCAS_PREEXISTENTES_KEYS} values={doencas} onChange={setDoencas} />
         )}
       </div>
 
@@ -396,53 +362,37 @@ function SimNaoGrid({
   items,
   values,
   onChange,
-  outros,
-  setOutros,
 }: {
   items: readonly { key: string; label: string }[];
   values: Record<string, string>;
   onChange: (v: Record<string, string>) => void;
-  outros: string;
-  setOutros: (v: string) => void;
 }) {
   return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {items.map((it) => (
-          <div key={it.key} className="flex items-center justify-between gap-3 border rounded-lg p-3">
-            <span className="text-sm font-medium">{it.label}</span>
-            <div className="flex gap-1">
-              {SIM_NAO_IGN.map((o) => {
-                const selected = values[it.key] === o.value;
-                return (
-                  <button
-                    key={o.value}
-                    type="button"
-                    onClick={() => onChange({ ...values, [it.key]: o.value })}
-                    className={`text-xs px-2.5 py-1 rounded-md border transition ${
-                      selected
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-background hover:bg-accent"
-                    }`}
-                  >
-                    {o.label}
-                  </button>
-                );
-              })}
-            </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {items.map((it) => (
+        <div key={it.key} className="flex items-center justify-between gap-3 border rounded-lg p-3">
+          <span className="text-sm font-medium">{it.label}</span>
+          <div className="flex gap-1">
+            {SIM_NAO.map((o) => {
+              const selected = values[it.key] === o.value;
+              return (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => onChange({ ...values, [it.key]: o.value })}
+                  className={`text-xs px-2.5 py-1 rounded-md border transition ${
+                    selected
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background hover:bg-accent"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              );
+            })}
           </div>
-        ))}
-      </div>
-      <div className="mt-4">
-        <Label className="text-xs">Outros</Label>
-        <Textarea
-          value={outros}
-          onChange={(e) => setOutros(e.target.value)}
-          rows={2}
-          placeholder="Descreva outros, se houver"
-          className="mt-1"
-        />
-      </div>
+        </div>
+      ))}
     </div>
   );
 }

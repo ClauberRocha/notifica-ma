@@ -13,18 +13,19 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/_authenticated/fichas")({
-  head: () => ({ meta: [{ title: "Fichas — Coqueluche" }] }),
-  component: FichasPage,
+export const Route = createFileRoute("/_authenticated/fichas/dengue-chikungunya")({
+  head: () => ({ meta: [{ title: "Fichas — Dengue / Chikungunya" }] }),
+  component: FichasDengueChikPage,
 });
 
 type CaseRow = {
   id: string;
   numero_ficha: string | null;
   nome_paciente: string;
+  agravo: string;
   data_notificacao: string;
   status: string;
-  classificacao_final: string | null;
+  classificacao: string | null;
   created_at: string;
 };
 
@@ -33,12 +34,20 @@ const STATUS_LABEL: Record<string, string> = {
   encerrado: "Encerrado",
 };
 
-const CLASSIF_LABEL: Record<string, string> = {
-  confirmado: "Confirmado",
-  descartado: "Descartado",
+const AGRAVO_LABEL: Record<string, string> = {
+  dengue: "Dengue",
+  chikungunya: "Chikungunya",
 };
 
-function FichasPage() {
+const CLASSIF_LABEL: Record<string, string> = {
+  descartado: "Descartado",
+  dengue: "Dengue",
+  dengue_sinais_alarme: "Dengue c/ alarme",
+  dengue_grave: "Dengue grave",
+  chikungunya: "Chikungunya",
+};
+
+function FichasDengueChikPage() {
   const [rows, setRows] = useState<CaseRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,8 +56,8 @@ function FichasPage() {
     let active = true;
     (async () => {
       const { data, error } = await supabase
-        .from("coqueluche_cases")
-        .select("id, numero_ficha, nome_paciente, data_notificacao, status, classificacao_final, created_at")
+        .from("dengue_chikungunya_cases")
+        .select("id, numero_ficha, nome_paciente, agravo, data_notificacao, status, classificacao, created_at")
         .order("created_at", { ascending: false });
       if (!active) return;
       if (error) setError(error.message);
@@ -64,13 +73,13 @@ function FichasPage() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+          <Link to="/fichas" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" /> Voltar
           </Link>
-          <h1 className="text-2xl font-bold mt-2">Fichas cadastradas</h1>
+          <h1 className="text-2xl font-bold mt-2">Fichas — Dengue / Chikungunya</h1>
         </div>
         <Button asChild>
-          <Link to="/nova-ficha">
+          <Link to="/nova-ficha/dengue-chikungunya">
             <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
           </Link>
         </Button>
@@ -87,7 +96,9 @@ function FichasPage() {
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
             <Button asChild>
-              <Link to="/nova-ficha"><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
+              <Link to="/nova-ficha/dengue-chikungunya">
+                <FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha
+              </Link>
             </Button>
           </div>
         ) : (
@@ -96,6 +107,7 @@ function FichasPage() {
               <TableRow>
                 <TableHead>Nº ficha</TableHead>
                 <TableHead>Paciente</TableHead>
+                <TableHead>Agravo</TableHead>
                 <TableHead>Data notif.</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Classificação</TableHead>
@@ -106,6 +118,9 @@ function FichasPage() {
                 <TableRow key={r.id}>
                   <TableCell className="font-mono text-xs">{r.numero_ficha || "—"}</TableCell>
                   <TableCell className="font-medium">{r.nome_paciente}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{AGRAVO_LABEL[r.agravo] ?? r.agravo}</Badge>
+                  </TableCell>
                   <TableCell>{new Date(r.data_notificacao).toLocaleDateString("pt-BR")}</TableCell>
                   <TableCell>
                     <Badge variant={r.status === "encerrado" ? "secondary" : "default"}>
@@ -113,9 +128,9 @@ function FichasPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {r.classificacao_final ? (
-                      <Badge variant={r.classificacao_final === "confirmado" ? "destructive" : "outline"}>
-                        {CLASSIF_LABEL[r.classificacao_final]}
+                    {r.classificacao ? (
+                      <Badge variant={r.classificacao === "descartado" ? "outline" : "destructive"}>
+                        {CLASSIF_LABEL[r.classificacao] ?? r.classificacao}
                       </Badge>
                     ) : (
                       <span className="text-muted-foreground text-sm">—</span>
