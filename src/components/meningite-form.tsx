@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+import { renderSmartField } from "@/components/smart-fields";
   SIM_NAO_IGN,
   TIPO_IDADE,
   SEXO,
@@ -333,12 +334,7 @@ export function MeningiteForm({ agravo }: { agravo: MeningiteAgravo }) {
         {current.fields && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {current.fields.map((f) => (
-              <FieldRenderer
-                key={f.name}
-                field={f}
-                value={form[f.name] ?? ""}
-                onChange={(v) => updateField(f.name, v)}
-              />
+              {renderSmartField(f, form, setForm) ?? (<FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />)}
             ))}
           </div>
         )}
