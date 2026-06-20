@@ -14,10 +14,16 @@ const agravos = [
     color: "bg-primary/10 text-primary border-primary/20 hover:bg-primary/15",
   },
   {
-    label: "Dengue / Chikungunya",
-    desc: "Fichas cadastradas de dengue ou chikungunya",
-    to: "/fichas/dengue-chikungunya" as const,
+    label: "Dengue",
+    desc: "Fichas cadastradas de dengue",
+    to: "/fichas/dengue" as const,
     color: "bg-chart-3/20 text-yellow-700 border-chart-3/30 hover:bg-chart-3/30",
+  },
+  {
+    label: "Chikungunya",
+    desc: "Fichas cadastradas de chikungunya",
+    to: "/fichas/chikungunya" as const,
+    color: "bg-chart-5/10 text-chart-5 border-chart-5/20 hover:bg-chart-5/15",
   },
 ];
 
