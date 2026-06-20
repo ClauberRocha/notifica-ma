@@ -184,6 +184,8 @@ function UsuariosPage() {
   const createUserFn = useServerFn(createUser);
   const updateUserFn = useServerFn(updateUser);
   const deleteUserFn = useServerFn(deleteUser);
+  const resendInviteFn = useServerFn(resendInvite);
+  const [lastCreatedId, setLastCreatedId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
