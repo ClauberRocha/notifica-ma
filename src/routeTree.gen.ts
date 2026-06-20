@@ -52,6 +52,7 @@ import { Route as AuthenticatedFichasDengueRouteImport } from './routes/_authent
 import { Route as AuthenticatedFichasCoquelucheRouteImport } from './routes/_authenticated/fichas.coqueluche'
 import { Route as AuthenticatedFichasChikungunyaRouteImport } from './routes/_authenticated/fichas.chikungunya'
 import { Route as AuthenticatedFichasDoencaMeningococicaIdRouteImport } from './routes/_authenticated/fichas.doenca-meningococica.$id'
+import { Route as AuthenticatedFichasDifteriaIdRouteImport } from './routes/_authenticated/fichas.difteria.$id'
 import { Route as AuthenticatedFichasCoquelucheIdRouteImport } from './routes/_authenticated/fichas.coqueluche.$id'
 
 const AuthRoute = AuthRouteImport.update({
@@ -304,6 +305,12 @@ const AuthenticatedFichasDoencaMeningococicaIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedFichasDoencaMeningococicaRoute,
   } as any)
+const AuthenticatedFichasDifteriaIdRoute =
+  AuthenticatedFichasDifteriaIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedFichasDifteriaRoute,
+  } as any)
 const AuthenticatedFichasCoquelucheIdRoute =
   AuthenticatedFichasCoquelucheIdRouteImport.update({
     id: '/$id',
@@ -320,7 +327,7 @@ export interface FileRoutesByFullPath {
   '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
-  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
+  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRouteWithChildren
   '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   '/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRoute
   '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
@@ -354,6 +361,7 @@ export interface FileRoutesByFullPath {
   '/fichas/': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
   '/fichas/coqueluche/$id': typeof AuthenticatedFichasCoquelucheIdRoute
+  '/fichas/difteria/$id': typeof AuthenticatedFichasDifteriaIdRoute
   '/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRoutesByTo {
@@ -365,7 +373,7 @@ export interface FileRoutesByTo {
   '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
   '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
   '/fichas/dengue': typeof AuthenticatedFichasDengueRoute
-  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
+  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRouteWithChildren
   '/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   '/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRoute
   '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
@@ -399,6 +407,7 @@ export interface FileRoutesByTo {
   '/fichas': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
   '/fichas/coqueluche/$id': typeof AuthenticatedFichasCoquelucheIdRoute
+  '/fichas/difteria/$id': typeof AuthenticatedFichasDifteriaIdRoute
   '/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRoutesById {
@@ -412,7 +421,7 @@ export interface FileRoutesById {
   '/_authenticated/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRoute
   '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
   '/_authenticated/fichas/dengue': typeof AuthenticatedFichasDengueRoute
-  '/_authenticated/fichas/difteria': typeof AuthenticatedFichasDifteriaRoute
+  '/_authenticated/fichas/difteria': typeof AuthenticatedFichasDifteriaRouteWithChildren
   '/_authenticated/fichas/doenca-meningococica': typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   '/_authenticated/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRoute
   '/_authenticated/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRoute
@@ -446,6 +455,7 @@ export interface FileRoutesById {
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
   '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
   '/_authenticated/fichas/coqueluche/$id': typeof AuthenticatedFichasCoquelucheIdRoute
+  '/_authenticated/fichas/difteria/$id': typeof AuthenticatedFichasDifteriaIdRoute
   '/_authenticated/fichas/doenca-meningococica/$id': typeof AuthenticatedFichasDoencaMeningococicaIdRoute
 }
 export interface FileRouteTypes {
@@ -493,6 +503,7 @@ export interface FileRouteTypes {
     | '/fichas/'
     | '/nova-ficha/'
     | '/fichas/coqueluche/$id'
+    | '/fichas/difteria/$id'
     | '/fichas/doenca-meningococica/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -538,6 +549,7 @@ export interface FileRouteTypes {
     | '/fichas'
     | '/nova-ficha'
     | '/fichas/coqueluche/$id'
+    | '/fichas/difteria/$id'
     | '/fichas/doenca-meningococica/$id'
   id:
     | '__root__'
@@ -584,6 +596,7 @@ export interface FileRouteTypes {
     | '/_authenticated/fichas/'
     | '/_authenticated/nova-ficha/'
     | '/_authenticated/fichas/coqueluche/$id'
+    | '/_authenticated/fichas/difteria/$id'
     | '/_authenticated/fichas/doenca-meningococica/$id'
   fileRoutesById: FileRoutesById
 }
@@ -895,6 +908,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFichasDoencaMeningococicaIdRouteImport
       parentRoute: typeof AuthenticatedFichasDoencaMeningococicaRoute
     }
+    '/_authenticated/fichas/difteria/$id': {
+      id: '/_authenticated/fichas/difteria/$id'
+      path: '/$id'
+      fullPath: '/fichas/difteria/$id'
+      preLoaderRoute: typeof AuthenticatedFichasDifteriaIdRouteImport
+      parentRoute: typeof AuthenticatedFichasDifteriaRoute
+    }
     '/_authenticated/fichas/coqueluche/$id': {
       id: '/_authenticated/fichas/coqueluche/$id'
       path: '/$id'
@@ -917,6 +937,20 @@ const AuthenticatedFichasCoquelucheRouteChildren: AuthenticatedFichasCoquelucheR
 const AuthenticatedFichasCoquelucheRouteWithChildren =
   AuthenticatedFichasCoquelucheRoute._addFileChildren(
     AuthenticatedFichasCoquelucheRouteChildren,
+  )
+
+interface AuthenticatedFichasDifteriaRouteChildren {
+  AuthenticatedFichasDifteriaIdRoute: typeof AuthenticatedFichasDifteriaIdRoute
+}
+
+const AuthenticatedFichasDifteriaRouteChildren: AuthenticatedFichasDifteriaRouteChildren =
+  {
+    AuthenticatedFichasDifteriaIdRoute: AuthenticatedFichasDifteriaIdRoute,
+  }
+
+const AuthenticatedFichasDifteriaRouteWithChildren =
+  AuthenticatedFichasDifteriaRoute._addFileChildren(
+    AuthenticatedFichasDifteriaRouteChildren,
   )
 
 interface AuthenticatedFichasDoencaMeningococicaRouteChildren {
@@ -942,7 +976,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFichasChikungunyaRoute: typeof AuthenticatedFichasChikungunyaRoute
   AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRouteWithChildren
   AuthenticatedFichasDengueRoute: typeof AuthenticatedFichasDengueRoute
-  AuthenticatedFichasDifteriaRoute: typeof AuthenticatedFichasDifteriaRoute
+  AuthenticatedFichasDifteriaRoute: typeof AuthenticatedFichasDifteriaRouteWithChildren
   AuthenticatedFichasDoencaMeningococicaRoute: typeof AuthenticatedFichasDoencaMeningococicaRouteWithChildren
   AuthenticatedFichasEpizootiaRoute: typeof AuthenticatedFichasEpizootiaRoute
   AuthenticatedFichasFebreAmarelaRoute: typeof AuthenticatedFichasFebreAmarelaRoute
@@ -986,7 +1020,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFichasCoquelucheRoute:
     AuthenticatedFichasCoquelucheRouteWithChildren,
   AuthenticatedFichasDengueRoute: AuthenticatedFichasDengueRoute,
-  AuthenticatedFichasDifteriaRoute: AuthenticatedFichasDifteriaRoute,
+  AuthenticatedFichasDifteriaRoute:
+    AuthenticatedFichasDifteriaRouteWithChildren,
   AuthenticatedFichasDoencaMeningococicaRoute:
     AuthenticatedFichasDoencaMeningococicaRouteWithChildren,
   AuthenticatedFichasEpizootiaRoute: AuthenticatedFichasEpizootiaRoute,
