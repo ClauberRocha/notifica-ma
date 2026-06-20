@@ -483,11 +483,13 @@ function VacinasGrid({
   onChange: (v: Record<string, Vacina>) => void;
 }) {
   const update = (key: string, patch: Partial<Vacina>) => {
+    const existing = values[key] ?? { status: "", doses: "", data: "" };
     onChange({
       ...values,
-      [key]: { status: "", doses: "", data: "", ...values[key], ...patch },
+      [key]: { ...existing, ...patch },
     });
   };
+
   return (
     <div className="space-y-3">
       {VACINAS_KEYS.map((v) => {
