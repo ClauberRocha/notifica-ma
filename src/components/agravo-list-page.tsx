@@ -1,28 +1,14 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, FilePlus, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
-export const Route = createFileRoute("/_authenticated/fichas/dengue-chikungunya")({
-  head: () => ({ meta: [{ title: "Fichas — Dengue / Chikungunya" }] }),
-  component: FichasDengueChikPage,
-});
 
 type CaseRow = {
   id: string;
   numero_ficha: string | null;
   nome_paciente: string;
-  agravo: string;
   data_notificacao: string;
   status: string;
   classificacao: string | null;
@@ -34,11 +20,6 @@ const STATUS_LABEL: Record<string, string> = {
   encerrado: "Encerrado",
 };
 
-const AGRAVO_LABEL: Record<string, string> = {
-  dengue: "Dengue",
-  chikungunya: "Chikungunya",
-};
-
 const CLASSIF_LABEL: Record<string, string> = {
   descartado: "Descartado",
   dengue: "Dengue",
@@ -47,7 +28,15 @@ const CLASSIF_LABEL: Record<string, string> = {
   chikungunya: "Chikungunya",
 };
 
-function FichasDengueChikPage() {
+export function AgravoListPage({
+  agravo,
+  title,
+  novaFichaPath,
+}: {
+  agravo: "dengue" | "chikungunya";
+  title: string;
+  novaFichaPath: string;
+}) {
   const [rows, setRows] = useState<CaseRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +46,8 @@ function FichasDengueChikPage() {
     (async () => {
       const { data, error } = await supabase
         .from("dengue_chikungunya_cases")
-        .select("id, numero_ficha, nome_paciente, agravo, data_notificacao, status, classificacao, created_at")
+        .select("id, numero_ficha, nome_paciente, data_notificacao, status, classificacao, created_at")
+        .eq("agravo", agravo)
         .order("created_at", { ascending: false });
       if (!active) return;
       if (error) setError(error.message);
@@ -67,7 +57,7 @@ function FichasDengueChikPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [agravo]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -76,10 +66,10 @@ function FichasDengueChikPage() {
           <Link to="/fichas" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" /> Voltar
           </Link>
-          <h1 className="text-2xl font-bold mt-2">Fichas — Dengue / Chikungunya</h1>
+          <h1 className="text-2xl font-bold mt-2">{title}</h1>
         </div>
         <Button asChild>
-          <Link to="/nova-ficha/dengue-chikungunya">
+          <Link to={novaFichaPath}>
             <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
           </Link>
         </Button>
@@ -96,7 +86,7 @@ function FichasDengueChikPage() {
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
             <Button asChild>
-              <Link to="/nova-ficha/dengue-chikungunya">
+              <Link to={novaFichaPath}>
                 <FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha
               </Link>
             </Button>
@@ -107,7 +97,6 @@ function FichasDengueChikPage() {
               <TableRow>
                 <TableHead>Nº ficha</TableHead>
                 <TableHead>Paciente</TableHead>
-                <TableHead>Agravo</TableHead>
                 <TableHead>Data notif.</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Classificação</TableHead>
@@ -118,9 +107,6 @@ function FichasDengueChikPage() {
                 <TableRow key={r.id}>
                   <TableCell className="font-mono text-xs">{r.numero_ficha || "—"}</TableCell>
                   <TableCell className="font-medium">{r.nome_paciente}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{AGRAVO_LABEL[r.agravo] ?? r.agravo}</Badge>
-                  </TableCell>
                   <TableCell>{new Date(r.data_notificacao).toLocaleDateString("pt-BR")}</TableCell>
                   <TableCell>
                     <Badge variant={r.status === "encerrado" ? "secondary" : "default"}>
@@ -145,3 +131,4 @@ function FichasDengueChikPage() {
     </div>
   );
 }
+
