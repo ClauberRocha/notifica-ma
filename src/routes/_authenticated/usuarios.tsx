@@ -181,13 +181,8 @@ function UsuariosPage() {
         </div>
         {isAdmin && (
           <Button
-            variant="outline"
             className="gap-2 w-full sm:w-auto"
-            onClick={() =>
-              toast.info(
-                "Novos usuários se cadastram pela página de login. Depois você pode promovê-los aqui.",
-              )
-            }
+            onClick={() => setCreateOpen(true)}
           >
             <UserPlus className="w-4 h-4" /> Adicionar Usuário
           </Button>
