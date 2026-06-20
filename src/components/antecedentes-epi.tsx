@@ -88,7 +88,7 @@ export function AntecedentesEpidemiologicosPanel({
 }) {
   const doencas = useMemo(() => parseCsv(form.antecedentes_doencas), [form.antecedentes_doencas]);
   const vacinas = useMemo(() => parseCsv(form.antecedentes_vacinas), [form.antecedentes_vacinas]);
-  const [doencaOutra, setDoencaOutra] = useState<string>(form.antecedentes_doencas_outras ?? "");
+  
   const [vacOpen, setVacOpen] = useState(false);
   const [busca, setBusca] = useState("");
 
