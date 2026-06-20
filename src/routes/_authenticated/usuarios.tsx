@@ -49,10 +49,11 @@ import {
   Search,
   Users,
   Loader2,
+  Mail,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { createUser, updateUser, deleteUser } from "@/lib/users.functions";
+import { createUser, updateUser, deleteUser, resendInvite } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
