@@ -55,7 +55,14 @@ const agravos = [
     to: "/fichas/febre-amarela" as const,
     color: "bg-amber-500/10 text-amber-700 border-amber-500/20 hover:bg-amber-500/15",
   },
+  {
+    label: "Hanseníase",
+    desc: "Fichas cadastradas de hanseníase",
+    to: "/fichas/hanseniase" as const,
+    color: "bg-orange-500/10 text-orange-700 border-orange-500/20 hover:bg-orange-500/15",
+  },
 ];
+
 
 function SelectAgravoListPage() {
   return (
