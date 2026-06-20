@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
+import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
 import {
   SIM_NAO,
   SIM_NAO_IGN,
