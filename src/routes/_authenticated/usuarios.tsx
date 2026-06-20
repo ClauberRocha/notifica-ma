@@ -430,6 +430,15 @@ function UsuariosPage() {
                             <Lock className="w-3.5 h-3.5" />
                           )}
                         </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="w-8 h-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() => setDeleting(u)}
+                          title="Excluir"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
                       </>
                     )}
                   </div>
