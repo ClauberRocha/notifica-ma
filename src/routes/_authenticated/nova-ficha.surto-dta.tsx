@@ -51,10 +51,13 @@ const STEPS: Step[] = [
     fields: [
       { name: "numero_ficha", label: "Nº da ficha", type: "text" },
       { name: "data_notificacao", label: "Data da notificação", type: "date", required: true },
+      { name: "semana_epidemiologica", label: "Semana Epidemiológica", type: "text" },
       { name: "data_1os_sintomas_1o_caso", label: "Data dos 1ºs sintomas do 1º caso", type: "date" },
       { name: "uf_notificacao", label: "UF da notificação", type: "text" },
       { name: "municipio_notificacao", label: "Município da notificação", type: "text", required: true },
       { name: "codigo_ibge_notificacao", label: "Código IBGE", type: "text" },
+      { name: "regional", label: "Regional", type: "text" },
+      { name: "macroregiao", label: "Macroregião", type: "text" },
       { name: "unidade_saude", label: "Unidade de saúde", type: "text", col: 2 },
       { name: "codigo_unidade_saude", label: "Código da unidade", type: "text" },
       { name: "numero_casos_suspeitos", label: "Nº de casos suspeitos", type: "number" },
