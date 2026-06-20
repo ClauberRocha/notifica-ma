@@ -707,6 +707,144 @@ export type Database = {
         }
         Relationships: []
       }
+      epizootia_cases: {
+        Row: {
+          agravo: string
+          ambiente: string | null
+          animais_acometidos: Json | null
+          bairro: string | null
+          cep: string | null
+          codigo_ibge_notificacao: string | null
+          codigo_ibge_ocorrencia: string | null
+          codigo_unidade_investigador: string | null
+          codigo_unidade_saude: string | null
+          complemento: string | null
+          created_at: string
+          data_coleta: string | null
+          data_inicio_epizootia: string | null
+          data_notificacao: string
+          distrito: string | null
+          fonte_informacao: string | null
+          funcao_investigador: string | null
+          geocampo1: string | null
+          geocampo2: string | null
+          houve_coleta: string | null
+          id: string
+          logradouro: string | null
+          material_coletado: Json | null
+          municipio_notificacao: string
+          municipio_ocorrencia: string | null
+          municipio_unidade_investigador: string | null
+          nome_investigador: string | null
+          numero_endereco: string | null
+          numero_ficha: string | null
+          observacoes_adicionais: string | null
+          ponto_referencia: string | null
+          resultado_laboratorial: Json | null
+          status: string
+          suspeita_diagnostica: Json | null
+          telefone: string | null
+          telefone_fonte: string | null
+          tipo_notificacao: string | null
+          uf_notificacao: string | null
+          uf_ocorrencia: string | null
+          unidade_saude: string | null
+          updated_at: string
+          user_id: string
+          zona: string | null
+        }
+        Insert: {
+          agravo?: string
+          ambiente?: string | null
+          animais_acometidos?: Json | null
+          bairro?: string | null
+          cep?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_ibge_ocorrencia?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          complemento?: string | null
+          created_at?: string
+          data_coleta?: string | null
+          data_inicio_epizootia?: string | null
+          data_notificacao: string
+          distrito?: string | null
+          fonte_informacao?: string | null
+          funcao_investigador?: string | null
+          geocampo1?: string | null
+          geocampo2?: string | null
+          houve_coleta?: string | null
+          id?: string
+          logradouro?: string | null
+          material_coletado?: Json | null
+          municipio_notificacao: string
+          municipio_ocorrencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ponto_referencia?: string | null
+          resultado_laboratorial?: Json | null
+          status?: string
+          suspeita_diagnostica?: Json | null
+          telefone?: string | null
+          telefone_fonte?: string | null
+          tipo_notificacao?: string | null
+          uf_notificacao?: string | null
+          uf_ocorrencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id: string
+          zona?: string | null
+        }
+        Update: {
+          agravo?: string
+          ambiente?: string | null
+          animais_acometidos?: Json | null
+          bairro?: string | null
+          cep?: string | null
+          codigo_ibge_notificacao?: string | null
+          codigo_ibge_ocorrencia?: string | null
+          codigo_unidade_investigador?: string | null
+          codigo_unidade_saude?: string | null
+          complemento?: string | null
+          created_at?: string
+          data_coleta?: string | null
+          data_inicio_epizootia?: string | null
+          data_notificacao?: string
+          distrito?: string | null
+          fonte_informacao?: string | null
+          funcao_investigador?: string | null
+          geocampo1?: string | null
+          geocampo2?: string | null
+          houve_coleta?: string | null
+          id?: string
+          logradouro?: string | null
+          material_coletado?: Json | null
+          municipio_notificacao?: string
+          municipio_ocorrencia?: string | null
+          municipio_unidade_investigador?: string | null
+          nome_investigador?: string | null
+          numero_endereco?: string | null
+          numero_ficha?: string | null
+          observacoes_adicionais?: string | null
+          ponto_referencia?: string | null
+          resultado_laboratorial?: Json | null
+          status?: string
+          suspeita_diagnostica?: Json | null
+          telefone?: string | null
+          telefone_fonte?: string | null
+          tipo_notificacao?: string | null
+          uf_notificacao?: string | null
+          uf_ocorrencia?: string | null
+          unidade_saude?: string | null
+          updated_at?: string
+          user_id?: string
+          zona?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
