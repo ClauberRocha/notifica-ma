@@ -103,6 +103,12 @@ const agravos = [
     to: "/fichas/tetano-neonatal" as const,
     color: "bg-violet-500/10 text-violet-700 border-violet-500/20 hover:bg-violet-500/15",
   },
+  {
+    label: "Tuberculose",
+    desc: "Fichas cadastradas de tuberculose",
+    to: "/fichas/tuberculose" as const,
+    color: "bg-fuchsia-500/10 text-fuchsia-700 border-fuchsia-500/20 hover:bg-fuchsia-500/15",
+  },
 ];
 
 
