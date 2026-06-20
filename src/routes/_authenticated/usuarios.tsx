@@ -313,6 +313,34 @@ function UsuariosPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="max-w-md mx-4 sm:mx-auto">
+          <DialogHeader>
+            <DialogTitle>Adicionar Novo Usuário</DialogTitle>
+          </DialogHeader>
+          <CreateUserForm
+            onClose={() => setCreateOpen(false)}
+            onCreate={async (form) => {
+              try {
+                await createUserFn({
+                  data: {
+                    full_name: form.full_name,
+                    email: form.email,
+                    cargo: form.cargo || null,
+                    role: form.role,
+                  },
+                });
+                toast.success("✅ Usuário criado! Um e-mail foi enviado para definir a senha.");
+                queryClient.invalidateQueries({ queryKey: ["users-list"] });
+                setCreateOpen(false);
+              } catch (e) {
+                toast.error(`❌ ${(e as Error).message}`);
+              }
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
