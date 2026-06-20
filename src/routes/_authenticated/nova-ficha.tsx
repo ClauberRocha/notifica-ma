@@ -376,7 +376,7 @@ function FieldRenderer({
           rows={3}
           className="mt-1"
         />
-      ) : (
+      ) : field.type === "select" ? (
         <Select value={value || undefined} onValueChange={onChange}>
           <SelectTrigger id={field.name} className="mt-1">
             <SelectValue placeholder="Selecione" />
@@ -387,7 +387,7 @@ function FieldRenderer({
             ))}
           </SelectContent>
         </Select>
-      )}
+      ) : null}
     </div>
   );
 }
