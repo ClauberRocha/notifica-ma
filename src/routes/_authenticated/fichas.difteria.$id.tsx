@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Trash2, Loader2, CheckCircle, Syringe } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
-import { getSeForDate } from "@/lib/seUtils";
+import { getSeNumber } from "@/lib/seUtils";
 import { toast } from "sonner";
 import {
   AlertDialog,
