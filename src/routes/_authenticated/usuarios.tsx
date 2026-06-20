@@ -591,9 +591,25 @@ function UsuariosPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
+            {lastCreatedId && (
+              <Button
+                variant="outline"
+                className="gap-2"
+                disabled={resendInviteMutation.isPending}
+                onClick={() => resendInviteMutation.mutate(lastCreatedId)}
+              >
+                {resendInviteMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Mail className="w-4 h-4" />
+                )}
+                Reenviar convite
+              </Button>
+            )}
             <AlertDialogAction
               onClick={() => {
                 setConfirmOpen(false);
+                setLastCreatedId(null);
                 queryClient.invalidateQueries({ queryKey: ["users-list"] });
               }}
             >
