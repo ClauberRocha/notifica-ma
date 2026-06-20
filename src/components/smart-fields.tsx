@@ -10,6 +10,60 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { getSemanaEpidemiologica } from "@/data/semana-epd";
+import { getRegional, getMacroregiao } from "@/data/regional-macro";
+
+/** Hoje no formato YYYY-MM-DD (timezone local). */
+export function todayIso(): string {
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60_000).toISOString().slice(0, 10);
+}
+
+/** Calcula idade em anos a partir de uma data ISO de nascimento. */
+export function calcIdade(dataNasc: string): string {
+  if (!dataNasc) return "";
+  const nasc = new Date(dataNasc);
+  if (Number.isNaN(nasc.getTime())) return "";
+  const hoje = new Date();
+  let anos = hoje.getFullYear() - nasc.getFullYear();
+  const m = hoje.getMonth() - nasc.getMonth();
+  if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) anos--;
+  return anos >= 0 ? String(anos) : "";
+}
+
+/** Faixa etaria padrao Ministerio da Saude. */
+export function calcFaixaEtaria(idade: string | number): string {
+  const n = typeof idade === "number" ? idade : Number(idade);
+  if (!Number.isFinite(n) || n < 0) return "";
+  if (n < 1) return "< 1 ano";
+  if (n <= 4) return "1-4 anos";
+  if (n <= 9) return "5-9 anos";
+  if (n <= 14) return "10-14 anos";
+  if (n <= 19) return "15-19 anos";
+  if (n <= 29) return "20-29 anos";
+  if (n <= 39) return "30-39 anos";
+  if (n <= 49) return "40-49 anos";
+  if (n <= 59) return "50-59 anos";
+  if (n <= 69) return "60-69 anos";
+  if (n <= 79) return "70-79 anos";
+  return "80+ anos";
+}
+
+/** Mascara telefone (DDD) 9XXXX-XXXX. */
+export function maskTelefone(raw: string): string {
+  const d = (raw || "").replace(/\D/g, "").slice(0, 11);
+  if (d.length <= 2) return d.length ? `(${d}` : "";
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
+/** Aplica MAIUSCULAS preservando espaços; ignora vazio. */
+export function toUpper(v: string): string {
+  return v ? v.toUpperCase() : v;
+}
 
 /** Estados (UF) do Brasil */
 export const BR_UFS: { sigla: string; nome: string; codigo_ibge: string }[] = [
@@ -428,47 +482,155 @@ export function CepInput({
   );
 }
 
+/* ============== Auto-computed read-only fields ============== */
+
+function ReadOnlyField({
+  label,
+  value,
+  col,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  col?: ColSpan;
+  placeholder?: string;
+}) {
+  return (
+    <div className={colClass(col)}>
+      <Label className="text-xs">{label}</Label>
+      <Input value={value} readOnly placeholder={placeholder ?? "Preenchido automaticamente"} className="mt-1 bg-muted/40" />
+    </div>
+  );
+}
+
+function AutoDateField({ name, label, required, col, form, setForm }: { name: string; label: string; required?: boolean; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const value = form[name] ?? "";
+  useEffect(() => {
+    if (!value) {
+      const t = todayIso();
+      setForm((p) => (p[name] ? p : { ...p, [name]: t }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name]);
+  return (
+    <div className={colClass(col)}>
+      <Label className="text-xs">{label}{required ? <span className="text-destructive"> *</span> : null}</Label>
+      <Input type="date" value={value} onChange={(e) => setForm((p) => ({ ...p, [name]: e.target.value }))} className="mt-1" />
+    </div>
+  );
+}
+
+function SemanaEpdField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const data = form.data_notificacao ?? form.data ?? "";
+  const se = useMemo(() => getSemanaEpidemiologica(data), [data]);
+  const valueStr = se != null ? String(se) : "";
+  useEffect(() => {
+    if ((form[name] ?? "") !== valueStr) setForm((p) => ({ ...p, [name]: valueStr }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valueStr]);
+  return <ReadOnlyField label={label} value={valueStr} col={col} placeholder="Calculada pela data" />;
+}
+
+function IdadeAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const dn = form.data_nascimento ?? "";
+  const idade = useMemo(() => calcIdade(dn), [dn]);
+  useEffect(() => {
+    if (idade && (form[name] ?? "") !== idade) setForm((p) => ({ ...p, [name]: idade }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idade]);
+  return <ReadOnlyField label={label} value={idade} col={col} placeholder="Calculada pela data de nascimento" />;
+}
+
+function FaixaEtariaField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const idade = form.idade ?? calcIdade(form.data_nascimento ?? "");
+  const faixa = useMemo(() => calcFaixaEtaria(idade), [idade]);
+  useEffect(() => {
+    if ((form[name] ?? "") !== faixa) setForm((p) => ({ ...p, [name]: faixa }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [faixa]);
+  return <ReadOnlyField label={label} value={faixa} col={col} placeholder="Calculada pela idade" />;
+}
+
+function RegionalAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const mun = form.municipio_residencia ?? "";
+  const reg = useMemo(() => getRegional(mun), [mun]);
+  useEffect(() => {
+    if ((form[name] ?? "") !== reg) setForm((p) => ({ ...p, [name]: reg }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reg]);
+  return <ReadOnlyField label={label} value={reg} col={col} placeholder="Definida pelo municipio" />;
+}
+
+function MacroregiaoAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const reg = form.regional ?? getRegional(form.municipio_residencia ?? "");
+  const macro = useMemo(() => getMacroregiao(reg), [reg]);
+  useEffect(() => {
+    if ((form[name] ?? "") !== macro) setForm((p) => ({ ...p, [name]: macro }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [macro]);
+  return <ReadOnlyField label={label} value={macro} col={col} placeholder="Definida pela regional" />;
+}
+
+function ResponsavelDigitacaoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const { user } = useAuth();
+  const nome = user?.full_name || user?.email || "";
+  useEffect(() => {
+    if (nome && (form[name] ?? "") !== nome) setForm((p) => ({ ...p, [name]: nome }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nome]);
+  return <ReadOnlyField label={label} value={nome} col={col} placeholder="Usuario logado" />;
+}
+
+function TelefoneInput({ name, label, required, col, form, setForm }: { name: string; label: string; required?: boolean; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  return (
+    <div className={colClass(col)}>
+      <Label className="text-xs">{label}{required ? <span className="text-destructive"> *</span> : null}</Label>
+      <Input value={form[name] ?? ""} placeholder="(00) 90000-0000" inputMode="tel" onChange={(e) => setForm((p) => ({ ...p, [name]: maskTelefone(e.target.value) }))} className="mt-1" />
+    </div>
+  );
+}
+
+const SEXO_FEMININO_VALUES = new Set(["F", "FEMININO", "Feminino", "feminino", "f"]);
+
+function GestanteSelect({ name, label, required, col, form, setForm }: { name: string; label: string; required?: boolean; col?: ColSpan; form: FormState; setForm: SetForm }) {
+  const sexo = form.sexo ?? "";
+  const disabled = !SEXO_FEMININO_VALUES.has(sexo);
+  useEffect(() => {
+    if (disabled && form[name]) setForm((p) => ({ ...p, [name]: "" }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disabled]);
+  const opts = [
+    { v: "1", l: "1º Trimestre" }, { v: "2", l: "2º Trimestre" }, { v: "3", l: "3º Trimestre" },
+    { v: "4", l: "Idade gestacional ignorada" }, { v: "5", l: "Não" }, { v: "6", l: "Não se aplica" }, { v: "9", l: "Ignorado" },
+  ];
+  return (
+    <div className={colClass(col)}>
+      <Label className="text-xs">{label}{required ? <span className="text-destructive"> *</span> : null}</Label>
+      <Select value={form[name] || undefined} onValueChange={(v) => setForm((p) => ({ ...p, [name]: v }))} disabled={disabled}>
+        <SelectTrigger className="mt-1"><SelectValue placeholder={disabled ? "Disponivel apenas para sexo feminino" : "Selecione"} /></SelectTrigger>
+        <SelectContent>{opts.map((o) => (<SelectItem key={o.v} value={o.v}>{o.l}</SelectItem>))}</SelectContent>
+      </Select>
+    </div>
+  );
+}
+
 /* ============== Smart Field dispatcher ============== */
 
-type FieldLike = {
-  name: string;
-  label: string;
-  type: string;
-  required?: boolean;
-  col?: ColSpan;
-};
+type FieldLike = { name: string; label: string; type: string; required?: boolean; col?: ColSpan };
 
-/**
- * Returns a ReactNode for "smart" fields (UF/Município/IBGE, Unidade de Saúde, CEP).
- * Returns null when the field is not handled — caller renders the default input.
- */
-export function renderSmartField(
-  field: FieldLike,
-  form: FormState,
-  setForm: SetForm,
-): ReactNode | null {
-  const { name } = field;
+/** Returns a ReactNode for "smart" fields. Returns null when the field is not handled. */
+export function renderSmartField(field: FieldLike, form: FormState, setForm: SetForm): ReactNode | null {
+  const name = field.name;
+  const labelRaw = field.label || "";
+  const label = name === "numero_ficha" || /n[º°o]?\s*da\s*ficha/i.test(labelRaw) ? "Nº da Notificação" : labelRaw;
+  const f = { ...field, label };
 
-  // UF (notificação / residência / hospital / ocorrencia)
   const ufMatch = name.match(/^uf_(notificacao|residencia|hospital|ocorrencia|infeccao)$/);
   if (ufMatch) {
     const scope = ufMatch[1];
     return (
-      <UfSelect
-        key={name}
-        label={field.label}
-        value={form[name] ?? ""}
-        required={field.required}
-        col={field.col}
-        onChange={(v) =>
-          setForm((prev) => ({
-            ...prev,
-            [name]: v,
-            [`municipio_${scope}`]: "",
-            [`codigo_ibge_${scope}`]: "",
-          }))
-        }
-      />
+      <UfSelect key={name} label={f.label} value={form[name] ?? ""} required={f.required} col={f.col}
+        onChange={(v) => setForm((prev) => ({ ...prev, [name]: v, [`municipio_${scope}`]: "", [`codigo_ibge_${scope}`]: "" }))} />
     );
   }
 
@@ -477,64 +639,66 @@ export function renderSmartField(
     const scope = muniMatch[1];
     const uf = form[`uf_${scope}`] ?? "";
     return (
-      <MunicipioCombobox
-        key={name}
-        label={field.label}
-        uf={uf}
-        value={form[name] ?? ""}
-        required={field.required}
-        col={field.col}
-        onSelect={(nome, codigoIbge) =>
-          setForm((prev) => ({
-            ...prev,
-            [name]: nome,
-            [`codigo_ibge_${scope}`]: codigoIbge,
-          }))
-        }
-      />
+      <MunicipioCombobox key={name} label={f.label} uf={uf} value={form[name] ?? ""} required={f.required} col={f.col}
+        onSelect={(nome, codigoIbge) => setForm((prev) => ({ ...prev, [name]: nome.toUpperCase(), [`codigo_ibge_${scope}`]: codigoIbge }))} />
     );
   }
 
   if (/^codigo_ibge_(notificacao|residencia|hospital|ocorrencia|infeccao)$/.test(name)) {
-    return <CodigoIbgeField key={name} label={field.label} value={form[name] ?? ""} col={field.col} />;
+    return <CodigoIbgeField key={name} label={f.label} value={form[name] ?? ""} col={f.col} />;
   }
 
   if (name === "unidade_saude") {
     return (
-      <UnidadeSaudeAutocomplete
-        key={name}
-        label={field.label}
-        value={form[name] ?? ""}
-        required={field.required}
-        col={field.col}
-        onChange={(v) => setForm((prev) => ({ ...prev, [name]: v }))}
-      />
+      <UnidadeSaudeAutocomplete key={name} label={f.label} value={form[name] ?? ""} required={f.required} col={f.col}
+        onChange={(v) => setForm((prev) => ({ ...prev, [name]: v.toUpperCase() }))} />
     );
   }
 
   if (name === "cep") {
     return (
-      <CepInput
-        key={name}
-        label={field.label}
-        value={form[name] ?? ""}
-        required={field.required}
-        col={field.col}
+      <CepInput key={name} label={f.label} value={form[name] ?? ""} required={f.required} col={f.col}
         onChange={(v) => setForm((prev) => ({ ...prev, [name]: v }))}
-        onAutoFill={(data) =>
-          setForm((prev) => ({
-            ...prev,
-            cep: data.cep ?? prev.cep ?? "",
-            logradouro: data.logradouro || prev.logradouro || "",
-            bairro: data.bairro || prev.bairro || "",
-            uf_residencia: data.uf || prev.uf_residencia || "",
-            municipio_residencia: data.localidade || prev.municipio_residencia || "",
-            codigo_ibge_residencia: data.ibge || prev.codigo_ibge_residencia || "",
-          }))
-        }
-      />
+        onAutoFill={(data) => setForm((prev) => ({
+          ...prev,
+          cep: data.cep ?? prev.cep ?? "",
+          logradouro: toUpper(data.logradouro || prev.logradouro || ""),
+          bairro: toUpper(data.bairro || prev.bairro || ""),
+          uf_residencia: data.uf || prev.uf_residencia || "",
+          municipio_residencia: toUpper(data.localidade || prev.municipio_residencia || ""),
+          codigo_ibge_residencia: data.ibge || prev.codigo_ibge_residencia || "",
+        }))} />
     );
+  }
+
+  if (name === "data_notificacao" || name === "data" || name === "data_diagnostico_notificacao") {
+    return <AutoDateField key={name} name={name} label={f.label} required={f.required} col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "semana_epidemiologica" || name === "se" || name === "semana_epi") {
+    return <SemanaEpdField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "idade") {
+    return <IdadeAutoField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "faixa_etaria") {
+    return <FaixaEtariaField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "regional") {
+    return <RegionalAutoField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "macroregiao" || name === "macro_regiao" || name === "macro_regiao_saude") {
+    return <MacroregiaoAutoField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "responsavel_digitacao" || name === "investigador" || name === "nome_investigador" || name === "responsavel_preenchimento") {
+    return <ResponsavelDigitacaoField key={name} name={name} label="Responsável pela Digitação" col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "telefone" || name === "telefone_contato" || name === "telefone_paciente" || name === "ddd_telefone") {
+    return <TelefoneInput key={name} name={name} label={f.label} required={f.required} col={f.col} form={form} setForm={setForm} />;
+  }
+  if (name === "gestante") {
+    return <GestanteSelect key={name} name={name} label={f.label} required={f.required} col={f.col} form={form} setForm={setForm} />;
   }
 
   return null;
 }
+

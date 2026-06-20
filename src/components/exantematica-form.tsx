@@ -15,8 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
 import { renderSmartField } from "@/components/smart-fields";
+import {
   SIM_NAO_IGN,
   TIPO_IDADE,
   SEXO,
@@ -260,8 +260,8 @@ export function ExantematicaForm({ agravo }: { agravo: ExantemaAgravo }) {
 
         {current.fields && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {current.fields.map((f) => (
-              {renderSmartField(f, form, setForm) ?? (<FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />)}
+            {current.fields.map((f) => renderSmartField(f, form, setForm) ?? (
+              <FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />
             ))}
           </div>
         )}
@@ -330,9 +330,9 @@ function FieldRenderer({
         {"required" in field && field.required ? <span className="text-destructive"> *</span> : null}
       </Label>
       {field.type === "text" || field.type === "number" || field.type === "date" ? (
-        <Input id={field.name} type={field.type} value={value} onChange={(e) => onChange(e.target.value)} className="mt-1" />
+        <Input id={field.name} type={field.type} value={value} onChange={(e) => onChange(field.type === "text" || field.type === "textarea" ? e.target.value.toUpperCase() : e.target.value)} className="mt-1" />
       ) : field.type === "textarea" ? (
-        <Textarea id={field.name} value={value} onChange={(e) => onChange(e.target.value)} rows={3} className="mt-1" />
+        <Textarea id={field.name} value={value} onChange={(e) => onChange(field.type === "text" || field.type === "textarea" ? e.target.value.toUpperCase() : e.target.value)} rows={3} className="mt-1" />
       ) : field.type === "select" ? (
         <Select value={value || undefined} onValueChange={onChange}>
           <SelectTrigger id={field.name} className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
