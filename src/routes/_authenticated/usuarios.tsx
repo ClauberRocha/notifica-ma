@@ -182,6 +182,7 @@ function UsuariosPage() {
 
   const createUserFn = useServerFn(createUser);
   const updateUserFn = useServerFn(updateUser);
+  const deleteUserFn = useServerFn(deleteUser);
 
   useEffect(() => {
     (async () => {
@@ -256,6 +257,16 @@ function UsuariosPage() {
       setEditOpen(false);
       setEditing(null);
       toast.success("✅ Usuário atualizado com sucesso!");
+    },
+    onError: (e: Error) => toast.error(`❌ ${e.message}`),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteUserFn({ data: { id } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users-list"] });
+      setDeleting(null);
+      toast.success("✅ Usuário excluído com sucesso.");
     },
     onError: (e: Error) => toast.error(`❌ ${e.message}`),
   });
