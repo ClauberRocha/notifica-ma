@@ -49,10 +49,11 @@ import {
   Search,
   Users,
   Loader2,
+  Mail,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { createUser, updateUser, deleteUser } from "@/lib/users.functions";
+import { createUser, updateUser, deleteUser, resendInvite } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
@@ -183,6 +184,8 @@ function UsuariosPage() {
   const createUserFn = useServerFn(createUser);
   const updateUserFn = useServerFn(updateUser);
   const deleteUserFn = useServerFn(deleteUser);
+  const resendInviteFn = useServerFn(resendInvite);
+  const [lastCreatedId, setLastCreatedId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -232,12 +235,19 @@ function UsuariosPage() {
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["users-list"] });
       setCreateOpen(false);
+      setLastCreatedId(res.id);
       setConfirmInfo({
         title: "Usuário criado com sucesso!",
         description: `Um e-mail foi enviado para ${res.email} com instruções para definir a senha de acesso.`,
       });
       setConfirmOpen(true);
     },
+    onError: (e: Error) => toast.error(`❌ ${e.message}`),
+  });
+
+  const resendInviteMutation = useMutation({
+    mutationFn: (id: string) => resendInviteFn({ data: { id } }),
+    onSuccess: (res) => toast.success(`✉️ Convite reenviado para ${res.email}.`),
     onError: (e: Error) => toast.error(`❌ ${e.message}`),
   });
 
@@ -420,6 +430,24 @@ function UsuariosPage() {
                         <Button
                           variant="ghost"
                           size="icon"
+                          className="w-8 h-8 text-muted-foreground hover:text-primary disabled:opacity-50"
+                          onClick={() => resendInviteMutation.mutate(u.id)}
+                          disabled={
+                            resendInviteMutation.isPending &&
+                            resendInviteMutation.variables === u.id
+                          }
+                          title="Reenviar convite"
+                        >
+                          {resendInviteMutation.isPending &&
+                          resendInviteMutation.variables === u.id ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Mail className="w-3.5 h-3.5" />
+                          )}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className={`w-8 h-8 ${u.blocked ? "text-green-600 hover:text-green-700" : "text-yellow-600 hover:text-yellow-700"}`}
                           onClick={() => blockMutation.mutate(u)}
                           title={u.blocked ? "Desbloquear" : "Bloquear"}
@@ -563,9 +591,25 @@ function UsuariosPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
+            {lastCreatedId && (
+              <Button
+                variant="outline"
+                className="gap-2"
+                disabled={resendInviteMutation.isPending}
+                onClick={() => resendInviteMutation.mutate(lastCreatedId)}
+              >
+                {resendInviteMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Mail className="w-4 h-4" />
+                )}
+                Reenviar convite
+              </Button>
+            )}
             <AlertDialogAction
               onClick={() => {
                 setConfirmOpen(false);
+                setLastCreatedId(null);
                 queryClient.invalidateQueries({ queryKey: ["users-list"] });
               }}
             >
