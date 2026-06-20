@@ -14,8 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
-import { Route as AuthenticatedNovaFichaRouteImport } from './routes/_authenticated/nova-ficha'
-import { Route as AuthenticatedFichasRouteImport } from './routes/_authenticated/fichas'
+import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_authenticated/nova-ficha.coqueluche'
+import { Route as AuthenticatedFichasCoquelucheRouteImport } from './routes/_authenticated/fichas.coqueluche'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -41,57 +41,71 @@ const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedNovaFichaRoute = AuthenticatedNovaFichaRouteImport.update({
-  id: '/nova-ficha',
-  path: '/nova-ficha',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedFichasRoute = AuthenticatedFichasRouteImport.update({
-  id: '/fichas',
-  path: '/fichas',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedNovaFichaCoquelucheRoute =
+  AuthenticatedNovaFichaCoquelucheRouteImport.update({
+    id: '/nova-ficha/coqueluche',
+    path: '/nova-ficha/coqueluche',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasCoquelucheRoute =
+  AuthenticatedFichasCoquelucheRouteImport.update({
+    id: '/fichas/coqueluche',
+    path: '/fichas/coqueluche',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRoute
-  '/fichas': typeof AuthenticatedFichasRoute
-  '/nova-ficha': typeof AuthenticatedNovaFichaRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
-  '/fichas': typeof AuthenticatedFichasRoute
-  '/nova-ficha': typeof AuthenticatedNovaFichaRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/': typeof AuthenticatedIndexRoute
+  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/_authenticated/fichas': typeof AuthenticatedFichasRoute
-  '/_authenticated/nova-ficha': typeof AuthenticatedNovaFichaRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRoute
+  '/_authenticated/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/painel'
+    | '/usuarios'
+    | '/fichas/coqueluche'
+    | '/nova-ficha/coqueluche'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios' | '/'
+  to:
+    | '/auth'
+    | '/painel'
+    | '/usuarios'
+    | '/'
+    | '/fichas/coqueluche'
+    | '/nova-ficha/coqueluche'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
-    | '/_authenticated/fichas'
-    | '/_authenticated/nova-ficha'
     | '/_authenticated/painel'
     | '/_authenticated/usuarios'
     | '/_authenticated/'
+    | '/_authenticated/fichas/coqueluche'
+    | '/_authenticated/nova-ficha/coqueluche'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -136,37 +150,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/nova-ficha': {
-      id: '/_authenticated/nova-ficha'
-      path: '/nova-ficha'
-      fullPath: '/nova-ficha'
-      preLoaderRoute: typeof AuthenticatedNovaFichaRouteImport
+    '/_authenticated/nova-ficha/coqueluche': {
+      id: '/_authenticated/nova-ficha/coqueluche'
+      path: '/nova-ficha/coqueluche'
+      fullPath: '/nova-ficha/coqueluche'
+      preLoaderRoute: typeof AuthenticatedNovaFichaCoquelucheRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas': {
-      id: '/_authenticated/fichas'
-      path: '/fichas'
-      fullPath: '/fichas'
-      preLoaderRoute: typeof AuthenticatedFichasRouteImport
+    '/_authenticated/fichas/coqueluche': {
+      id: '/_authenticated/fichas/coqueluche'
+      path: '/fichas/coqueluche'
+      fullPath: '/fichas/coqueluche'
+      preLoaderRoute: typeof AuthenticatedFichasCoquelucheRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedFichasRoute: typeof AuthenticatedFichasRoute
-  AuthenticatedNovaFichaRoute: typeof AuthenticatedNovaFichaRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRoute
+  AuthenticatedNovaFichaCoquelucheRoute: typeof AuthenticatedNovaFichaCoquelucheRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedFichasRoute: AuthenticatedFichasRoute,
-  AuthenticatedNovaFichaRoute: AuthenticatedNovaFichaRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedFichasCoquelucheRoute: AuthenticatedFichasCoquelucheRoute,
+  AuthenticatedNovaFichaCoquelucheRoute: AuthenticatedNovaFichaCoquelucheRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

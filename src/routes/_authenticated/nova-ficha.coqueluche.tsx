@@ -36,7 +36,7 @@ import {
   COMPLICACOES_KEYS,
 } from "@/lib/coqueluche-options";
 
-export const Route = createFileRoute("/_authenticated/nova-ficha")({
+export const Route = createFileRoute("/_authenticated/nova-ficha/coqueluche")({
   head: () => ({
     meta: [{ title: "Nova Ficha de Coqueluche" }],
   }),
