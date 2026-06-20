@@ -97,6 +97,12 @@ const agravos = [
     to: "/fichas/tetano-acidental" as const,
     color: "bg-indigo-500/10 text-indigo-700 border-indigo-500/20 hover:bg-indigo-500/15",
   },
+  {
+    label: "Tétano Neonatal",
+    desc: "Fichas cadastradas de tétano neonatal",
+    to: "/fichas/tetano-neonatal" as const,
+    color: "bg-violet-500/10 text-violet-700 border-violet-500/20 hover:bg-violet-500/15",
+  },
 ];
 
 
