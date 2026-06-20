@@ -253,7 +253,7 @@ function NovaFichaPage() {
         .insert(payload as never);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
-      navigate({ to: "/fichas" });
+      navigate({ to: "/fichas/coqueluche" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Erro ao salvar ficha");
     } finally {

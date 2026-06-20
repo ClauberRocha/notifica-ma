@@ -70,7 +70,7 @@ function FichasPage() {
           <h1 className="text-2xl font-bold mt-2">Fichas cadastradas</h1>
         </div>
         <Button asChild>
-          <Link to="/nova-ficha">
+          <Link to="/nova-ficha/coqueluche">
             <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
           </Link>
         </Button>
@@ -87,7 +87,7 @@ function FichasPage() {
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
             <Button asChild>
-              <Link to="/nova-ficha"><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
+              <Link to="/nova-ficha/coqueluche"><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
             </Button>
           </div>
         ) : (
