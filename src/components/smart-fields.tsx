@@ -10,6 +10,60 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { getSemanaEpidemiologica } from "@/data/semana-epd";
+import { getRegional, getMacroregiao } from "@/data/regional-macro";
+
+/** Hoje no formato YYYY-MM-DD (timezone local). */
+export function todayIso(): string {
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60_000).toISOString().slice(0, 10);
+}
+
+/** Calcula idade em anos a partir de uma data ISO de nascimento. */
+export function calcIdade(dataNasc: string): string {
+  if (!dataNasc) return "";
+  const nasc = new Date(dataNasc);
+  if (Number.isNaN(nasc.getTime())) return "";
+  const hoje = new Date();
+  let anos = hoje.getFullYear() - nasc.getFullYear();
+  const m = hoje.getMonth() - nasc.getMonth();
+  if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) anos--;
+  return anos >= 0 ? String(anos) : "";
+}
+
+/** Faixa etaria padrao Ministerio da Saude. */
+export function calcFaixaEtaria(idade: string | number): string {
+  const n = typeof idade === "number" ? idade : Number(idade);
+  if (!Number.isFinite(n) || n < 0) return "";
+  if (n < 1) return "< 1 ano";
+  if (n <= 4) return "1-4 anos";
+  if (n <= 9) return "5-9 anos";
+  if (n <= 14) return "10-14 anos";
+  if (n <= 19) return "15-19 anos";
+  if (n <= 29) return "20-29 anos";
+  if (n <= 39) return "30-39 anos";
+  if (n <= 49) return "40-49 anos";
+  if (n <= 59) return "50-59 anos";
+  if (n <= 69) return "60-69 anos";
+  if (n <= 79) return "70-79 anos";
+  return "80+ anos";
+}
+
+/** Mascara telefone (DDD) 9XXXX-XXXX. */
+export function maskTelefone(raw: string): string {
+  const d = (raw || "").replace(/\D/g, "").slice(0, 11);
+  if (d.length <= 2) return d.length ? `(${d}` : "";
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+}
+
+/** Aplica MAIUSCULAS preservando espaços; ignora vazio. */
+export function toUpper(v: string): string {
+  return v ? v.toUpperCase() : v;
+}
 
 /** Estados (UF) do Brasil */
 export const BR_UFS: { sigla: string; nome: string; codigo_ibge: string }[] = [
