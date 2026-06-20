@@ -1,10 +1,22 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { ArrowLeft, FilePlus, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+
+export const Route = createFileRoute("/_authenticated/fichas/difteria")({
+  head: () => ({ meta: [{ title: "Fichas — Difteria" }] }),
+  component: FichasDifteriaPage,
+});
 
 type CaseRow = {
   id: string;
@@ -12,7 +24,7 @@ type CaseRow = {
   nome_paciente: string;
   data_notificacao: string;
   status: string;
-  classificacao: string | null;
+  classificacao_final: string | null;
   created_at: string;
 };
 
@@ -22,22 +34,11 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const CLASSIF_LABEL: Record<string, string> = {
+  confirmado: "Confirmado",
   descartado: "Descartado",
-  dengue: "Dengue",
-  dengue_sinais_alarme: "Dengue c/ alarme",
-  dengue_grave: "Dengue grave",
-  chikungunya: "Chikungunya",
 };
 
-export function AgravoListPage({
-  agravo,
-  title,
-  novaFichaPath,
-}: {
-  agravo: "dengue" | "chikungunya";
-  title: string;
-  novaFichaPath: string;
-}) {
+function FichasDifteriaPage() {
   const [rows, setRows] = useState<CaseRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,9 +47,8 @@ export function AgravoListPage({
     let active = true;
     (async () => {
       const { data, error } = await supabase
-        .from("dengue_chikungunya_cases")
-        .select("id, numero_ficha, nome_paciente, data_notificacao, status, classificacao, created_at")
-        .eq("agravo", agravo)
+        .from("difteria_cases")
+        .select("id, numero_ficha, nome_paciente, data_notificacao, status, classificacao_final, created_at")
         .order("created_at", { ascending: false });
       if (!active) return;
       if (error) setError(error.message);
@@ -58,7 +58,7 @@ export function AgravoListPage({
     return () => {
       active = false;
     };
-  }, [agravo]);
+  }, []);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -67,10 +67,10 @@ export function AgravoListPage({
           <Link to="/fichas" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
             <ArrowLeft className="w-4 h-4" /> Voltar
           </Link>
-          <h1 className="text-2xl font-bold mt-2">{title}</h1>
+          <h1 className="text-2xl font-bold mt-2">Fichas — Difteria</h1>
         </div>
         <Button asChild>
-          <Link to={novaFichaPath}>
+          <Link to="/nova-ficha/difteria">
             <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
           </Link>
         </Button>
@@ -87,9 +87,7 @@ export function AgravoListPage({
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
             <Button asChild>
-              <Link to={novaFichaPath}>
-                <FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha
-              </Link>
+              <Link to="/nova-ficha/difteria"><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
             </Button>
           </div>
         ) : (
@@ -115,9 +113,9 @@ export function AgravoListPage({
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {r.classificacao ? (
-                      <Badge variant={r.classificacao === "descartado" ? "outline" : "destructive"}>
-                        {CLASSIF_LABEL[r.classificacao] ?? r.classificacao}
+                    {r.classificacao_final ? (
+                      <Badge variant={r.classificacao_final === "confirmado" ? "destructive" : "outline"}>
+                        {CLASSIF_LABEL[r.classificacao_final] ?? r.classificacao_final}
                       </Badge>
                     ) : (
                       <span className="text-muted-foreground text-sm">—</span>
@@ -132,4 +130,3 @@ export function AgravoListPage({
     </div>
   );
 }
-
