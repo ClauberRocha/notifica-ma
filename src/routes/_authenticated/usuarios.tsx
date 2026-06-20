@@ -235,12 +235,19 @@ function UsuariosPage() {
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["users-list"] });
       setCreateOpen(false);
+      setLastCreatedId(res.id);
       setConfirmInfo({
         title: "Usuário criado com sucesso!",
         description: `Um e-mail foi enviado para ${res.email} com instruções para definir a senha de acesso.`,
       });
       setConfirmOpen(true);
     },
+    onError: (e: Error) => toast.error(`❌ ${e.message}`),
+  });
+
+  const resendInviteMutation = useMutation({
+    mutationFn: (id: string) => resendInviteFn({ data: { id } }),
+    onSuccess: (res) => toast.success(`✉️ Convite reenviado para ${res.email}.`),
     onError: (e: Error) => toast.error(`❌ ${e.message}`),
   });
 
