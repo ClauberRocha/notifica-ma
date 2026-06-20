@@ -607,7 +607,7 @@ function GestanteSelect({ name, label, required, col, form, setForm }: { name: s
     <div className={colClass(col)}>
       <Label className="text-xs">{label}{required ? <span className="text-destructive"> *</span> : null}</Label>
       <Select value={form[name] || undefined} onValueChange={(v) => setForm((p) => ({ ...p, [name]: v }))} disabled={disabled}>
-        <SelectTrigger className="mt-1"><SelectValue placeholder={disabled ? "Disponivel apenas para sexo feminino" : "Selecione"} /></SelectTrigger>
+        <SelectTrigger className="mt-1"><SelectValue placeholder={disabled ? "Disponível apenas para sexo Feminino" : "Selecione"} /></SelectTrigger>
         <SelectContent>{opts.map((o) => (<SelectItem key={o.v} value={o.v}>{o.l}</SelectItem>))}</SelectContent>
       </Select>
     </div>
