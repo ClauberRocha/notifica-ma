@@ -287,8 +287,8 @@ export function DengueChikForm({
 
         {current.fields && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {current.fields.map((f) => (
-              {renderSmartField(f, form, setForm) ?? (<FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />)}
+            {current.fields.map((f) => renderSmartField(f, form, setForm) ?? (
+              <FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />
             ))}
           </div>
         )}
