@@ -25,6 +25,7 @@ import {
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -44,13 +45,14 @@ import {
   Pencil,
   Lock,
   Unlock,
+  Trash2,
   Search,
   Users,
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { createUser, updateUser } from "@/lib/users.functions";
+import { createUser, updateUser, deleteUser } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
