@@ -1,4 +1,3 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, FilePlus, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -133,4 +132,3 @@ export function AgravoListPage({
   );
 }
 
-export const _Route = createFileRoute;
