@@ -96,7 +96,7 @@ async function audit(
       user_role: actor.role,
       entity_type: "user",
       entity_id: entity_id ?? null,
-      metadata: metadata ?? null,
+      metadata: (metadata ?? null) as never,
     });
   } catch {
     // auditoria nunca deve quebrar a operação
