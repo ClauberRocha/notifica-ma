@@ -248,11 +248,13 @@ function NovaFichaHanseniasePage() {
           <p className="text-sm text-muted-foreground mb-4">{current.description}</p>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {current.fields.map((f) => renderSmartField(f, form, setForm) ?? (
-              <FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />
-            ))}
-        </div>
+        {current.fields && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {current.fields.map((f) => renderSmartField(f, form, setForm) ?? (
+                <FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />
+              ))}
+          </div>
+        )}
         {current.custom === "antecedentes_epi" && (
           <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
         )}
