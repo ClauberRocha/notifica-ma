@@ -301,6 +301,9 @@ export function DengueChikForm({
 
         {current.custom === "sinais" && <SimNaoGrid items={SINAIS_CLINICOS_KEYS} values={sinais} onChange={setSinais} />}
         {current.custom === "doencas" && <SimNaoGrid items={DOENCAS_PREEXISTENTES_KEYS} values={doencas} onChange={setDoencas} />}
+        {current.custom === "antecedentes_epi" && (
+          <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
+        )}
       </div>
 
       <div className="flex justify-between mt-6">
