@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,10 +22,35 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { UserPlus, Pencil, Lock, Unlock, Search, Users } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  UserPlus,
+  Pencil,
+  Lock,
+  Unlock,
+  Search,
+  Users,
+  Loader2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { createUser } from "@/lib/users.functions";
+import { createUser, updateUser } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
@@ -61,6 +87,42 @@ type FormState = {
   role: Role;
 };
 
+type FormErrors = Partial<Record<keyof FormState, string>>;
+
+const PAGE_SIZE = 8;
+
+const FormSchema = z.object({
+  full_name: z
+    .string()
+    .trim()
+    .min(2, { message: "Informe o nome completo (mín. 2 caracteres)." })
+    .max(150, { message: "Nome muito longo (máx. 150 caracteres)." }),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: "E-mail é obrigatório." })
+    .email({ message: "E-mail inválido." })
+    .max(255),
+  cargo: z
+    .string()
+    .trim()
+    .max(150, { message: "Cargo muito longo (máx. 150 caracteres)." }),
+  role: z.enum(["admin", "gestor", "user"], {
+    message: "Selecione um perfil.",
+  }),
+});
+
+function validateForm(form: FormState): FormErrors {
+  const result = FormSchema.safeParse(form);
+  if (result.success) return {};
+  const errs: FormErrors = {};
+  for (const issue of result.error.issues) {
+    const key = issue.path[0] as keyof FormState;
+    if (!errs[key]) errs[key] = issue.message;
+  }
+  return errs;
+}
+
 async function fetchUsers(): Promise<UserRow[]> {
   const [{ data: profiles, error: pErr }, { data: roles, error: rErr }] =
     await Promise.all([
@@ -87,12 +149,24 @@ async function fetchUsers(): Promise<UserRow[]> {
 function UsuariosPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [roleFilter, setRoleFilter] = useState<"all" | Role>("all");
+  const [page, setPage] = useState(1);
+
+  const [editOpen, setEditOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<UserRow | null>(null);
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmInfo, setConfirmInfo] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
+
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+
   const createUserFn = useServerFn(createUser);
+  const updateUserFn = useServerFn(updateUser);
 
   useEffect(() => {
     (async () => {
@@ -114,59 +188,86 @@ function UsuariosPage() {
     queryFn: fetchUsers,
   });
 
-  const updateMutation = useMutation({
-    mutationFn: async (vars: {
-      id: string;
-      profile?: { cargo?: string | null; blocked?: boolean; full_name?: string };
-      role?: Role;
-    }) => {
-      if (vars.profile) {
-        const { error } = await supabase
-          .from("profiles")
-          .update(vars.profile)
-          .eq("id", vars.id);
-        if (error) throw error;
-      }
-      if (vars.role) {
-        // upsert into user_roles (delete previous then insert)
-        const { error: delErr } = await supabase
-          .from("user_roles")
-          .delete()
-          .eq("user_id", vars.id);
-        if (delErr) throw delErr;
-        const { error: insErr } = await supabase
-          .from("user_roles")
-          .insert({ user_id: vars.id, role: vars.role });
-        if (insErr) throw insErr;
-      }
+  const blockMutation = useMutation({
+    mutationFn: async (u: UserRow) => {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ blocked: !u.blocked })
+        .eq("id", u.id);
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users-list"] });
-      toast.success("✅ Usuário atualizado com sucesso!");
-      setDialogOpen(false);
-      setEditing(null);
+      toast.success("✅ Status atualizado.");
     },
     onError: (e: Error) => toast.error(`❌ ${e.message}`),
   });
 
-  const handleSave = (form: FormState) => {
-    if (!editing) return;
-    updateMutation.mutate({
-      id: editing.id,
-      profile: { full_name: form.full_name, cargo: form.cargo || null },
-      role: form.role,
+  const createMutation = useMutation({
+    mutationFn: (form: FormState) =>
+      createUserFn({
+        data: {
+          full_name: form.full_name,
+          email: form.email,
+          cargo: form.cargo || null,
+          role: form.role,
+        },
+      }),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["users-list"] });
+      setCreateOpen(false);
+      setConfirmInfo({
+        title: "Usuário criado com sucesso!",
+        description: `Um e-mail foi enviado para ${res.email} com instruções para definir a senha de acesso.`,
+      });
+      setConfirmOpen(true);
+    },
+    onError: (e: Error) => toast.error(`❌ ${e.message}`),
+  });
+
+  const editMutation = useMutation({
+    mutationFn: (vars: { id: string; form: FormState }) =>
+      updateUserFn({
+        data: {
+          id: vars.id,
+          full_name: vars.form.full_name,
+          email: vars.form.email,
+          cargo: vars.form.cargo || null,
+          role: vars.form.role,
+        },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users-list"] });
+      setEditOpen(false);
+      setEditing(null);
+      toast.success("✅ Usuário atualizado com sucesso!");
+    },
+    onError: (e: Error) => toast.error(`❌ ${e.message}`),
+  });
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return users.filter((u) => {
+      const matchesText =
+        !q ||
+        (u.full_name || "").toLowerCase().includes(q) ||
+        (u.email || "").toLowerCase().includes(q);
+      const matchesRole = roleFilter === "all" || u.role === roleFilter;
+      return matchesText && matchesRole;
     });
-  };
+  }, [users, search, roleFilter]);
 
-  const handleBlock = (u: UserRow) => {
-    updateMutation.mutate({ id: u.id, profile: { blocked: !u.blocked } });
-  };
-
-  const filtered = users.filter(
-    (u) =>
-      (u.full_name || "").toLowerCase().includes(search.toLowerCase()) ||
-      (u.email || "").toLowerCase().includes(search.toLowerCase()),
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const paginated = filtered.slice(
+    (safePage - 1) * PAGE_SIZE,
+    safePage * PAGE_SIZE,
   );
+
+  // Reset page on filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [search, roleFilter]);
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto px-4 py-6">
@@ -189,14 +290,32 @@ function UsuariosPage() {
         )}
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <Input
-          placeholder="Buscar por nome ou e-mail..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9"
-        />
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por nome ou e-mail..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Select
+          value={roleFilter}
+          onValueChange={(v) => setRoleFilter(v as "all" | Role)}
+        >
+          <SelectTrigger className="w-full sm:w-56">
+            <SelectValue placeholder="Filtrar por perfil" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os perfis</SelectItem>
+            {ROLE_OPTIONS.map((r) => (
+              <SelectItem key={r.value} value={r.value}>
+                {r.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <Card>
@@ -216,7 +335,7 @@ function UsuariosPage() {
             </div>
           ) : (
             <div className="divide-y divide-border">
-              {filtered.map((u) => (
+              {paginated.map((u) => (
                 <div
                   key={u.id}
                   className={`flex items-center justify-between px-5 py-4 gap-3 ${u.blocked ? "opacity-50" : ""}`}
@@ -266,7 +385,7 @@ function UsuariosPage() {
                           className="w-8 h-8 text-muted-foreground hover:text-primary"
                           onClick={() => {
                             setEditing(u);
-                            setDialogOpen(true);
+                            setEditOpen(true);
                           }}
                           title="Editar"
                         >
@@ -276,7 +395,7 @@ function UsuariosPage() {
                           variant="ghost"
                           size="icon"
                           className={`w-8 h-8 ${u.blocked ? "text-green-600 hover:text-green-700" : "text-yellow-600 hover:text-yellow-700"}`}
-                          onClick={() => handleBlock(u)}
+                          onClick={() => blockMutation.mutate(u)}
                           title={u.blocked ? "Desbloquear" : "Bloquear"}
                         >
                           {u.blocked ? (
@@ -295,172 +414,174 @@ function UsuariosPage() {
         </CardContent>
       </Card>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-md mx-4 sm:mx-auto">
-          <DialogHeader>
-            <DialogTitle>Editar Usuário</DialogTitle>
-          </DialogHeader>
-          {editing && (
-            <UserForm
-              initial={editing}
-              onSave={handleSave}
-              onClose={() => {
-                setDialogOpen(false);
-                setEditing(null);
-              }}
-              saving={updateMutation.isPending}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+      {totalPages > 1 && (
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage((p) => Math.max(1, p - 1));
+                }}
+                aria-disabled={safePage === 1}
+                className={
+                  safePage === 1 ? "pointer-events-none opacity-50" : ""
+                }
+              />
+            </PaginationItem>
+            {Array.from({ length: totalPages }).map((_, i) => {
+              const n = i + 1;
+              return (
+                <PaginationItem key={n}>
+                  <PaginationLink
+                    href="#"
+                    isActive={n === safePage}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPage(n);
+                    }}
+                  >
+                    {n}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage((p) => Math.min(totalPages, p + 1));
+                }}
+                aria-disabled={safePage === totalPages}
+                className={
+                  safePage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
 
+      {/* Create dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="max-w-md mx-4 sm:mx-auto">
           <DialogHeader>
             <DialogTitle>Adicionar Novo Usuário</DialogTitle>
           </DialogHeader>
-          <CreateUserForm
+          <UserFormFields
+            initial={{ full_name: "", email: "", cargo: "", role: "user" }}
+            saving={createMutation.isPending}
             onClose={() => setCreateOpen(false)}
-            onCreate={async (form) => {
-              try {
-                await createUserFn({
-                  data: {
-                    full_name: form.full_name,
-                    email: form.email,
-                    cargo: form.cargo || null,
-                    role: form.role,
-                  },
-                });
-                toast.success("✅ Usuário criado! Um e-mail foi enviado para definir a senha.");
-                queryClient.invalidateQueries({ queryKey: ["users-list"] });
-                setCreateOpen(false);
-              } catch (e) {
-                toast.error(`❌ ${(e as Error).message}`);
-              }
-            }}
+            onSubmit={(form) => createMutation.mutate(form)}
+            submitLabel="Salvar"
           />
         </DialogContent>
       </Dialog>
+
+      {/* Edit dialog */}
+      <Dialog
+        open={editOpen}
+        onOpenChange={(o) => {
+          setEditOpen(o);
+          if (!o) setEditing(null);
+        }}
+      >
+        <DialogContent className="max-w-md mx-4 sm:mx-auto">
+          <DialogHeader>
+            <DialogTitle>Editar Usuário</DialogTitle>
+          </DialogHeader>
+          {editing && (
+            <UserFormFields
+              initial={{
+                full_name: editing.full_name ?? "",
+                email: editing.email ?? "",
+                cargo: editing.cargo ?? "",
+                role: editing.role,
+              }}
+              saving={editMutation.isPending}
+              onClose={() => {
+                setEditOpen(false);
+                setEditing(null);
+              }}
+              onSubmit={(form) =>
+                editMutation.mutate({ id: editing.id, form })
+              }
+              submitLabel="Salvar alterações"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirmation modal after create */}
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmInfo?.title ?? "Sucesso"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmInfo?.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                setConfirmOpen(false);
+                queryClient.invalidateQueries({ queryKey: ["users-list"] });
+              }}
+            >
+              Fechar e recarregar lista
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
 
-function UserForm({
+function UserFormFields({
   initial,
-  onSave,
-  onClose,
   saving,
+  onClose,
+  onSubmit,
+  submitLabel,
 }: {
-  initial: UserRow;
-  onSave: (f: FormState) => void;
-  onClose: () => void;
+  initial: FormState;
   saving: boolean;
+  onClose: () => void;
+  onSubmit: (f: FormState) => void;
+  submitLabel: string;
 }) {
-  const [form, setForm] = useState<FormState>({
-    full_name: initial.full_name ?? "",
-    email: initial.email ?? "",
-    cargo: initial.cargo ?? "",
-    role: initial.role,
-  });
+  const [form, setForm] = useState<FormState>(initial);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
 
-  const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
-    setForm((p) => ({ ...p, [k]: v }));
-
-  const handleSave = () => {
-    if (!form.full_name.trim()) {
-      toast.warning("⚠️ Nome é obrigatório.");
-      return;
-    }
-    onSave(form);
+  const set = <K extends keyof FormState>(k: K, v: FormState[K]) => {
+    setForm((p) => {
+      const next = { ...p, [k]: v };
+      if (touched[k]) setErrors(validateForm(next));
+      return next;
+    });
   };
 
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1 sm:col-span-2">
-          <Label>Nome Completo *</Label>
-          <Input
-            placeholder="Ex: João da Silva"
-            value={form.full_name}
-            onChange={(e) => set("full_name", e.target.value)}
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>E-mail</Label>
-          <Input type="email" value={form.email} disabled />
-        </div>
-        <div className="space-y-1">
-          <Label>Cargo/Função</Label>
-          <Input
-            placeholder="Ex: Epidemiologista"
-            value={form.cargo}
-            onChange={(e) => set("cargo", e.target.value)}
-          />
-        </div>
-        <div className="space-y-1 sm:col-span-2">
-          <Label>Perfil de Acesso</Label>
-          <Select
-            value={form.role}
-            onValueChange={(v) => set("role", v as Role)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {ROLE_OPTIONS.map((r) => (
-                <SelectItem key={r.value} value={r.value}>
-                  {r.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <DialogFooter>
-        <Button variant="outline" onClick={onClose}>
-          Cancelar
-        </Button>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? "Salvando..." : "Salvar"}
-        </Button>
-      </DialogFooter>
-    </div>
-  );
-}
+  const blur = (k: keyof FormState) => {
+    setTouched((p) => ({ ...p, [k]: true }));
+    setErrors(validateForm(form));
+  };
 
-function CreateUserForm({
-  onClose,
-  onCreate,
-}: {
-  onClose: () => void;
-  onCreate: (f: FormState) => Promise<void> | void;
-}) {
-  const [form, setForm] = useState<FormState>({
-    full_name: "",
-    email: "",
-    cargo: "",
-    role: "user",
-  });
-  const [saving, setSaving] = useState(false);
-
-  const set = <K extends keyof FormState>(k: K, v: FormState[K]) =>
-    setForm((p) => ({ ...p, [k]: v }));
-
-  const handleSave = async () => {
-    if (!form.full_name.trim()) {
-      toast.warning("⚠️ Nome é obrigatório.");
+  const handleSubmit = () => {
+    const errs = validateForm(form);
+    setErrors(errs);
+    setTouched({ full_name: true, email: true, cargo: true, role: true });
+    if (Object.keys(errs).length > 0) {
+      toast.warning("⚠️ Corrija os campos destacados.");
       return;
     }
-    if (!form.email.trim()) {
-      toast.warning("⚠️ E-mail é obrigatório.");
-      return;
-    }
-    setSaving(true);
-    try {
-      await onCreate(form);
-    } finally {
-      setSaving(false);
-    }
+    onSubmit(form);
   };
 
   return (
@@ -471,7 +592,13 @@ function CreateUserForm({
           placeholder="Ex: João da Silva"
           value={form.full_name}
           onChange={(e) => set("full_name", e.target.value)}
+          onBlur={() => blur("full_name")}
+          aria-invalid={!!errors.full_name}
+          disabled={saving}
         />
+        {errors.full_name && (
+          <p className="text-xs text-destructive">{errors.full_name}</p>
+        )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1">
@@ -481,7 +608,13 @@ function CreateUserForm({
             placeholder="email@exemplo.com"
             value={form.email}
             onChange={(e) => set("email", e.target.value)}
+            onBlur={() => blur("email")}
+            aria-invalid={!!errors.email}
+            disabled={saving}
           />
+          {errors.email && (
+            <p className="text-xs text-destructive">{errors.email}</p>
+          )}
         </div>
         <div className="space-y-1">
           <Label>Cargo/Função</Label>
@@ -489,13 +622,23 @@ function CreateUserForm({
             placeholder="Ex: Epidemiologista"
             value={form.cargo}
             onChange={(e) => set("cargo", e.target.value)}
+            onBlur={() => blur("cargo")}
+            aria-invalid={!!errors.cargo}
+            disabled={saving}
           />
+          {errors.cargo && (
+            <p className="text-xs text-destructive">{errors.cargo}</p>
+          )}
         </div>
       </div>
       <div className="space-y-1">
         <Label>Perfil de Acesso</Label>
-        <Select value={form.role} onValueChange={(v) => set("role", v as Role)}>
-          <SelectTrigger>
+        <Select
+          value={form.role}
+          onValueChange={(v) => set("role", v as Role)}
+          disabled={saving}
+        >
+          <SelectTrigger aria-invalid={!!errors.role}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -506,13 +649,17 @@ function CreateUserForm({
             ))}
           </SelectContent>
         </Select>
+        {errors.role && (
+          <p className="text-xs text-destructive">{errors.role}</p>
+        )}
       </div>
       <DialogFooter>
         <Button variant="outline" onClick={onClose} disabled={saving}>
           Cancelar
         </Button>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? "Salvando..." : "Salvar"}
+        <Button onClick={handleSubmit} disabled={saving} className="gap-2">
+          {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+          {saving ? "Salvando..." : submitLabel}
         </Button>
       </DialogFooter>
     </div>
