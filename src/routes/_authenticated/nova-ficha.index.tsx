@@ -31,6 +31,12 @@ const agravos = [
     to: "/nova-ficha/difteria" as const,
     color: "bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/15",
   },
+  {
+    label: "Epizootia",
+    desc: "Notificação de epizootia em animais",
+    to: "/nova-ficha/epizootia" as const,
+    color: "bg-chart-4/10 text-chart-4 border-chart-4/20 hover:bg-chart-4/15",
+  },
 ];
 
 function SelectAgravoPage() {
