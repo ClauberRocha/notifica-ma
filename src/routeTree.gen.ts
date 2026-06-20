@@ -9,122 +9,172 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UsuariosRouteImport } from './routes/usuarios'
-import { Route as PainelRouteImport } from './routes/painel'
-import { Route as NovaFichaRouteImport } from './routes/nova-ficha'
-import { Route as FichasRouteImport } from './routes/fichas'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedNovaFichaRouteImport } from './routes/_authenticated/nova-ficha'
+import { Route as AuthenticatedFichasRouteImport } from './routes/_authenticated/fichas'
 
-const UsuariosRoute = UsuariosRouteImport.update({
-  id: '/usuarios',
-  path: '/usuarios',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PainelRoute = PainelRouteImport.update({
-  id: '/painel',
-  path: '/painel',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const NovaFichaRoute = NovaFichaRouteImport.update({
-  id: '/nova-ficha',
-  path: '/nova-ficha',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FichasRoute = FichasRouteImport.update({
-  id: '/fichas',
-  path: '/fichas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNovaFichaRoute = AuthenticatedNovaFichaRouteImport.update({
+  id: '/nova-ficha',
+  path: '/nova-ficha',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFichasRoute = AuthenticatedFichasRouteImport.update({
+  id: '/fichas',
+  path: '/fichas',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/fichas': typeof FichasRoute
-  '/nova-ficha': typeof NovaFichaRoute
-  '/painel': typeof PainelRoute
-  '/usuarios': typeof UsuariosRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/auth': typeof AuthRoute
+  '/fichas': typeof AuthenticatedFichasRoute
+  '/nova-ficha': typeof AuthenticatedNovaFichaRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/fichas': typeof FichasRoute
-  '/nova-ficha': typeof NovaFichaRoute
-  '/painel': typeof PainelRoute
-  '/usuarios': typeof UsuariosRoute
+  '/auth': typeof AuthRoute
+  '/fichas': typeof AuthenticatedFichasRoute
+  '/nova-ficha': typeof AuthenticatedNovaFichaRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/fichas': typeof FichasRoute
-  '/nova-ficha': typeof NovaFichaRoute
-  '/painel': typeof PainelRoute
-  '/usuarios': typeof UsuariosRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/fichas': typeof AuthenticatedFichasRoute
+  '/_authenticated/nova-ficha': typeof AuthenticatedNovaFichaRoute
+  '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
+  fullPaths: '/' | '/auth' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
-  id: '__root__' | '/' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios'
+  to: '/auth' | '/fichas' | '/nova-ficha' | '/painel' | '/usuarios' | '/'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/fichas'
+    | '/_authenticated/nova-ficha'
+    | '/_authenticated/painel'
+    | '/_authenticated/usuarios'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  FichasRoute: typeof FichasRoute
-  NovaFichaRoute: typeof NovaFichaRoute
-  PainelRoute: typeof PainelRoute
-  UsuariosRoute: typeof UsuariosRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/usuarios': {
-      id: '/usuarios'
-      path: '/usuarios'
-      fullPath: '/usuarios'
-      preLoaderRoute: typeof UsuariosRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/painel': {
-      id: '/painel'
-      path: '/painel'
-      fullPath: '/painel'
-      preLoaderRoute: typeof PainelRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/nova-ficha': {
-      id: '/nova-ficha'
-      path: '/nova-ficha'
-      fullPath: '/nova-ficha'
-      preLoaderRoute: typeof NovaFichaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fichas': {
-      id: '/fichas'
-      path: '/fichas'
-      fullPath: '/fichas'
-      preLoaderRoute: typeof FichasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/usuarios': {
+      id: '/_authenticated/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nova-ficha': {
+      id: '/_authenticated/nova-ficha'
+      path: '/nova-ficha'
+      fullPath: '/nova-ficha'
+      preLoaderRoute: typeof AuthenticatedNovaFichaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas': {
+      id: '/_authenticated/fichas'
+      path: '/fichas'
+      fullPath: '/fichas'
+      preLoaderRoute: typeof AuthenticatedFichasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedFichasRoute: typeof AuthenticatedFichasRoute
+  AuthenticatedNovaFichaRoute: typeof AuthenticatedNovaFichaRoute
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+  AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedFichasRoute: AuthenticatedFichasRoute,
+  AuthenticatedNovaFichaRoute: AuthenticatedNovaFichaRoute,
+  AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+  AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  FichasRoute: FichasRoute,
-  NovaFichaRoute: NovaFichaRoute,
-  PainelRoute: PainelRoute,
-  UsuariosRoute: UsuariosRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
