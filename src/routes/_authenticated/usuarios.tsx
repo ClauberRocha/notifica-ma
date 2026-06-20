@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dialog";
 import { UserPlus, Pencil, Lock, Unlock, Search, Users } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { createUser } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
