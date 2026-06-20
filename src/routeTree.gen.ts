@@ -16,6 +16,7 @@ import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedNovaFichaIndexRouteImport } from './routes/_authenticated/nova-ficha.index'
 import { Route as AuthenticatedFichasIndexRouteImport } from './routes/_authenticated/fichas.index'
+import { Route as AuthenticatedNovaFichaSurtoDtaRouteImport } from './routes/_authenticated/nova-ficha.surto-dta'
 import { Route as AuthenticatedNovaFichaSragRouteImport } from './routes/_authenticated/nova-ficha.srag'
 import { Route as AuthenticatedNovaFichaSarampoRouteImport } from './routes/_authenticated/nova-ficha.sarampo'
 import { Route as AuthenticatedNovaFichaRubeolaRouteImport } from './routes/_authenticated/nova-ficha.rubeola'
@@ -29,6 +30,7 @@ import { Route as AuthenticatedNovaFichaDifteriaRouteImport } from './routes/_au
 import { Route as AuthenticatedNovaFichaDengueRouteImport } from './routes/_authenticated/nova-ficha.dengue'
 import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_authenticated/nova-ficha.coqueluche'
 import { Route as AuthenticatedNovaFichaChikungunyaRouteImport } from './routes/_authenticated/nova-ficha.chikungunya'
+import { Route as AuthenticatedFichasSurtoDtaRouteImport } from './routes/_authenticated/fichas.surto-dta'
 import { Route as AuthenticatedFichasSragRouteImport } from './routes/_authenticated/fichas.srag'
 import { Route as AuthenticatedFichasSarampoRouteImport } from './routes/_authenticated/fichas.sarampo'
 import { Route as AuthenticatedFichasRubeolaRouteImport } from './routes/_authenticated/fichas.rubeola'
@@ -77,6 +79,12 @@ const AuthenticatedFichasIndexRoute =
   AuthenticatedFichasIndexRouteImport.update({
     id: '/fichas/',
     path: '/fichas/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNovaFichaSurtoDtaRoute =
+  AuthenticatedNovaFichaSurtoDtaRouteImport.update({
+    id: '/nova-ficha/surto-dta',
+    path: '/nova-ficha/surto-dta',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedNovaFichaSragRoute =
@@ -155,6 +163,12 @@ const AuthenticatedNovaFichaChikungunyaRoute =
   AuthenticatedNovaFichaChikungunyaRouteImport.update({
     id: '/nova-ficha/chikungunya',
     path: '/nova-ficha/chikungunya',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasSurtoDtaRoute =
+  AuthenticatedFichasSurtoDtaRouteImport.update({
+    id: '/fichas/surto-dta',
+    path: '/fichas/surto-dta',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasSragRoute = AuthenticatedFichasSragRouteImport.update({
@@ -253,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/fichas/rubeola': typeof AuthenticatedFichasRubeolaRoute
   '/fichas/sarampo': typeof AuthenticatedFichasSarampoRoute
   '/fichas/srag': typeof AuthenticatedFichasSragRoute
+  '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -266,6 +281,7 @@ export interface FileRoutesByFullPath {
   '/nova-ficha/rubeola': typeof AuthenticatedNovaFichaRubeolaRoute
   '/nova-ficha/sarampo': typeof AuthenticatedNovaFichaSarampoRoute
   '/nova-ficha/srag': typeof AuthenticatedNovaFichaSragRoute
+  '/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/fichas/': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -287,6 +303,7 @@ export interface FileRoutesByTo {
   '/fichas/rubeola': typeof AuthenticatedFichasRubeolaRoute
   '/fichas/sarampo': typeof AuthenticatedFichasSarampoRoute
   '/fichas/srag': typeof AuthenticatedFichasSragRoute
+  '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -300,6 +317,7 @@ export interface FileRoutesByTo {
   '/nova-ficha/rubeola': typeof AuthenticatedNovaFichaRubeolaRoute
   '/nova-ficha/sarampo': typeof AuthenticatedNovaFichaSarampoRoute
   '/nova-ficha/srag': typeof AuthenticatedNovaFichaSragRoute
+  '/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/fichas': typeof AuthenticatedFichasIndexRoute
   '/nova-ficha': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -323,6 +341,7 @@ export interface FileRoutesById {
   '/_authenticated/fichas/rubeola': typeof AuthenticatedFichasRubeolaRoute
   '/_authenticated/fichas/sarampo': typeof AuthenticatedFichasSarampoRoute
   '/_authenticated/fichas/srag': typeof AuthenticatedFichasSragRoute
+  '/_authenticated/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRoute
   '/_authenticated/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/_authenticated/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/_authenticated/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -336,6 +355,7 @@ export interface FileRoutesById {
   '/_authenticated/nova-ficha/rubeola': typeof AuthenticatedNovaFichaRubeolaRoute
   '/_authenticated/nova-ficha/sarampo': typeof AuthenticatedNovaFichaSarampoRoute
   '/_authenticated/nova-ficha/srag': typeof AuthenticatedNovaFichaSragRoute
+  '/_authenticated/nova-ficha/surto-dta': typeof AuthenticatedNovaFichaSurtoDtaRoute
   '/_authenticated/fichas/': typeof AuthenticatedFichasIndexRoute
   '/_authenticated/nova-ficha/': typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -359,6 +379,7 @@ export interface FileRouteTypes {
     | '/fichas/rubeola'
     | '/fichas/sarampo'
     | '/fichas/srag'
+    | '/fichas/surto-dta'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -372,6 +393,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/rubeola'
     | '/nova-ficha/sarampo'
     | '/nova-ficha/srag'
+    | '/nova-ficha/surto-dta'
     | '/fichas/'
     | '/nova-ficha/'
   fileRoutesByTo: FileRoutesByTo
@@ -393,6 +415,7 @@ export interface FileRouteTypes {
     | '/fichas/rubeola'
     | '/fichas/sarampo'
     | '/fichas/srag'
+    | '/fichas/surto-dta'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -406,6 +429,7 @@ export interface FileRouteTypes {
     | '/nova-ficha/rubeola'
     | '/nova-ficha/sarampo'
     | '/nova-ficha/srag'
+    | '/nova-ficha/surto-dta'
     | '/fichas'
     | '/nova-ficha'
   id:
@@ -428,6 +452,7 @@ export interface FileRouteTypes {
     | '/_authenticated/fichas/rubeola'
     | '/_authenticated/fichas/sarampo'
     | '/_authenticated/fichas/srag'
+    | '/_authenticated/fichas/surto-dta'
     | '/_authenticated/nova-ficha/chikungunya'
     | '/_authenticated/nova-ficha/coqueluche'
     | '/_authenticated/nova-ficha/dengue'
@@ -441,6 +466,7 @@ export interface FileRouteTypes {
     | '/_authenticated/nova-ficha/rubeola'
     | '/_authenticated/nova-ficha/sarampo'
     | '/_authenticated/nova-ficha/srag'
+    | '/_authenticated/nova-ficha/surto-dta'
     | '/_authenticated/fichas/'
     | '/_authenticated/nova-ficha/'
   fileRoutesById: FileRoutesById
@@ -499,6 +525,13 @@ declare module '@tanstack/react-router' {
       path: '/fichas'
       fullPath: '/fichas/'
       preLoaderRoute: typeof AuthenticatedFichasIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/nova-ficha/surto-dta': {
+      id: '/_authenticated/nova-ficha/surto-dta'
+      path: '/nova-ficha/surto-dta'
+      fullPath: '/nova-ficha/surto-dta'
+      preLoaderRoute: typeof AuthenticatedNovaFichaSurtoDtaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/nova-ficha/srag': {
@@ -590,6 +623,13 @@ declare module '@tanstack/react-router' {
       path: '/nova-ficha/chikungunya'
       fullPath: '/nova-ficha/chikungunya'
       preLoaderRoute: typeof AuthenticatedNovaFichaChikungunyaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fichas/surto-dta': {
+      id: '/_authenticated/fichas/surto-dta'
+      path: '/fichas/surto-dta'
+      fullPath: '/fichas/surto-dta'
+      preLoaderRoute: typeof AuthenticatedFichasSurtoDtaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/srag': {
@@ -703,6 +743,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFichasRubeolaRoute: typeof AuthenticatedFichasRubeolaRoute
   AuthenticatedFichasSarampoRoute: typeof AuthenticatedFichasSarampoRoute
   AuthenticatedFichasSragRoute: typeof AuthenticatedFichasSragRoute
+  AuthenticatedFichasSurtoDtaRoute: typeof AuthenticatedFichasSurtoDtaRoute
   AuthenticatedNovaFichaChikungunyaRoute: typeof AuthenticatedNovaFichaChikungunyaRoute
   AuthenticatedNovaFichaCoquelucheRoute: typeof AuthenticatedNovaFichaCoquelucheRoute
   AuthenticatedNovaFichaDengueRoute: typeof AuthenticatedNovaFichaDengueRoute
@@ -716,6 +757,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNovaFichaRubeolaRoute: typeof AuthenticatedNovaFichaRubeolaRoute
   AuthenticatedNovaFichaSarampoRoute: typeof AuthenticatedNovaFichaSarampoRoute
   AuthenticatedNovaFichaSragRoute: typeof AuthenticatedNovaFichaSragRoute
+  AuthenticatedNovaFichaSurtoDtaRoute: typeof AuthenticatedNovaFichaSurtoDtaRoute
   AuthenticatedFichasIndexRoute: typeof AuthenticatedFichasIndexRoute
   AuthenticatedNovaFichaIndexRoute: typeof AuthenticatedNovaFichaIndexRoute
 }
@@ -739,6 +781,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFichasRubeolaRoute: AuthenticatedFichasRubeolaRoute,
   AuthenticatedFichasSarampoRoute: AuthenticatedFichasSarampoRoute,
   AuthenticatedFichasSragRoute: AuthenticatedFichasSragRoute,
+  AuthenticatedFichasSurtoDtaRoute: AuthenticatedFichasSurtoDtaRoute,
   AuthenticatedNovaFichaChikungunyaRoute:
     AuthenticatedNovaFichaChikungunyaRoute,
   AuthenticatedNovaFichaCoquelucheRoute: AuthenticatedNovaFichaCoquelucheRoute,
@@ -757,6 +800,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNovaFichaRubeolaRoute: AuthenticatedNovaFichaRubeolaRoute,
   AuthenticatedNovaFichaSarampoRoute: AuthenticatedNovaFichaSarampoRoute,
   AuthenticatedNovaFichaSragRoute: AuthenticatedNovaFichaSragRoute,
+  AuthenticatedNovaFichaSurtoDtaRoute: AuthenticatedNovaFichaSurtoDtaRoute,
   AuthenticatedFichasIndexRoute: AuthenticatedFichasIndexRoute,
   AuthenticatedNovaFichaIndexRoute: AuthenticatedNovaFichaIndexRoute,
 }
