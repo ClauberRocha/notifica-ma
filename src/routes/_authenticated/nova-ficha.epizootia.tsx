@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
 import { renderSmartField } from "@/components/smart-fields";
+import {
   ZONA,
   AMBIENTE,
   SIM_NAO_IGN,

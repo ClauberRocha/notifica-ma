@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
 import { renderSmartField } from "@/components/smart-fields";
+import {
   SIM_NAO_IGN,
   TIPO_IDADE,
   SEXO,
