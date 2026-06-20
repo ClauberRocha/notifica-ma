@@ -48,7 +48,7 @@ type FieldDef =
 type Step = {
   title: string;
   description?: string;
-  fields: FieldDef[];
+  fields?: FieldDef[];
   custom?: "antecedentes_epi";
 };
 
