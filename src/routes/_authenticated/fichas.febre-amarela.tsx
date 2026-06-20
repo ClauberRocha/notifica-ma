@@ -104,7 +104,7 @@ function FichasFebreAmarelaPage() {
             </TableHeader>
             <TableBody>
               {rows.map((r) => (
-                <TableRow key={r.id}>
+                <TableRow key={r.id} className="cursor-pointer hover:bg-muted/50" onClick={() => { window.location.href = `/fichas/febre-amarela/${r.id}`; }}>
                   <TableCell className="font-mono text-xs">{r.numero_ficha || "—"}</TableCell>
                   <TableCell className="font-medium">{r.nome_paciente}</TableCell>
                   <TableCell>{new Date(r.data_notificacao).toLocaleDateString("pt-BR")}</TableCell>

@@ -98,7 +98,7 @@ function FichasEpizootiaPage() {
             </TableHeader>
             <TableBody>
               {rows.map((r) => (
-                <TableRow key={r.id}>
+                <TableRow key={r.id} className="cursor-pointer hover:bg-muted/50" onClick={() => { window.location.href = `/fichas/epizootia/${r.id}`; }}>
                   <TableCell className="font-mono text-xs">{r.numero_ficha || "—"}</TableCell>
                   <TableCell className="font-medium">{r.municipio_notificacao}</TableCell>
                   <TableCell>{new Date(r.data_notificacao).toLocaleDateString("pt-BR")}</TableCell>
