@@ -161,6 +161,7 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
     },
     { title: "Sinais clínicos", description: "Marque a presença de cada sinal.", custom: "sinais" },
     { title: "Doenças preexistentes", description: "Marque as doenças preexistentes.", custom: "doencas" },
+    { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
     { title: "Laboratório", description: "Resultados de exames.", fields: labLab },
     {
       title: "Hospitalização",
