@@ -37,6 +37,18 @@ const agravos = [
     to: "/fichas/epizootia" as const,
     color: "bg-chart-4/10 text-chart-4 border-chart-4/20 hover:bg-chart-4/15",
   },
+  {
+    label: "Sarampo",
+    desc: "Fichas cadastradas de sarampo",
+    to: "/fichas/sarampo" as const,
+    color: "bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/15",
+  },
+  {
+    label: "Rubéola",
+    desc: "Fichas cadastradas de rubéola",
+    to: "/fichas/rubeola" as const,
+    color: "bg-chart-1/10 text-chart-1 border-chart-1/20 hover:bg-chart-1/15",
+  },
 ];
 
 function SelectAgravoListPage() {
