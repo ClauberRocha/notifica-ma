@@ -61,7 +61,20 @@ const agravos = [
     to: "/nova-ficha/hanseniase" as const,
     color: "bg-orange-500/10 text-orange-700 border-orange-500/20 hover:bg-orange-500/15",
   },
+  {
+    label: "Doença Meningocócica",
+    desc: "Notificação individual de doença meningocócica",
+    to: "/nova-ficha/doenca-meningococica" as const,
+    color: "bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/15",
+  },
+  {
+    label: "Outras Meningites",
+    desc: "Notificação individual de outras meningites",
+    to: "/nova-ficha/outras-meningites" as const,
+    color: "bg-sky-500/10 text-sky-700 border-sky-500/20 hover:bg-sky-500/15",
+  },
 ];
+
 
 
 function SelectAgravoPage() {
