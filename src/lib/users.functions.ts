@@ -27,6 +27,8 @@ const ToggleBlockSchema = z.object({
 
 const DeleteSchema = z.object({ id: z.string().uuid() });
 
+const ResendInviteSchema = z.object({ id: z.string().uuid() });
+
 const RANK: Record<Role, number> = { admin: 3, gestor: 2, user: 1 };
 
 async function getActorRoles(supabase: any, userId: string): Promise<Role[]> {
