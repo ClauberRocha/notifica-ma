@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
 import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
+import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
   TIPO_IDADE,
   SEXO,
@@ -54,7 +55,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "populacoes" | "doencas" | "antecedentes_epi";
+  custom?: "populacoes" | "doencas" | "antecedentes_epi" | "dados_clinicos";
 };
 
 const STEPS: Step[] = [
@@ -159,6 +160,7 @@ const STEPS: Step[] = [
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
   },
+  { title: "Dados Clínicos", description: "Sinais, sintomas, hospitalização e evolução.", custom: "dados_clinicos" },
   { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
 ];
 
@@ -295,6 +297,10 @@ function NovaFichaTuberculosePage() {
             <CheckGrid items={DOENCAS_KEYS} values={doencas} onChange={setDoencas} />
           </div>
         )}
+                {current.custom === "dados_clinicos" && (
+          <DadosClinicosPanel form={form} setForm={setForm} />
+        )}
+
         {current.custom === "antecedentes_epi" && (
           <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
         )}

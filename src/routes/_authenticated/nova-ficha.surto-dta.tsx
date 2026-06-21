@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
 import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
+import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
   SIM_NAO_IGN,
   LOCAL_INICIAL_OCORRENCIA,
@@ -43,7 +44,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "sintomas" | "fatores" | "antecedentes_epi";
+  custom?: "sintomas" | "fatores" | "antecedentes_epi" | "dados_clinicos";
 };
 
 const STEPS: Step[] = [
@@ -91,11 +92,6 @@ const STEPS: Step[] = [
       { name: "numero_total_hospitalizados", label: "Nº total de hospitalizados", type: "number" },
       { name: "numero_obitos", label: "Nº de óbitos", type: "number" },
     ],
-  },
-  {
-    title: "Sinais e sintomas",
-    description: "Quantidade de pessoas que apresentaram cada sintoma.",
-    custom: "sintomas",
   },
   {
     title: "Período de incubação",
@@ -153,6 +149,7 @@ const STEPS: Step[] = [
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
   },
+  { title: "Dados Clínicos", description: "Sinais, sintomas, hospitalização e evolução.", custom: "dados_clinicos" },
   { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
 ];
 
@@ -340,6 +337,10 @@ function NovaFichaSurtoDtaPage() {
             ))}
           </div>
         )}
+                {current.custom === "dados_clinicos" && (
+          <DadosClinicosPanel form={form} setForm={setForm} />
+        )}
+
         {current.custom === "antecedentes_epi" && (
           <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
         )}

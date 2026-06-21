@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
 import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
+import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
   SIM_NAO_IGN,
   TIPO_IDADE,
@@ -55,7 +56,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "tipo_exposicao" | "localizacao" | "tipo_ferimento" | "sintomas" | "diag_lab" | "antecedentes_epi";
+  custom?: "tipo_exposicao" | "localizacao" | "tipo_ferimento" | "sintomas" | "diag_lab" | "antecedentes_epi" | "dados_clinicos";
 };
 
 const STEPS: Step[] = [
@@ -142,7 +143,6 @@ const STEPS: Step[] = [
       { name: "nome_hospital", label: "Nome do hospital", type: "text", col: 2 },
     ],
   },
-  { title: "Sinais e sintomas", custom: "sintomas" },
   {
     title: "Tratamento antirrábico atual",
     fields: [
@@ -175,6 +175,7 @@ const STEPS: Step[] = [
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
   },
+  { title: "Dados Clínicos", description: "Sinais, sintomas, hospitalização e evolução.", custom: "dados_clinicos" },
   { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
 ];
 
@@ -338,6 +339,10 @@ function NovaFichaRaivaHumanaPage() {
             ))}
           </div>
         )}
+                {current.custom === "dados_clinicos" && (
+          <DadosClinicosPanel form={form} setForm={setForm} />
+        )}
+
         {current.custom === "antecedentes_epi" && (
           <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
         )}
