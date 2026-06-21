@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
 import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
+import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
   SIM_NAO_IGN,
   TIPO_IDADE,
@@ -46,7 +47,7 @@ type FieldDef =
   | { name: string; label: string; type: "text" | "date" | "number" | "textarea"; required?: boolean; col?: 1 | 2 | 3 }
   | { name: string; label: string; type: "select"; options: Opt[]; required?: boolean; col?: 1 | 2 | 3 };
 
-type Step = { title: string; description?: string; fields?: FieldDef[]; custom?: "sintomas" | "antecedentes_epi" };
+type Step = { title: string; description?: string; fields?: FieldDef[]; custom?: "sintomas" | "antecedentes_epi" | "dados_clinicos" };
 
 const STEPS: Step[] = [
   {
@@ -115,7 +116,6 @@ const STEPS: Step[] = [
       { name: "unidade_saude_vacinacao", label: "Unidade da vacinação", type: "text", col: 2 },
     ],
   },
-  { title: "Sinais e sintomas", custom: "sintomas" },
   {
     title: "Hospitalização",
     fields: [
@@ -175,6 +175,7 @@ const STEPS: Step[] = [
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
   },
+  { title: "Dados Clínicos", description: "Sinais, sintomas, hospitalização e evolução.", custom: "dados_clinicos" },
   { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
 ];
 
@@ -324,6 +325,10 @@ function NovaFichaFebreAmarelaPage() {
             ))}
           </div>
         )}
+                {current.custom === "dados_clinicos" && (
+          <DadosClinicosPanel form={form} setForm={setForm} />
+        )}
+
         {current.custom === "antecedentes_epi" && (
           <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
         )}

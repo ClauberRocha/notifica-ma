@@ -46,6 +46,12 @@ export type Database = {
           data_obito: string | null
           data_primeiros_sintomas: string | null
           data_ultima_dose: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           distrito: string | null
           doenca_relacionada_trabalho: string | null
           doses_vacina_triplice: string | null
@@ -127,6 +133,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           doenca_relacionada_trabalho?: string | null
           doses_vacina_triplice?: string | null
@@ -208,6 +220,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           doenca_relacionada_trabalho?: string | null
           doses_vacina_triplice?: string | null
@@ -281,6 +299,12 @@ export type Database = {
           data_notificacao: string
           data_obito: string | null
           data_primeiros_sintomas: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           dengue_grave: string | null
           dengue_sinais_alarme: string | null
           doencas_preexistentes: Json | null
@@ -350,6 +374,12 @@ export type Database = {
           data_notificacao: string
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           dengue_grave?: string | null
           dengue_sinais_alarme?: string | null
           doencas_preexistentes?: Json | null
@@ -419,6 +449,12 @@ export type Database = {
           data_notificacao?: string
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           dengue_grave?: string | null
           dengue_sinais_alarme?: string | null
           doencas_preexistentes?: Json | null
@@ -501,6 +537,12 @@ export type Database = {
           data_obito: string | null
           data_primeiros_sintomas: string | null
           data_ultima_dose: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           distrito: string | null
           doenca_relacionada_trabalho: string | null
           doses_vacina: string | null
@@ -585,6 +627,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           doenca_relacionada_trabalho?: string | null
           doses_vacina?: string | null
@@ -669,6 +717,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           doenca_relacionada_trabalho?: string | null
           doses_vacina?: string | null
@@ -830,6 +884,12 @@ export type Database = {
           data_coleta: string | null
           data_inicio_epizootia: string | null
           data_notificacao: string
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           distrito: string | null
           fonte_informacao: string | null
           funcao_investigador: string | null
@@ -877,6 +937,12 @@ export type Database = {
           data_coleta?: string | null
           data_inicio_epizootia?: string | null
           data_notificacao: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           fonte_informacao?: string | null
           funcao_investigador?: string | null
@@ -924,6 +990,12 @@ export type Database = {
           data_coleta?: string | null
           data_inicio_epizootia?: string | null
           data_notificacao?: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           fonte_informacao?: string | null
           funcao_investigador?: string | null
@@ -983,6 +1055,12 @@ export type Database = {
           data_obito: string | null
           data_primeiros_sintomas: string | null
           data_ultima_dose_vacina: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           endereco_contato: string | null
           escolaridade: string | null
           evolucao: string | null
@@ -1052,6 +1130,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose_vacina?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           endereco_contato?: string | null
           escolaridade?: string | null
           evolucao?: string | null
@@ -1121,6 +1205,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose_vacina?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           endereco_contato?: string | null
           escolaridade?: string | null
           evolucao?: string | null
@@ -1197,6 +1287,12 @@ export type Database = {
           data_obito: string | null
           data_primeiros_sintomas: string | null
           data_vacinacao: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           doenca_relacionada_trabalho: string | null
           escolaridade: string | null
           evolucao: string | null
@@ -1278,6 +1374,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_vacinacao?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           doenca_relacionada_trabalho?: string | null
           escolaridade?: string | null
           evolucao?: string | null
@@ -1359,6 +1461,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_vacinacao?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           doenca_relacionada_trabalho?: string | null
           escolaridade?: string | null
           evolucao?: string | null
@@ -1429,6 +1537,12 @@ export type Database = {
           data_inicio_tratamento: string | null
           data_nascimento: string | null
           data_notificacao: string
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           escolaridade: string | null
           esquema_terapeutico: string | null
           forma_clinica: string | null
@@ -1483,6 +1597,12 @@ export type Database = {
           data_inicio_tratamento?: string | null
           data_nascimento?: string | null
           data_notificacao: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           escolaridade?: string | null
           esquema_terapeutico?: string | null
           forma_clinica?: string | null
@@ -1537,6 +1657,12 @@ export type Database = {
           data_inicio_tratamento?: string | null
           data_nascimento?: string | null
           data_notificacao?: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           escolaridade?: string | null
           esquema_terapeutico?: string | null
           forma_clinica?: string | null
@@ -1605,6 +1731,12 @@ export type Database = {
           data_primeiros_sintomas: string | null
           data_puncao: string | null
           data_quimioprofilaxia: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           distrito: string | null
           doenca_relacionada_trabalho: string | null
           doencas_preexistentes: Json | null
@@ -1684,6 +1816,12 @@ export type Database = {
           data_primeiros_sintomas?: string | null
           data_puncao?: string | null
           data_quimioprofilaxia?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           doenca_relacionada_trabalho?: string | null
           doencas_preexistentes?: Json | null
@@ -1763,6 +1901,12 @@ export type Database = {
           data_primeiros_sintomas?: string | null
           data_puncao?: string | null
           data_quimioprofilaxia?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           distrito?: string | null
           doenca_relacionada_trabalho?: string | null
           doencas_preexistentes?: Json | null
@@ -1876,6 +2020,12 @@ export type Database = {
           data_primeiros_sintomas: string | null
           data_ultima_dose: string | null
           data_ultima_dose_anterior: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           diagnostico_laboratorial: Json | null
           doenca_relacionada_trabalho: string | null
           escolaridade: string | null
@@ -1952,6 +2102,12 @@ export type Database = {
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
           data_ultima_dose_anterior?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           diagnostico_laboratorial?: Json | null
           doenca_relacionada_trabalho?: string | null
           escolaridade?: string | null
@@ -2028,6 +2184,12 @@ export type Database = {
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
           data_ultima_dose_anterior?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           diagnostico_laboratorial?: Json | null
           doenca_relacionada_trabalho?: string | null
           escolaridade?: string | null
@@ -2103,6 +2265,12 @@ export type Database = {
           data_raio_x: string | null
           data_saida_uti: string | null
           data_ultima_dose_vacina: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           diagnostico_etiologico: Json | null
           escolaridade: string | null
           evolucao: string | null
@@ -2169,6 +2337,12 @@ export type Database = {
           data_raio_x?: string | null
           data_saida_uti?: string | null
           data_ultima_dose_vacina?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           diagnostico_etiologico?: Json | null
           escolaridade?: string | null
           evolucao?: string | null
@@ -2235,6 +2409,12 @@ export type Database = {
           data_raio_x?: string | null
           data_saida_uti?: string | null
           data_ultima_dose_vacina?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           diagnostico_etiologico?: Json | null
           escolaridade?: string | null
           evolucao?: string | null
@@ -2324,6 +2504,12 @@ export type Database = {
           data_encerramento: string | null
           data_investigacao: string | null
           data_notificacao: string
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           fatores_causais: Json | null
           funcao_investigador: string | null
           id: string
@@ -2385,6 +2571,12 @@ export type Database = {
           data_encerramento?: string | null
           data_investigacao?: string | null
           data_notificacao: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           fatores_causais?: Json | null
           funcao_investigador?: string | null
           id?: string
@@ -2446,6 +2638,12 @@ export type Database = {
           data_encerramento?: string | null
           data_investigacao?: string | null
           data_notificacao?: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           fatores_causais?: Json | null
           funcao_investigador?: string | null
           id?: string
@@ -2552,6 +2750,12 @@ export type Database = {
           data_obito: string | null
           data_primeiros_sintomas: string | null
           data_ultima_dose: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           escolaridade: string | null
           evolucao: string | null
           funcao_investigador: string | null
@@ -2613,6 +2817,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           escolaridade?: string | null
           evolucao?: string | null
           funcao_investigador?: string | null
@@ -2674,6 +2884,12 @@ export type Database = {
           data_obito?: string | null
           data_primeiros_sintomas?: string | null
           data_ultima_dose?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           escolaridade?: string | null
           evolucao?: string | null
           funcao_investigador?: string | null
@@ -2742,6 +2958,12 @@ export type Database = {
           data_primeiros_sintomas: string | null
           data_trismo: string | null
           data_ultimo_reforco_mae: string | null
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           escolaridade_mae: string | null
           evolucao: string | null
           funcao_investigador: string | null
@@ -2806,6 +3028,12 @@ export type Database = {
           data_primeiros_sintomas?: string | null
           data_trismo?: string | null
           data_ultimo_reforco_mae?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           escolaridade_mae?: string | null
           evolucao?: string | null
           funcao_investigador?: string | null
@@ -2870,6 +3098,12 @@ export type Database = {
           data_primeiros_sintomas?: string | null
           data_trismo?: string | null
           data_ultimo_reforco_mae?: string | null
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           escolaridade_mae?: string | null
           evolucao?: string | null
           funcao_investigador?: string | null
@@ -2929,6 +3163,12 @@ export type Database = {
           data_inicio_tratamento: string | null
           data_nascimento: string | null
           data_notificacao: string
+          dc_data_internacao: string | null
+          dc_data_primeiros_sintomas: string | null
+          dc_evolucao_clinica: string | null
+          dc_houve_hospitalizacao: string | null
+          dc_sintomas: string | null
+          dc_sintomas_outros: string | null
           doencas_agravos_associados: Json | null
           escolaridade: string | null
           forma: string | null
@@ -2987,6 +3227,12 @@ export type Database = {
           data_inicio_tratamento?: string | null
           data_nascimento?: string | null
           data_notificacao: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           doencas_agravos_associados?: Json | null
           escolaridade?: string | null
           forma?: string | null
@@ -3045,6 +3291,12 @@ export type Database = {
           data_inicio_tratamento?: string | null
           data_nascimento?: string | null
           data_notificacao?: string
+          dc_data_internacao?: string | null
+          dc_data_primeiros_sintomas?: string | null
+          dc_evolucao_clinica?: string | null
+          dc_houve_hospitalizacao?: string | null
+          dc_sintomas?: string | null
+          dc_sintomas_outros?: string | null
           doencas_agravos_associados?: Json | null
           escolaridade?: string | null
           forma?: string | null

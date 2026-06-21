@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { renderSmartField } from "@/components/smart-fields";
 import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
+import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
   SIM_NAO,
   SIM_NAO_IGN,
@@ -48,7 +49,7 @@ type Step = {
   title: string;
   description?: string;
   fields?: FieldDef[];
-  custom?: "sinais" | "doencas" | "antecedentes_epi";
+  custom?: "sinais" | "doencas" | "antecedentes_epi" | "dados_clinicos";
 };
 
 function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
@@ -160,8 +161,8 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
         { name: "ocupacao", label: "Ocupação", type: "text", col: 2 },
       ],
     },
-    { title: "Sinais clínicos", description: "Marque a presença de cada sinal.", custom: "sinais" },
     { title: "Doenças preexistentes", description: "Marque as doenças preexistentes.", custom: "doencas" },
+  { title: "Dados Clínicos", description: "Sinais, sintomas, hospitalização e evolução.", custom: "dados_clinicos" },
     { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
     { title: "Laboratório", description: "Resultados de exames.", fields: labLab },
     {
@@ -301,6 +302,10 @@ export function DengueChikForm({
 
         {current.custom === "sinais" && <SimNaoGrid items={SINAIS_CLINICOS_KEYS} values={sinais} onChange={setSinais} />}
         {current.custom === "doencas" && <SimNaoGrid items={DOENCAS_PREEXISTENTES_KEYS} values={doencas} onChange={setDoencas} />}
+                {current.custom === "dados_clinicos" && (
+          <DadosClinicosPanel form={form} setForm={setForm} />
+        )}
+
         {current.custom === "antecedentes_epi" && (
           <AntecedentesEpidemiologicosPanel form={form} setForm={setForm} />
         )}
