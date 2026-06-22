@@ -424,6 +424,7 @@ function UsuariosPage() {
                             setEditOpen(true);
                           }}
                           title="Editar"
+                          aria-label={`Editar usuário ${u.full_name || u.email}`}
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
@@ -437,6 +438,7 @@ function UsuariosPage() {
                             resendInviteMutation.variables === u.id
                           }
                           title="Reenviar convite"
+                          aria-label={`Reenviar convite para ${u.full_name || u.email}`}
                         >
                           {resendInviteMutation.isPending &&
                           resendInviteMutation.variables === u.id ? (
@@ -451,6 +453,7 @@ function UsuariosPage() {
                           className={`w-8 h-8 ${u.blocked ? "text-green-600 hover:text-green-700" : "text-yellow-600 hover:text-yellow-700"}`}
                           onClick={() => blockMutation.mutate(u)}
                           title={u.blocked ? "Desbloquear" : "Bloquear"}
+                          aria-label={`${u.blocked ? "Desbloquear" : "Bloquear"} usuário ${u.full_name || u.email}`}
                         >
                           {u.blocked ? (
                             <Unlock className="w-3.5 h-3.5" />
@@ -464,6 +467,7 @@ function UsuariosPage() {
                           className="w-8 h-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                           onClick={() => setDeleting(u)}
                           title="Excluir"
+                          aria-label={`Excluir usuário ${u.full_name || u.email}`}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
