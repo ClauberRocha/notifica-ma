@@ -39,10 +39,9 @@ import {
   QUIMIOCITOLOGICO_KEYS,
 } from "@/lib/meningite-options";
 
-export type MeningiteAgravo = "doenca_meningococica" | "outras_meningites";
+export type MeningiteAgravo = "outras_meningites";
 
 const LABEL_MAP: Record<MeningiteAgravo, string> = {
-  doenca_meningococica: "Doença Meningocócica",
   outras_meningites: "Outras Meningites",
 };
 
