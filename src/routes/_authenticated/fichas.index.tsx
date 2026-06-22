@@ -65,7 +65,7 @@ type AgravoDef = {
     | "/fichas/rubeola"
     | "/fichas/febre-amarela"
     | "/fichas/hanseniase"
-    | "/fichas/doenca-meningococica"
+    
     | "/fichas/outras-meningites"
     | "/fichas/raiva-humana"
     | "/fichas/srag"
