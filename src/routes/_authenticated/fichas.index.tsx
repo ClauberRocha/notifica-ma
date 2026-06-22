@@ -83,7 +83,7 @@ const AGRAVOS: AgravoDef[] = [
   { table: "exantematica_cases", slug: "sarampo", tipo: "sarampo", label: "Sarampo/Rubéola", dateField: "data_notificacao", listPath: "/fichas/sarampo" },
   { table: "febre_amarela_cases", slug: "febre-amarela", tipo: "febre_amarela", label: "Febre Amarela", dateField: "data_notificacao", listPath: "/fichas/febre-amarela" },
   { table: "hanseniase_cases", slug: "hanseniase", tipo: "hanseniase", label: "Hanseníase", dateField: "data_notificacao", listPath: "/fichas/hanseniase" },
-  { table: "meningite_cases", slug: "doenca-meningococica", tipo: "meningite", label: "Meningite", dateField: "data_notificacao", listPath: "/fichas/doenca-meningococica" },
+  { table: "meningite_cases", slug: "outras-meningites", tipo: "meningite", label: "Meningite", dateField: "data_notificacao", listPath: "/fichas/outras-meningites" },
   { table: "raiva_humana_cases", slug: "raiva-humana", tipo: "raiva_humana", label: "Raiva Humana", dateField: "data_notificacao", listPath: "/fichas/raiva-humana" },
   { table: "srag_cases", slug: "srag", tipo: "srag_influenza", label: "SRAG/Influenza", dateField: "data_preenchimento", listPath: "/fichas/srag" },
   { table: "surto_dta_cases", slug: "surto-dta", tipo: "surto_dta", label: "Surto DTA", dateField: "data_notificacao", listPath: "/fichas/surto-dta" },
