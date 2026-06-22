@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-export type MeningiteAgravo = "doenca_meningococica" | "outras_meningites";
+export type MeningiteAgravo = "outras_meningites";
 
 type CaseRow = {
   id: string;
