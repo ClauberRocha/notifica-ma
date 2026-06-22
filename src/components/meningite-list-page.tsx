@@ -112,7 +112,7 @@ export function MeningiteListPage({ agravo }: { agravo: MeningiteAgravo }) {
             </TableHeader>
             <TableBody>
               {rows.map((r) => {
-                const slug = agravo === "doenca_meningococica" ? "doenca-meningococica" : "outras-meningites";
+                const slug = "outras-meningites";
                 return (
                 <TableRow
                   key={r.id}
