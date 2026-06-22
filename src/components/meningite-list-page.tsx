@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-export type MeningiteAgravo = "doenca_meningococica" | "outras_meningites";
+export type MeningiteAgravo = "outras_meningites";
 
 type CaseRow = {
   id: string;
@@ -38,9 +38,8 @@ const CLASSIF_LABEL: Record<string, string> = {
 
 const TITLE_MAP: Record<
   MeningiteAgravo,
-  { title: string; novaPath: "/nova-ficha/doenca-meningococica" | "/nova-ficha/outras-meningites" }
+  { title: string; novaPath: "/nova-ficha/outras-meningites" }
 > = {
-  doenca_meningococica: { title: "Doença Meningocócica", novaPath: "/nova-ficha/doenca-meningococica" },
   outras_meningites: { title: "Outras Meningites", novaPath: "/nova-ficha/outras-meningites" },
 };
 
@@ -113,7 +112,7 @@ export function MeningiteListPage({ agravo }: { agravo: MeningiteAgravo }) {
             </TableHeader>
             <TableBody>
               {rows.map((r) => {
-                const slug = agravo === "doenca_meningococica" ? "doenca-meningococica" : "outras-meningites";
+                const slug = "outras-meningites";
                 return (
                 <TableRow
                   key={r.id}

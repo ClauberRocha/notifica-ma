@@ -32,12 +32,6 @@ const agravos = [
     color: "bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/15",
   },
   {
-    label: "Doença Meningocócica",
-    desc: "Notificação individual de doença meningocócica",
-    to: "/nova-ficha/doenca-meningococica" as const,
-    color: "bg-rose-500/10 text-rose-700 border-rose-500/20 hover:bg-rose-500/15",
-  },
-  {
     label: "Epizootia",
     desc: "Notificação de epizootia em animais",
     to: "/nova-ficha/epizootia" as const,

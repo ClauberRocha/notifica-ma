@@ -19,7 +19,6 @@ import { renderSmartField } from "@/components/smart-fields";
 import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi";
 import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
-  TIPO_IDADE,
   SEXO,
   GESTANTE,
   RACA_COR,
@@ -79,7 +78,6 @@ const STEPS: Step[] = [
       { name: "data_nascimento", label: "Data de nascimento", type: "date" },
       { name: "idade", label: "Idade", type: "number" },
       { name: "faixa_etaria", label: "Faixa Etária", type: "text" },
-      { name: "tipo_idade", label: "Tipo de idade", type: "select", options: TIPO_IDADE },
       { name: "sexo", label: "Sexo", type: "select", options: SEXO },
       { name: "gestante", label: "Gestante", type: "select", options: GESTANTE },
       { name: "raca_cor", label: "Raça/Cor", type: "select", options: RACA_COR },

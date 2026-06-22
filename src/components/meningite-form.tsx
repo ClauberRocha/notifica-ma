@@ -20,7 +20,6 @@ import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi"
 import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
   SIM_NAO_IGN,
-  TIPO_IDADE,
   SEXO,
   GESTANTE,
   RACA_COR,
@@ -40,10 +39,9 @@ import {
   QUIMIOCITOLOGICO_KEYS,
 } from "@/lib/meningite-options";
 
-export type MeningiteAgravo = "doenca_meningococica" | "outras_meningites";
+export type MeningiteAgravo = "outras_meningites";
 
 const LABEL_MAP: Record<MeningiteAgravo, string> = {
-  doenca_meningococica: "Doença Meningocócica",
   outras_meningites: "Outras Meningites",
 };
 
@@ -83,7 +81,6 @@ const STEPS: Step[] = [
       { name: "data_nascimento", label: "Data de nascimento", type: "date" },
       { name: "idade", label: "Idade", type: "number" },
       { name: "faixa_etaria", label: "Faixa Etária", type: "text" },
-      { name: "tipo_idade", label: "Tipo de idade", type: "select", options: TIPO_IDADE },
       { name: "sexo", label: "Sexo", type: "select", options: SEXO },
       { name: "gestante", label: "Gestante", type: "select", options: GESTANTE },
       { name: "raca_cor", label: "Raça/Cor", type: "select", options: RACA_COR },
@@ -184,13 +181,11 @@ type Vacina = { status: string; doses: string; data: string };
 type Quimio = Record<string, string>;
 type Lab = Record<string, string>;
 
-const NOVA_PATH: Record<MeningiteAgravo, "/nova-ficha/doenca-meningococica" | "/nova-ficha/outras-meningites"> = {
-  doenca_meningococica: "/nova-ficha/doenca-meningococica",
+const NOVA_PATH: Record<MeningiteAgravo, "/nova-ficha/outras-meningites"> = {
   outras_meningites: "/nova-ficha/outras-meningites",
 };
 
-const FICHAS_PATH: Record<MeningiteAgravo, "/fichas/doenca-meningococica" | "/fichas/outras-meningites"> = {
-  doenca_meningococica: "/fichas/doenca-meningococica",
+const FICHAS_PATH: Record<MeningiteAgravo, "/fichas/outras-meningites"> = {
   outras_meningites: "/fichas/outras-meningites",
 };
 

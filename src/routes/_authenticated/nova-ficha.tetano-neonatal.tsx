@@ -21,7 +21,6 @@ import { AntecedentesEpidemiologicosPanel } from "@/components/antecedentes-epi"
 import { DadosClinicosPanel } from "@/components/dados-clinicos";
 import {
   SIM_NAO_IGN,
-  TIPO_IDADE,
   SEXO,
   RACA_COR,
   ZONA,
@@ -82,7 +81,6 @@ const STEPS: Step[] = [
       { name: "data_nascimento", label: "Data de nascimento", type: "date" },
       { name: "idade", label: "Idade", type: "number" },
       { name: "faixa_etaria", label: "Faixa Etária", type: "text" },
-      { name: "tipo_idade", label: "Tipo de idade", type: "select", options: TIPO_IDADE },
       { name: "sexo", label: "Sexo", type: "select", options: SEXO },
       { name: "raca_cor", label: "Raça/Cor", type: "select", options: RACA_COR },
       { name: "numero_cartao_sus", label: "Cartão SUS", type: "text", col: 2 },
