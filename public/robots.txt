@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /_authenticated/
+Disallow: /lovable/
+
+Sitemap: https://notifica-ma.lovable.app/sitemap.xml

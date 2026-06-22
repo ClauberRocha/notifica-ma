@@ -80,18 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "A simple app that greets the user with \"bom dia\" (good morning) in Portuguese." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "A simple app that greets the user with \"bom dia\" (good morning) in Portuguese." },
+      { title: "Notifica MA — Sistema de Notificação de Agravos" },
+      { name: "description", content: "Plataforma para registro, consulta e análise de fichas de notificação de agravos em saúde pública no Maranhão." },
+      { property: "og:title", content: "Notifica MA — Sistema de Notificação de Agravos" },
+      { property: "og:description", content: "Registre, consulte e analise fichas de notificação de agravos em saúde pública." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Notifica MA" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "A simple app that greets the user with \"bom dia\" (good morning) in Portuguese." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e140b39d-7dbf-4787-8023-3cab16f39e34/id-preview-f0723f64--22ce52f4-ddac-40e9-a7f3-0ab7a1c753e7.lovable.app-1782015785687.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e140b39d-7dbf-4787-8023-3cab16f39e34/id-preview-f0723f64--22ce52f4-ddac-40e9-a7f3-0ab7a1c753e7.lovable.app-1782015785687.png" },
+      { name: "twitter:title", content: "Notifica MA — Sistema de Notificação de Agravos" },
+      { name: "twitter:description", content: "Registre, consulte e analise fichas de notificação de agravos em saúde pública." },
     ],
     links: [
       {
@@ -108,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
