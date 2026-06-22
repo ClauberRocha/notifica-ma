@@ -507,6 +507,7 @@ function FichasListPage() {
                 className="h-8 w-8"
                 disabled={page === 0}
                 onClick={() => setPage(page - 1)}
+                aria-label="Página anterior"
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
@@ -516,6 +517,7 @@ function FichasListPage() {
                 className="h-8 w-8"
                 disabled={page >= totalPages - 1}
                 onClick={() => setPage(page + 1)}
+                aria-label="Próxima página"
               >
                 <ChevronRight className="w-4 h-4" />
               </Button>
