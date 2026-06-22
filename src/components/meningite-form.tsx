@@ -181,13 +181,11 @@ type Vacina = { status: string; doses: string; data: string };
 type Quimio = Record<string, string>;
 type Lab = Record<string, string>;
 
-const NOVA_PATH: Record<MeningiteAgravo, "/nova-ficha/doenca-meningococica" | "/nova-ficha/outras-meningites"> = {
-  doenca_meningococica: "/nova-ficha/doenca-meningococica",
+const NOVA_PATH: Record<MeningiteAgravo, "/nova-ficha/outras-meningites"> = {
   outras_meningites: "/nova-ficha/outras-meningites",
 };
 
-const FICHAS_PATH: Record<MeningiteAgravo, "/fichas/doenca-meningococica" | "/fichas/outras-meningites"> = {
-  doenca_meningococica: "/fichas/doenca-meningococica",
+const FICHAS_PATH: Record<MeningiteAgravo, "/fichas/outras-meningites"> = {
   outras_meningites: "/fichas/outras-meningites",
 };
 
