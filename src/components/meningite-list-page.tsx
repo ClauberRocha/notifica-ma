@@ -38,9 +38,8 @@ const CLASSIF_LABEL: Record<string, string> = {
 
 const TITLE_MAP: Record<
   MeningiteAgravo,
-  { title: string; novaPath: "/nova-ficha/doenca-meningococica" | "/nova-ficha/outras-meningites" }
+  { title: string; novaPath: "/nova-ficha/outras-meningites" }
 > = {
-  doenca_meningococica: { title: "Doença Meningocócica", novaPath: "/nova-ficha/doenca-meningococica" },
   outras_meningites: { title: "Outras Meningites", novaPath: "/nova-ficha/outras-meningites" },
 };
 
