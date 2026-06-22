@@ -552,17 +552,18 @@ function FaixaEtariaField({ name, label, col, form, setForm }: { name: string; l
 }
 
 function RegionalAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
-  const mun = form.municipio_residencia ?? "";
+  const mun = form.municipio_notificacao || form.municipio_residencia || form.municipio_ocorrencia || "";
   const reg = useMemo(() => getRegional(mun), [mun]);
   useEffect(() => {
     if ((form[name] ?? "") !== reg) setForm((p) => ({ ...p, [name]: reg }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reg]);
-  return <ReadOnlyField label={label} value={reg} col={col} placeholder="Definida pelo municipio" />;
+  return <ReadOnlyField label={label} value={reg} col={col} placeholder="Definida pelo município de notificação" />;
 }
 
 function MacroregiaoAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
-  const reg = form.regional ?? getRegional(form.municipio_residencia ?? "");
+  const mun = form.municipio_notificacao || form.municipio_residencia || form.municipio_ocorrencia || "";
+  const reg = form.regional || getRegional(mun);
   const macro = useMemo(() => getMacroregiao(reg), [reg]);
   useEffect(() => {
     if ((form[name] ?? "") !== macro) setForm((p) => ({ ...p, [name]: macro }));
