@@ -39,10 +39,10 @@ function Home() {
             {firstName[0].toUpperCase()}
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-            {loading ? "Carregando..." : `${greeting}, ${firstName}!`}
+            Notifica MA — Sistema de Notificação de Agravos
           </h1>
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">
-            O que você deseja fazer hoje?
+            {loading ? "Carregando..." : `${greeting}, ${firstName}. O que você deseja fazer hoje?`}
           </p>
           <p className="text-xs text-muted-foreground/60 mt-1">
             {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
