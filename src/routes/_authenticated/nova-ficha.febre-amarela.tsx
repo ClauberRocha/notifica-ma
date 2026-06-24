@@ -85,11 +85,11 @@ const STEPS: Step[] = [
     fields: [
       { name: "uf_residencia", label: "UF", type: "text" },
       { name: "municipio_residencia", label: "Município", type: "text" },
+      { name: "cep", label: "CEP", type: "text" },
       { name: "bairro", label: "Bairro", type: "text" },
       { name: "logradouro", label: "Logradouro", type: "text", col: 2 },
       { name: "numero_endereco", label: "Número", type: "text" },
       { name: "complemento", label: "Complemento", type: "text" },
-      { name: "cep", label: "CEP", type: "text" },
       { name: "telefone", label: "Telefone", type: "text" },
       { name: "zona", label: "Zona", type: "select", options: ZONA },
     ],
