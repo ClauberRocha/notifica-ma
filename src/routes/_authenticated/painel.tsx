@@ -25,6 +25,10 @@ import {
   Heart,
   Moon,
   Sun,
+  Skull,
+  MapPin,
+  TrendingUp,
+  TrendingDown,
 } from "lucide-react";
 import {
   BarChart,
@@ -299,6 +303,66 @@ function PainelPage() {
     confirmados.length > 0
       ? ((obitosConf.length / confirmados.length) * 100).toFixed(1)
       : "0";
+
+  const trendAnalysis = useMemo(() => {
+    if (filtered.length === 0) return { percent: 0, direction: "up" as const, isZero: true };
+    
+    const dates = filtered
+      .map((c) => {
+        const dt = (c.data_notificacao as string) || (c.data_preenchimento as string);
+        return dt ? new Date(dt).getTime() : null;
+      })
+      .filter((t): t is number => t !== null && !isNaN(t));
+
+    if (dates.length === 0) return { percent: 0, direction: "up" as const, isZero: true };
+
+    const minTime = Math.min(...dates);
+    const maxTime = Math.max(...dates);
+    const diff = maxTime - minTime;
+
+    let cutoff: number;
+    let startOfPeriod: number;
+    if (diff < 24 * 60 * 60 * 1000 * 2) {
+      const now = maxTime;
+      cutoff = now - 7 * 24 * 60 * 60 * 1000;
+      startOfPeriod = now - 14 * 24 * 60 * 60 * 1000;
+    } else {
+      cutoff = minTime + diff / 2;
+      startOfPeriod = minTime;
+    }
+
+    const firstHalfCount = dates.filter((t) => t >= startOfPeriod && t < cutoff).length;
+    const secondHalfCount = dates.filter((t) => t >= cutoff).length;
+
+    if (firstHalfCount === 0) {
+      if (secondHalfCount === 0) return { percent: 0, direction: "up" as const, isZero: true };
+      return { percent: 100, direction: "up" as const, isZero: false };
+    }
+
+    const change = ((secondHalfCount - firstHalfCount) / firstHalfCount) * 100;
+    return {
+      percent: Math.abs(Math.round(change)),
+      direction: change >= 0 ? ("up" as const) : ("down" as const),
+      isZero: false,
+    };
+  }, [filtered]);
+
+  const topMunicipios = useMemo(() => {
+    const counts: Record<string, number> = {};
+    confirmados.forEach((c) => {
+      const m = (c.municipio_notificacao as string) || "Desconhecido";
+      counts[m] = (counts[m] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: confirmados.length > 0 ? ((count / confirmados.length) * 100).toFixed(1) : "0",
+      }));
+  }, [confirmados]);
+
 
   // SE data
   const seCounts: Record<number, number> = {};
@@ -602,96 +666,344 @@ function PainelPage() {
         </CardContent>
       </Card>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <StatCard title="Total de Casos" value={total} icon={Activity} color="bg-primary" loading={isLoading} />
-        <StatCard
-          title="Em Investigação"
-          value={emInvestigacao.length}
-          icon={Clock}
-          color="bg-yellow-500"
-          loading={isLoading}
-          pctVal={pct(emInvestigacao.length, total)}
-        />
-        <StatCard
-          title="Encerrados"
-          value={encerrados.length}
-          icon={CheckCircle}
-          color="bg-emerald-500"
-          loading={isLoading}
-          pctVal={pct(encerrados.length, total)}
-        />
-        <StatCard
-          title="Confirmados"
-          value={confirmados.length}
-          icon={AlertTriangle}
-          color="bg-destructive"
-          loading={isLoading}
-          pctVal={pct(confirmados.length, total)}
-        />
-      </div>
+      {/* Dashboard Executivo */}
+      <div className="space-y-4">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-foreground flex items-center gap-2">
+          <Activity className="w-4 h-4 text-primary animate-pulse" />
+          Dashboard Executivo
+          {selectedAgravo !== "all" && ` — ${LABELS[selectedAgravo]}`}
+        </h2>
 
-      {/* Resumo Executivo */}
-      {!isLoading && total > 0 && (
-        <Card className="border-2 border-primary/20 bg-primary/5">
-          <CardHeader className="pb-2 pt-4 px-5">
-            <CardTitle className="text-sm font-bold text-primary uppercase tracking-wide flex items-center gap-2">
-              <Activity className="w-4 h-4" /> Resumo Executivo
-              {selectedAgravo !== "all" && ` — ${LABELS[selectedAgravo]}`}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-5 pb-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
-                <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">
-                  Notificações vs Confirmados
-                </p>
-                <p className="text-2xl font-bold text-primary">{confirmados.length}</p>
-                <p className="text-xs text-muted-foreground">
-                  casos confirmados em {total} notificações
-                </p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Hero Card: Situação Atual */}
+          <Card className="lg:col-span-1 border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/10 relative overflow-hidden group shadow-md hover:shadow-lg transition-all duration-300">
+            {/* Ambient glow */}
+            <div className="absolute -right-16 -top-16 w-36 h-36 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/15 transition-all duration-300" />
+            
+            <CardContent className="p-5 flex flex-col justify-between h-full space-y-6">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-base font-bold flex items-center gap-2 text-foreground">
+                    <span>🚨</span> Situação Atual
+                  </span>
+                  <span className="px-2.5 py-1 text-[10px] font-semibold rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
+                    Período Selecionado
+                  </span>
+                </div>
+                
+                <div className="mt-6 space-y-3.5">
+                  <div className="flex justify-between items-center py-2 border-b border-border/50">
+                    <span className="text-sm text-muted-foreground font-medium">Casos notificados:</span>
+                    {isLoading ? (
+                      <Skeleton className="h-6 w-16" />
+                    ) : (
+                      <span className="font-bold text-lg text-foreground">
+                        {total.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-border/50">
+                    <span className="text-sm text-muted-foreground font-medium">Confirmados:</span>
+                    {isLoading ? (
+                      <Skeleton className="h-6 w-16" />
+                    ) : (
+                      <span className="font-bold text-lg text-destructive">
+                        {confirmados.length.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-border/50">
+                    <span className="text-sm text-muted-foreground font-medium">Em investigação:</span>
+                    {isLoading ? (
+                      <Skeleton className="h-6 w-16" />
+                    ) : (
+                      <span className="font-bold text-lg text-yellow-600 dark:text-yellow-500">
+                        {emInvestigacao.length.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm text-muted-foreground font-medium">Óbitos:</span>
+                    {isLoading ? (
+                      <Skeleton className="h-6 w-16" />
+                    ) : (
+                      <span className="font-bold text-lg text-destructive flex items-center gap-1.5">
+                        <Skull className="w-4 h-4 text-destructive/80" />
+                        {obitosConf.length.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
-                <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">
-                  SE com Pico (Confirmados)
-                </p>
-                <p className="text-2xl font-bold">
-                  {peakConfirmSE
-                    ? `SE ${String(peakConfirmSE[0]).padStart(2, "0")}`
-                    : peakSE
-                      ? `SE ${String(peakSE[0]).padStart(2, "0")}`
-                      : "—"}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {peakConfirmSE
-                    ? `${peakConfirmSE[1]} confirmados`
-                    : peakSE
-                      ? `${peakSE[1]} notificados`
-                      : "sem dados"}
-                </p>
+
+              <div className="pt-4 border-t border-border/50 flex items-center gap-2">
+                {isLoading ? (
+                  <Skeleton className="h-5 w-full" />
+                ) : trendAnalysis.isZero ? (
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                    Sem variação comparada ao período anterior
+                  </span>
+                ) : (
+                  <span className={`text-xs font-semibold flex items-center gap-1 ${
+                    trendAnalysis.direction === 'up' ? 'text-destructive' : 'text-emerald-500'
+                  }`}>
+                    {trendAnalysis.direction === 'up' ? (
+                      <TrendingUp className="w-3.5 h-3.5 animate-pulse" />
+                    ) : (
+                      <TrendingDown className="w-3.5 h-3.5 animate-pulse" />
+                    )}
+                    <span>
+                      {trendAnalysis.direction === 'up' ? '↑' : '↓'} {trendAnalysis.percent}%
+                    </span>
+                    <span className="text-muted-foreground font-normal">
+                      comparado ao período anterior
+                    </span>
+                  </span>
+                )}
               </div>
-              <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
-                <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">
-                  Letalidade
-                </p>
-                <p className="text-2xl font-bold text-destructive">{letalidade}%</p>
-                <p className="text-xs text-muted-foreground">{obitosConf.length} óbito(s)</p>
-              </div>
-              <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
-                <p className="text-xs text-muted-foreground uppercase font-semibold mb-1">
-                  Maior Concentração
-                </p>
-                <p className="text-lg font-bold text-foreground truncate">
-                  {topMun ? topMun[0] : "—"}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {topMun ? `${pct(topMun[1], confirmados.length)} dos confirmados` : "sem dados"}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+            </CardContent>
+          </Card>
+
+          {/* Grid of Main Cards */}
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            {/* Total de Notificações */}
+            <Card className="hover:border-primary/40 transition-colors shadow-sm">
+              <CardContent className="p-5 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Total de Notificações
+                    </p>
+                    {isLoading ? (
+                      <Skeleton className="h-8 w-20 mt-1" />
+                    ) : (
+                      <h3 className="text-2xl font-extrabold text-foreground">
+                        {total.toLocaleString()}
+                      </h3>
+                    )}
+                  </div>
+                  <div className="p-2 bg-primary/10 rounded-xl">
+                    <Activity className="w-4 h-4 text-primary" />
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center text-xs text-muted-foreground">
+                  <span>No período selecionado</span>
+                  <span className="font-semibold text-foreground">100% das fichas</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Casos Confirmados */}
+            <Card className="hover:border-destructive/40 transition-colors shadow-sm">
+              <CardContent className="p-5 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Casos Confirmados
+                    </p>
+                    {isLoading ? (
+                      <Skeleton className="h-8 w-20 mt-1" />
+                    ) : (
+                      <h3 className="text-2xl font-extrabold text-destructive">
+                        {confirmados.length.toLocaleString()}
+                      </h3>
+                    )}
+                  </div>
+                  <div className="p-2 bg-destructive/10 rounded-xl">
+                    <AlertTriangle className="w-4 h-4 text-destructive" />
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center text-xs text-muted-foreground">
+                  <span>Taxa de confirmação</span>
+                  <span className="font-semibold text-destructive">
+                    {pct(confirmados.length, total)} do total
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Casos em Investigação */}
+            <Card className="hover:border-yellow-500/40 transition-colors shadow-sm">
+              <CardContent className="p-5 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Casos em Investigação
+                    </p>
+                    {isLoading ? (
+                      <Skeleton className="h-8 w-20 mt-1" />
+                    ) : (
+                      <h3 className="text-2xl font-extrabold text-yellow-600 dark:text-yellow-500">
+                        {emInvestigacao.length.toLocaleString()}
+                      </h3>
+                    )}
+                  </div>
+                  <div className="p-2 bg-yellow-500/10 rounded-xl">
+                    <Clock className="w-4 h-4 text-yellow-600 dark:text-yellow-500" />
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center text-xs text-muted-foreground">
+                  <span>Aguardando encerramento</span>
+                  <span className="font-semibold text-yellow-600 dark:text-yellow-500">
+                    {pct(emInvestigacao.length, total)} do total
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Óbitos */}
+            <Card className="hover:border-neutral-500/40 transition-colors shadow-sm">
+              <CardContent className="p-5 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Óbitos Confirmados
+                    </p>
+                    {isLoading ? (
+                      <Skeleton className="h-8 w-20 mt-1" />
+                    ) : (
+                      <h3 className="text-2xl font-extrabold text-foreground">
+                        {obitosConf.length.toLocaleString()}
+                      </h3>
+                    )}
+                  </div>
+                  <div className="p-2 bg-neutral-500/10 dark:bg-neutral-500/20 rounded-xl">
+                    <Skull className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center text-xs text-muted-foreground">
+                  <span>Evolução para óbito</span>
+                  <span className="font-semibold text-foreground">
+                    {pct(obitosConf.length, confirmados.length)} dos confirmados
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Taxa de Letalidade */}
+            <Card className="hover:border-red-500/40 transition-colors shadow-sm">
+              <CardContent className="p-5 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Taxa de Letalidade
+                    </p>
+                    {isLoading ? (
+                      <Skeleton className="h-8 w-20 mt-1" />
+                    ) : (
+                      <h3 className="text-2xl font-extrabold text-destructive">
+                        {letalidade}%
+                      </h3>
+                    )}
+                  </div>
+                  <div className="p-2 bg-red-500/10 rounded-xl">
+                    <Skull className="w-4 h-4 text-red-500" />
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center text-xs text-muted-foreground">
+                  <span>Gravidade no período</span>
+                  <span className="font-semibold text-destructive">
+                    {obitosConf.length} óbitos em {confirmados.length} conf.
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Tendência Período */}
+            <Card className="hover:border-primary/40 transition-colors shadow-sm">
+              <CardContent className="p-5 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Tendência de Casos
+                    </p>
+                    {isLoading ? (
+                      <Skeleton className="h-8 w-20 mt-1" />
+                    ) : (
+                      <h3 className={`text-2xl font-extrabold flex items-center gap-1 ${
+                        trendAnalysis.direction === 'up' ? 'text-destructive' : 'text-emerald-500'
+                      }`}>
+                        {trendAnalysis.direction === 'up' ? '+' : '-'}{trendAnalysis.percent}%
+                      </h3>
+                    )}
+                  </div>
+                  <div className={`p-2 rounded-xl ${
+                    trendAnalysis.direction === 'up' ? 'bg-destructive/10' : 'bg-emerald-500/10'
+                  }`}>
+                    {trendAnalysis.direction === 'up' ? (
+                      <TrendingUp className="w-4 h-4 text-destructive" />
+                    ) : (
+                      <TrendingDown className="w-4 h-4 text-emerald-500" />
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center text-xs text-muted-foreground">
+                  <span>Direção da epidemia</span>
+                  <span className={`font-semibold flex items-center gap-0.5 ${
+                    trendAnalysis.direction === 'up' ? 'text-destructive' : 'text-emerald-500'
+                  }`}>
+                    {trendAnalysis.direction === 'up' ? 'Crescimento' : 'Queda'}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Municípios de Maior Incidência */}
+            <Card className="hover:border-primary/40 transition-colors shadow-sm sm:col-span-2">
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Municípios de Maior Incidência (Top 3 Confirmados)
+                    </p>
+                  </div>
+                  <div className="p-2 bg-blue-500/10 rounded-xl">
+                    <MapPin className="w-4 h-4 text-blue-600" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {isLoading ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <div key={i} className="p-3 bg-muted/40 rounded-xl border border-border/50">
+                        <Skeleton className="h-4 w-20 mb-2 animate-pulse" />
+                        <Skeleton className="h-6 w-12 animate-pulse" />
+                      </div>
+                    ))
+                  ) : topMunicipios.length === 0 ? (
+                    <div className="sm:col-span-3 text-center py-2 text-sm text-muted-foreground">
+                      Sem dados de municípios confirmados
+                    </div>
+                  ) : (
+                    topMunicipios.map((mun, idx) => (
+                      <div key={mun.name} className="p-3 bg-muted/40 rounded-xl border border-border/50 flex flex-col justify-between hover:bg-muted/60 transition-colors duration-200">
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <span className="text-[10px] font-bold text-muted-foreground w-4 h-4 rounded-full bg-muted flex items-center justify-center">
+                              {idx + 1}
+                            </span>
+                            <span className="text-xs font-semibold text-foreground truncate max-w-[120px]" title={mun.name}>
+                              {mun.name}
+                            </span>
+                          </div>
+                          <span className="text-lg font-bold text-foreground">
+                            {mun.count}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground mt-1 block">
+                          {mun.percentage}% do total conf.
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+          </div>
+        </div>
+      </div>
 
       {/* Situação + Desfecho */}
       {!isLoading && total > 0 && (
