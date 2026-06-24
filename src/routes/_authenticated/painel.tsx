@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo, useState, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,9 @@ import {
   Legend,
 } from "recharts";
 import { getSeNumber } from "@/lib/seUtils";
+
+const SmartMap = lazy(() => import("@/components/SmartMap"));
+
 
 export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({ meta: [{ title: "Painel — Vigilância Epidemiológica" }] }),
@@ -218,6 +221,13 @@ function PainelPage() {
   const [selectedEvolucao, setSelectedEvolucao] = useState("all");
   const [seInicio, setSeInicio] = useState("");
   const [seFim, setSeFim] = useState("");
+  const [selectedSexo, setSelectedSexo] = useState("all");
+  const [selectedFaixaEtaria, setSelectedFaixaEtaria] = useState("all");
+  const [selectedMunicipio, setSelectedMunicipio] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [heatmapMode, setHeatmapMode] = useState(false);
+  const [mapMetric, setMapMetric] = useState<"notificados" | "confirmados">("confirmados");
   const [darkMode, setDarkMode] = useState(() =>
     typeof document !== "undefined"
       ? document.documentElement.classList.contains("dark")
@@ -265,10 +275,66 @@ function PainelPage() {
   }, [byAgravo, selectedEvolucao]);
 
   const filtered = useMemo(() => {
-    if (!seInicio && !seFim) return byEvolucao;
+    let result = byEvolucao;
+
+    // Filter by Sexo
+    if (selectedSexo !== "all") {
+      result = result.filter((c) => {
+        const s = String(c.sexo || "").toLowerCase();
+        if (selectedSexo === "M") return s === "masculino" || s === "m";
+        if (selectedSexo === "F") return s === "feminino" || s === "f";
+        return false;
+      });
+    }
+
+    // Filter by Faixa Etária
+    if (selectedFaixaEtaria !== "all") {
+      result = result.filter((c) => {
+        const nasc = c.data_nascimento as string | undefined;
+        const notif = (c.data_notificacao as string) || (c.data_preenchimento as string);
+        if (!nasc || !notif) return false;
+        try {
+          const birthDate = new Date(nasc);
+          const refDate = new Date(notif);
+          let age = refDate.getFullYear() - birthDate.getFullYear();
+          const monthDiff = refDate.getMonth() - birthDate.getMonth();
+          if (monthDiff < 0 || (monthDiff === 0 && refDate.getDate() < birthDate.getDate())) {
+            age--;
+          }
+          if (selectedFaixaEtaria === "<1") return age < 1;
+          if (selectedFaixaEtaria === "1-4") return age >= 1 && age <= 4;
+          if (selectedFaixaEtaria === "5-9") return age >= 5 && age <= 9;
+          if (selectedFaixaEtaria === "10-14") return age >= 10 && age <= 14;
+          if (selectedFaixaEtaria === "15-19") return age >= 15 && age <= 19;
+          if (selectedFaixaEtaria === "20-29") return age >= 20 && age <= 29;
+          if (selectedFaixaEtaria === "30-39") return age >= 30 && age <= 39;
+          if (selectedFaixaEtaria === "40-49") return age >= 40 && age <= 49;
+          if (selectedFaixaEtaria === "50-59") return age >= 50 && age <= 59;
+          if (selectedFaixaEtaria === "60+") return age >= 60;
+        } catch {
+          return false;
+        }
+        return true;
+      });
+    }
+
+    // Filter by Município
+    if (selectedMunicipio !== "all") {
+      result = result.filter(
+        (c) => (c.municipio_notificacao as string) === selectedMunicipio
+      );
+    }
+
+    // Filter by Status do caso
+    if (selectedStatus !== "all") {
+      result = result.filter((c) => c.status === selectedStatus);
+    }
+
+    // Filter by SE range
+    if (!seInicio && !seFim) return result;
     const ini = seInicio ? Number(seInicio) : 1;
     const fim = seFim ? Number(seFim) : 53;
-    return byEvolucao.filter((c) => {
+    return result.filter((c) => {
       const dt = (c.data_notificacao as string) || (c.data_preenchimento as string);
       if (!dt) return false;
       try {
@@ -278,7 +344,62 @@ function PainelPage() {
         return false;
       }
     });
-  }, [byEvolucao, seInicio, seFim]);
+  }, [byEvolucao, selectedSexo, selectedFaixaEtaria, selectedMunicipio, selectedStatus, seInicio, seFim]);
+
+  const uniqueMunicipios = useMemo(() => {
+    const list = allCases
+      .map((c) => (c.municipio_notificacao as string) || "")
+      .filter((m) => m !== "");
+    return Array.from(new Set(list)).sort((a, b) => a.localeCompare(b));
+  }, [allCases]);
+
+  const municipiosAumentando = useMemo(() => {
+    const dates = filtered
+      .map((c) => {
+        const dt = (c.data_notificacao as string) || (c.data_preenchimento as string);
+        return dt ? new Date(dt).getTime() : null;
+      })
+      .filter((t): t is number => t !== null && !isNaN(t));
+
+    if (dates.length === 0) return [];
+
+    const maxTime = Math.max(...dates);
+    const twoWeeksMs = 14 * 24 * 60 * 60 * 1000;
+    const fourWeeksMs = 28 * 24 * 60 * 60 * 1000;
+
+    const limitRecent = maxTime - twoWeeksMs;
+    const limitPast = maxTime - fourWeeksMs;
+
+    const countsRecent: Record<string, number> = {};
+    const countsPast: Record<string, number> = {};
+
+    filtered.forEach((c) => {
+      const dt = (c.data_notificacao as string) || (c.data_preenchimento as string);
+      if (!dt) return;
+      const t = new Date(dt).getTime();
+      const mun = (c.municipio_notificacao as string) || "Desconhecido";
+
+      if (t >= limitRecent && t <= maxTime) {
+        countsRecent[mun] = (countsRecent[mun] || 0) + 1;
+      } else if (t >= limitPast && t < limitRecent) {
+        countsPast[mun] = (countsPast[mun] || 0) + 1;
+      }
+    });
+
+    const increasing: { name: string; past: number; recent: number; percent: number }[] = [];
+    Object.keys(countsRecent).forEach((mun) => {
+      const recent = countsRecent[mun];
+      const past = countsPast[mun] || 0;
+      if (recent > past) {
+        const diff = recent - past;
+        const pctVal = past > 0 ? Math.round((diff / past) * 100) : 100;
+        increasing.push({ name: mun, past, recent, percent: pctVal });
+      }
+    });
+
+    return increasing.sort((a, b) => b.recent - a.recent).slice(0, 8);
+  }, [filtered]);
+
 
   const total = filtered.length;
   const isConfirmed = (c: CaseRow) =>
@@ -544,7 +665,15 @@ function PainelPage() {
     }));
 
   const anyFilter =
-    selectedAgravo !== "all" || selectedEvolucao !== "all" || seInicio || seFim;
+    selectedAgravo !== "all" ||
+    selectedEvolucao !== "all" ||
+    seInicio !== "" ||
+    seFim !== "" ||
+    selectedSexo !== "all" ||
+    selectedFaixaEtaria !== "all" ||
+    selectedMunicipio !== "all" ||
+    selectedStatus !== "all";
+
 
   const sexoTop = [...sexoData].sort((a, b) => b.value - a.value)[0];
   const etioTop = [...etioData].sort((a, b) => b.value - a.value)[0];
@@ -648,6 +777,69 @@ function PainelPage() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Sexo</Label>
+              <Select value={selectedSexo} onValueChange={setSelectedSexo}>
+                <SelectTrigger className="w-28">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="M">Masculino</SelectItem>
+                  <SelectItem value="F">Feminino</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Faixa Etária</Label>
+              <Select value={selectedFaixaEtaria} onValueChange={setSelectedFaixaEtaria}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as faixas</SelectItem>
+                  <SelectItem value="<1">&lt;1 ano</SelectItem>
+                  <SelectItem value="1-4">1-4 anos</SelectItem>
+                  <SelectItem value="5-9">5-9 anos</SelectItem>
+                  <SelectItem value="10-14">10-14 anos</SelectItem>
+                  <SelectItem value="15-19">15-19 anos</SelectItem>
+                  <SelectItem value="20-29">20-29 anos</SelectItem>
+                  <SelectItem value="30-39">30-39 anos</SelectItem>
+                  <SelectItem value="40-49">40-49 anos</SelectItem>
+                  <SelectItem value="50-59">50-59 anos</SelectItem>
+                  <SelectItem value="60+">60+ anos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Município</Label>
+              <Select value={selectedMunicipio} onValueChange={setSelectedMunicipio}>
+                <SelectTrigger className="w-44">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  {uniqueMunicipios.map((m) => (
+                    <SelectItem key={m} value={m}>
+                      {m}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Status do Caso</Label>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="em_investigacao">Em Investigação</SelectItem>
+                  <SelectItem value="encerrado">Encerrado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             {anyFilter && (
               <Button
                 variant="ghost"
@@ -657,6 +849,10 @@ function PainelPage() {
                   setSelectedEvolucao("all");
                   setSeInicio("");
                   setSeFim("");
+                  setSelectedSexo("all");
+                  setSelectedFaixaEtaria("all");
+                  setSelectedMunicipio("all");
+                  setSelectedStatus("all");
                 }}
               >
                 Limpar filtros
@@ -666,8 +862,36 @@ function PainelPage() {
         </CardContent>
       </Card>
 
-      {/* Dashboard Executivo */}
-      <div className="space-y-4">
+      {/* Tabs Selector */}
+      <div className="flex border-b border-border mt-3 mb-2">
+        <button
+          onClick={() => setActiveTab("dashboard")}
+          className={`px-5 py-2.5 text-sm font-semibold border-b-2 transition-all duration-200 flex items-center gap-2 -mb-[2px] ${
+            activeTab === "dashboard"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          Visão Geral & Gráficos
+        </button>
+        <button
+          onClick={() => setActiveTab("mapa")}
+          className={`px-5 py-2.5 text-sm font-semibold border-b-2 transition-all duration-200 flex items-center gap-2 -mb-[2px] ${
+            activeTab === "mapa"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <MapPin className="w-4 h-4" />
+          Mapa Inteligente do MA
+        </button>
+      </div>
+
+      {activeTab === "dashboard" && (
+        <div className="space-y-6">
+          {/* Dashboard Executivo */}
+          <div className="space-y-4">
         <h2 className="text-sm font-bold uppercase tracking-wide text-foreground flex items-center gap-2">
           <Activity className="w-4 h-4 text-primary animate-pulse" />
           Dashboard Executivo
@@ -1396,6 +1620,147 @@ function PainelPage() {
             )}
           </CardContent>
         </Card>
+      )}
+
+      </div>
+      )}
+
+      {/* Dynamic Map Tab View */}
+      {activeTab === "mapa" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Map Column */}
+          <div className="lg:col-span-2 space-y-4">
+            <Card className="p-4 border border-border shadow-sm bg-card relative">
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div>
+                  <h3 className="text-base font-bold text-foreground flex items-center gap-1.5">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    Mapa de Distribuição de Casos (MA)
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Arraste e utilize o zoom para explorar os municípios. Clique nos marcadores para detalhes.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* Vis Mode Toggle */}
+                  <div className="flex items-center rounded-lg border border-border p-0.5 bg-muted/40">
+                    <Button
+                      variant={!heatmapMode ? "default" : "ghost"}
+                      size="sm"
+                      className="h-7 text-xs px-2.5 rounded-md"
+                      onClick={() => setHeatmapMode(false)}
+                    >
+                      Municípios
+                    </Button>
+                    <Button
+                      variant={heatmapMode ? "default" : "ghost"}
+                      size="sm"
+                      className="h-7 text-xs px-2.5 rounded-md"
+                      onClick={() => setHeatmapMode(true)}
+                    >
+                      Calor
+                    </Button>
+                  </div>
+                  {/* Metric Toggle */}
+                  <div className="flex items-center rounded-lg border border-border p-0.5 bg-muted/40">
+                    <Button
+                      variant={mapMetric === "confirmados" ? "default" : "ghost"}
+                      size="sm"
+                      className="h-7 text-xs px-2.5 rounded-md"
+                      onClick={() => setMapMetric("confirmados")}
+                    >
+                      Confirmados
+                    </Button>
+                    <Button
+                      variant={mapMetric === "notificados" ? "default" : "ghost"}
+                      size="sm"
+                      className="h-7 text-xs px-2.5 rounded-md"
+                      onClick={() => setMapMetric("notificados")}
+                    >
+                      Notificados
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <Suspense fallback={
+                <div className="w-full h-[520px] rounded-xl border border-border/80 flex items-center justify-center bg-muted/20">
+                  <div className="flex flex-col items-center gap-2">
+                    <Activity className="w-8 h-8 text-primary animate-pulse" />
+                    <span className="text-sm text-muted-foreground font-medium">Carregando mapa interativo...</span>
+                  </div>
+                </div>
+              }>
+                <SmartMap
+                  filteredCases={filtered}
+                  heatmapMode={heatmapMode}
+                  metric={mapMetric}
+                />
+              </Suspense>
+            </Card>
+          </div>
+
+          {/* Insights Column */}
+          <div className="lg:col-span-1 space-y-4">
+            <Card className="border border-border shadow-sm h-full flex flex-col justify-between">
+              <div className="p-5 border-b border-border/50">
+                <CardTitle className="text-base font-bold text-foreground flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-destructive animate-pulse" />
+                  Alerta de Tendências
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Análise comparativa das últimas 4 semanas de dados.
+                </p>
+              </div>
+              <CardContent className="p-5 flex-1 overflow-y-auto max-h-[420px]">
+                <div className="space-y-4">
+                  <div className="bg-destructive/5 dark:bg-destructive/10 rounded-xl p-3 border border-destructive/10 flex items-start gap-2.5">
+                    <span className="text-lg">📈</span>
+                    <div>
+                      <h4 className="text-xs font-bold text-destructive uppercase tracking-wide">
+                        Municípios com Aumento de Casos
+                      </h4>
+                      <p className="text-[11px] text-muted-foreground mt-1">
+                        Cidades registrando crescimento no volume de notificações comparando as duas últimas semanas com as duas semanas anteriores.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 pt-2">
+                    {municipiosAumentando.length === 0 ? (
+                      <div className="text-center py-8 text-sm text-muted-foreground">
+                        Nenhum município registrou aumento significativo de casos nas últimas 4 semanas.
+                      </div>
+                    ) : (
+                      municipiosAumentando.map((mun, idx) => (
+                        <div key={mun.name} className="flex items-center justify-between p-3 rounded-xl border border-border bg-muted/20 hover:bg-muted/40 transition-colors duration-200">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="text-xs font-extrabold text-destructive-foreground w-5 h-5 rounded-full bg-destructive flex items-center justify-center shrink-0">
+                              {idx + 1}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="text-xs font-bold text-foreground truncate" title={mun.name}>
+                                {mun.name}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">
+                                Anterior: <span className="font-semibold">{mun.past}</span> ➔ Recente: <span className="font-semibold text-foreground">{mun.recent}</span>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-destructive/10 text-destructive border border-destructive/20">
+                              +{mun.percent}%
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       )}
     </div>
   );
