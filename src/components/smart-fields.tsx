@@ -552,7 +552,7 @@ function FaixaEtariaField({ name, label, col, form, setForm }: { name: string; l
 }
 
 function RegionalAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
-  const mun = form.municipio_notificacao || form.municipio_residencia || form.municipio_ocorrencia || "";
+  const mun = form.municipio_notificacao || "";
   const reg = useMemo(() => getRegional(mun), [mun]);
   useEffect(() => {
     if ((form[name] ?? "") !== reg) setForm((p) => ({ ...p, [name]: reg }));
@@ -562,7 +562,7 @@ function RegionalAutoField({ name, label, col, form, setForm }: { name: string; 
 }
 
 function MacroregiaoAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
-  const mun = form.municipio_notificacao || form.municipio_residencia || form.municipio_ocorrencia || "";
+  const mun = form.municipio_notificacao || "";
   const reg = form.regional || getRegional(mun);
   const macro = useMemo(() => getMacroregiao(reg), [reg]);
   useEffect(() => {
