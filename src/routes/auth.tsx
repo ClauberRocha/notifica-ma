@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { checkEmailExists } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -22,6 +24,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const checkEmailExistsFn = useServerFn(checkEmailExists);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -34,6 +37,13 @@ function AuthPage() {
     setLoading(true);
     try {
       if (mode === "signup") {
+        // Check if profile already exists (pre-registered by admin) via server function bypassing RLS
+        const { exists } = await checkEmailExistsFn({ data: { email } });
+
+        if (exists) {
+          throw new Error("Este e-mail já está cadastrado no sistema. Se você foi pré-registrado, entre com a senha temporária fornecida pelo administrador.");
+        }
+
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -56,6 +66,7 @@ function AuthPage() {
       setLoading(false);
     }
   };
+
 
   const handleGoogle = async () => {
     setLoading(true);

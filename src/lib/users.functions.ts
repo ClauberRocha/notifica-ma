@@ -452,3 +452,28 @@ export const resendInvite = createServerFn({ method: "POST" })
 
     return { id: data.id, email };
   });
+
+const CheckEmailSchema = z.object({
+  email: z.string().trim().email(),
+});
+
+export const checkEmailExists = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => CheckEmailSchema.parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
+    );
+    const { data: existing, error } = await supabaseAdmin
+      .from("profiles")
+      .select("id")
+      .eq("email", data.email)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Erro ao verificar existência do e-mail:", error);
+      return { exists: false };
+    }
+
+    return { exists: !!existing };
+  });
+

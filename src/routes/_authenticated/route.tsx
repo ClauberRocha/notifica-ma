@@ -12,15 +12,44 @@ import { Loader2, LogOut, KeyRound } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       throw redirect({ to: "/auth" });
     }
-    return { user: data.user };
+
+    // Fetch user role
+    const { data: rows } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", data.user.id);
+    const role = rows?.[0]?.role || "user";
+
+    const path = location.pathname;
+
+    // Gestor can't access fichas or nova-ficha
+    if (role === "gestor") {
+      if (path.startsWith("/fichas") || path.startsWith("/nova-ficha")) {
+        throw redirect({ to: "/" });
+      }
+    }
+
+    // Standard user can't access painel, usuarios, or logs
+    if (role === "user") {
+      if (
+        path.startsWith("/painel") ||
+        path.startsWith("/usuarios") ||
+        path.startsWith("/logs")
+      ) {
+        throw redirect({ to: "/" });
+      }
+    }
+
+    return { user: data.user, role };
   },
   component: AuthenticatedLayout,
 });
+
 
 function AuthenticatedLayout() {
   const { session, signOut } = useAuth();

@@ -27,9 +27,20 @@ const shortcuts = [
 ] as const;
 
 function Home() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, role } = useAuth();
   const firstName = (user?.full_name?.trim().split(/\s+/)[0]) || "Usuário";
   const greeting = getGreeting();
+
+  const isShortcutDisabled = (path: string) => {
+    if (role === "user") {
+      return path === "/painel" || path === "/usuarios";
+    }
+    if (role === "gestor") {
+      return path === "/nova-ficha" || path === "/fichas";
+    }
+    return false;
+  };
+
 
   return (
     <div className="min-h-[80vh] flex flex-col justify-center">
@@ -53,22 +64,43 @@ function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {shortcuts.map((s) => (
-            <Link
-              key={s.path}
-              to={s.path}
-              className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 active:scale-95 ${s.color}`}
-            >
-              <div className="w-12 h-12 rounded-xl bg-current/10 flex items-center justify-center flex-shrink-0">
-                <s.icon className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="font-semibold text-base">{s.label}</p>
-                <p className="text-xs opacity-70 mt-0.5">{s.desc}</p>
-              </div>
-            </Link>
-          ))}
+          {shortcuts.map((s) => {
+            const disabled = isShortcutDisabled(s.path);
+            if (disabled) {
+              return (
+                <div
+                  key={s.path}
+                  className="flex items-center gap-4 p-5 rounded-2xl border-2 border-border/40 bg-muted/40 text-muted-foreground/50 cursor-not-allowed opacity-50 select-none"
+                  title="Acesso restrito para o seu perfil de usuário"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
+                    <s.icon className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-base">{s.label}</p>
+                    <p className="text-xs opacity-75 mt-0.5">{s.desc}</p>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <Link
+                key={s.path}
+                to={s.path}
+                className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-200 active:scale-95 ${s.color}`}
+              >
+                <div className="w-12 h-12 rounded-xl bg-current/10 flex items-center justify-center flex-shrink-0">
+                  <s.icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-semibold text-base">{s.label}</p>
+                  <p className="text-xs opacity-70 mt-0.5">{s.desc}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
+
 
         <div className="mt-8 text-center">
           <button

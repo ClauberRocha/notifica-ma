@@ -40,6 +40,7 @@ import {
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/fichas/")({
   head: () => ({ meta: [{ title: "Fichas de Investigação" }] }),
@@ -172,6 +173,8 @@ function printFicha(caso: CaseRow) {
 function FichasListPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { can } = useAuth();
+  const canDelete = can("fichas.delete");
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ["fichas-all"],
@@ -452,40 +455,42 @@ function FichasListPage() {
                           >
                             <Printer className="w-4 h-4" />
                           </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-destructive"
-                                title="Excluir"
-                                aria-label="Excluir ficha"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Excluir Ficha</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Tem certeza que deseja excluir a ficha de{" "}
-                                  <strong>
-                                    {c.nome_paciente || "este paciente"}
-                                  </strong>
-                                  ? Esta ação não pode ser desfeita.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction
-                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  onClick={() => handleDelete(c)}
+                          {canDelete && (
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-destructive"
+                                  title="Excluir"
+                                  aria-label="Excluir ficha"
                                 >
-                                  Excluir
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Excluir Ficha</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Tem certeza que deseja excluir a ficha de{" "}
+                                    <strong>
+                                      {c.nome_paciente || "este paciente"}
+                                    </strong>
+                                    ? Esta ação não pode ser desfeita.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    onClick={() => handleDelete(c)}
+                                  >
+                                    Excluir
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          )}
                         </div>
                       </td>
                     </tr>

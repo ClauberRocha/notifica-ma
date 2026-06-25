@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Trash2, Loader2, CheckCircle, Syringe } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
 import { getSeNumber } from "@/lib/seUtils";
 import { toast } from "sonner";
@@ -126,6 +127,8 @@ function FichaDifteriaDetalhesPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { can } = useAuth();
+  const canDelete = can("fichas.delete");
 
   const { data: ficha, isLoading } = useQuery({
     queryKey: ["difteria-case", id],
@@ -275,30 +278,32 @@ function FichaDifteriaDetalhesPage() {
               <CheckCircle className="w-4 h-4" /> Encerrar
             </Button>
           )}
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 text-destructive hover:text-destructive"
-              >
-                <Trash2 className="w-4 h-4" /> Excluir
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Excluir ficha?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Essa ação não pode ser desfeita.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteMutation.mutate()}>
-                  Excluir
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {canDelete && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="gap-2 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="w-4 h-4" /> Excluir
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir ficha?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Essa ação não pode ser desfeita.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => deleteMutation.mutate()}>
+                    Excluir
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       </div>
 

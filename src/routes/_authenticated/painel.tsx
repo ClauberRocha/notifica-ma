@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,6 +74,24 @@ type PainelSearch = {
 
 export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({ meta: [{ title: "Notifica-MA Intelligence — Monitoramento e Decisão" }] }),
+  beforeLoad: async ({ search }) => {
+    const { data: auth } = await supabase.auth.getUser();
+    if (!auth.user) throw redirect({ to: "/auth" });
+    const { data: rows } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", auth.user.id);
+    const allowed = !!rows?.some(
+      (r) => r.role === "admin" || r.role === "gestor",
+    );
+    if (!allowed) throw redirect({ to: "/" });
+
+    const role = rows?.[0]?.role;
+    if (role === "gestor" && search.tab === "config") {
+      throw redirect({ to: "/painel?tab=dashboard" });
+    }
+  },
+
   validateSearch: (search: Record<string, unknown>): PainelSearch => {
     return {
       tab: (search.tab as PainelSearch["tab"]) || "dashboard",
@@ -81,6 +99,7 @@ export const Route = createFileRoute("/_authenticated/painel")({
   },
   component: PainelPage,
 });
+
 
 const PIE_COLORS = [
   "hsl(213,94%,42%)",

@@ -65,9 +65,10 @@ const groups: SidebarGroup[] = [
   {
     label: "Sistema",
     items: [
-      { title: "Configurações", url: "/painel?tab=config", icon: Settings },
+      { title: "Configurações", url: "/painel?tab=config", icon: Settings, permission: "system.settings" },
     ],
   },
+
 ];
 
 function initials(name: string) {
@@ -163,6 +164,23 @@ export function AppSidebar() {
               <SidebarMenu className="gap-0.5">
                 {visibleGroupItems.map((item) => {
                   const active = isActive(item.url);
+                  const isDisabled = role === "user" && item.url.startsWith("/painel");
+
+                  if (isDisabled) {
+                    return (
+                      <SidebarMenuItem key={item.url}>
+                        <SidebarMenuButton
+                          disabled
+                          tooltip={item.title}
+                          className="h-9 rounded-lg opacity-40 cursor-not-allowed pointer-events-none text-sidebar-foreground/45"
+                        >
+                          <item.icon className="h-4 w-4 shrink-0 text-sidebar-foreground/35" />
+                          <span>{item.title}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  }
+
                   return (
                     <SidebarMenuItem key={item.url}>
                       <SidebarMenuButton
@@ -184,6 +202,7 @@ export function AppSidebar() {
                   );
                 })}
               </SidebarMenu>
+
             </div>
           );
         })}

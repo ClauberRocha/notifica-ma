@@ -193,6 +193,7 @@ function UsuariosPage() {
   const deleteUserFn = useServerFn(deleteUser);
   const resendInviteFn = useServerFn(resendInvite);
   const [lastCreatedId, setLastCreatedId] = useState<string | null>(null);
+  const [createdUserPassword, setCreatedUserPassword] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -246,7 +247,7 @@ function UsuariosPage() {
       setLastCreatedId(res.id);
       setConfirmInfo({
         title: "Usuário criado com sucesso!",
-        description: `Um e-mail contendo a senha temporária foi enviado para ${res.email}. A troca de senha será solicitada no primeiro acesso.`,
+        description: `O usuário foi pré-registrado no sistema.\n\nE-mail: ${res.email}\nSenha Temporária: ${createdUserPassword}\n\nCopie os dados acima e envie para o usuário. A troca de senha será solicitada obrigatoriamente no primeiro acesso.`,
       });
       setConfirmOpen(true);
     },
@@ -552,7 +553,10 @@ function UsuariosPage() {
             isCreate={true}
             saving={createMutation.isPending}
             onClose={() => setCreateOpen(false)}
-            onSubmit={(form) => createMutation.mutate(form)}
+            onSubmit={(form) => {
+              setCreatedUserPassword(form.password || "");
+              createMutation.mutate(form);
+            }}
             submitLabel="Salvar"
           />
         </DialogContent>
@@ -599,7 +603,7 @@ function UsuariosPage() {
             <AlertDialogTitle>
               {confirmInfo?.title ?? "Sucesso"}
             </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="whitespace-pre-line font-medium text-foreground bg-muted/40 p-4 rounded-xl border border-border/60 mt-2">
               {confirmInfo?.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
