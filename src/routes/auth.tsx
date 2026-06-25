@@ -8,8 +8,8 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Entrar — Sistema de Notificação de Agravos" },
-      { name: "description", content: "Acesse sua conta para registrar e consultar fichas de notificação." },
+      { title: "Entrar — Notifica-MA Intelligence" },
+      { name: "description", content: "Acesse sua conta no Notifica-MA Intelligence — Plataforma Estadual de Monitoramento e Decisão em Saúde." },
     ],
   }),
   component: AuthPage,
@@ -79,12 +79,15 @@ function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-foreground">
-            {mode === "login" ? "Entrar" : "Criar conta"}
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">
+            Notifica-MA Intelligence
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Sistema de Notificação de Agravos
+          <p className="text-xs text-primary font-medium mt-1">
+            Plataforma Estadual de Monitoramento e Decisão em Saúde
           </p>
+          <h2 className="text-lg font-semibold text-foreground mt-4">
+            {mode === "login" ? "Entrar" : "Criar conta"}
+          </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 bg-card border rounded-2xl p-6">

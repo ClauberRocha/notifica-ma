@@ -5,8 +5,8 @@ import { useAuth } from "@/hooks/use-auth";
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
-      { title: "Início — Sistema de Notificação de Agravos" },
-      { name: "description", content: "Registre, consulte e analise fichas de notificação de agravos." },
+      { title: "Notifica-MA Intelligence — Monitoramento e Decisão em Saúde" },
+      { name: "description", content: "Plataforma Estadual de Monitoramento e Decisão em Saúde." },
     ],
   }),
   component: Home,
@@ -38,9 +38,12 @@ function Home() {
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-primary">
             {firstName[0].toUpperCase()}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-            Notifica MA — Sistema de Notificação de Agravos
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+            Notifica-MA Intelligence
           </h1>
+          <p className="text-sm font-medium text-primary mt-1">
+            Plataforma Estadual de Monitoramento e Decisão em Saúde
+          </p>
           <p className="text-muted-foreground mt-2 text-sm sm:text-base">
             {loading ? "Carregando..." : `${greeting}, ${firstName}. O que você deseja fazer hoje?`}
           </p>

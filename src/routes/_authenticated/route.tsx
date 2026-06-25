@@ -23,7 +23,7 @@ function AuthenticatedLayout() {
         <div className="flex flex-1 flex-col">
           <header className="flex h-12 items-center gap-2 border-b border-border bg-card/50 px-3 md:hidden">
             <SidebarTrigger />
-            <span className="text-sm font-semibold">NOTIFICA - MA</span>
+            <span className="text-sm font-bold tracking-tight">Notifica-MA Intelligence</span>
           </header>
           <main className="flex-1 p-4 md:p-6">
             <Outlet />

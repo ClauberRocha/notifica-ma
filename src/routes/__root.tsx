@@ -80,15 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Notifica MA — Sistema de Notificação de Agravos" },
-      { name: "description", content: "Plataforma para registro, consulta e análise de fichas de notificação de agravos em saúde pública no Maranhão." },
-      { property: "og:title", content: "Notifica MA — Sistema de Notificação de Agravos" },
-      { property: "og:description", content: "Registre, consulte e analise fichas de notificação de agravos em saúde pública." },
+      { title: "Notifica-MA Intelligence — Plataforma Estadual de Monitoramento e Decisão em Saúde" },
+      { name: "description", content: "Plataforma Estadual para monitoramento, análise de dados e suporte à decisão em saúde pública no Maranhão." },
+      { property: "og:title", content: "Notifica-MA Intelligence — Monitoramento e Decisão em Saúde" },
+      { property: "og:description", content: "Plataforma para monitoramento de agravos, análise estatística e suporte à decisão em saúde pública." },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Notifica MA" },
+      { property: "og:site_name", content: "Notifica-MA Intelligence" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Notifica MA — Sistema de Notificação de Agravos" },
-      { name: "twitter:description", content: "Registre, consulte e analise fichas de notificação de agravos em saúde pública." },
+      { name: "twitter:title", content: "Notifica-MA Intelligence — Monitoramento e Decisão em Saúde" },
+      { name: "twitter:description", content: "Plataforma para monitoramento de agravos, análise estatística e suporte à decisão em saúde pública." },
     ],
     links: [
       {
@@ -105,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className="dark">
       <head>
         <HeadContent />
       </head>

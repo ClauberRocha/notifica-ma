@@ -142,3 +142,25 @@
     color: var(--color-foreground);
   }
 }
+
+@utility glass-card {
+  background: rgba(20, 24, 35, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@utility glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    background: rgba(20, 24, 35, 0.85);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@utility tech-gradient {
+  background: linear-gradient(135deg, oklch(0.48 0.15 245) 0%, oklch(0.36 0.12 250) 100%);
+}
+

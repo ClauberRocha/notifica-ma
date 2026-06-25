@@ -8,6 +8,13 @@ import {
   ClipboardList,
   LogOut,
   ShieldCheck,
+  MapPin,
+  Bell,
+  Activity,
+  Building,
+  FileText,
+  Bot,
+  Settings,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,13 +36,38 @@ type NavItem = {
   permission?: Permission;
 };
 
-const items: NavItem[] = [
-  { title: "Início", url: "/", icon: LayoutGrid },
-  { title: "Nova Ficha", url: "/nova-ficha", icon: FilePlus, permission: "fichas.create" },
-  { title: "Fichas", url: "/fichas", icon: List, permission: "fichas.view" },
-  { title: "Painel", url: "/painel", icon: BarChart3, permission: "reports.view" },
-  { title: "Usuários", url: "/usuarios", icon: Users, permission: "users.view" },
-  { title: "Logs", url: "/logs", icon: ClipboardList, permission: "logs.view" },
+type SidebarGroup = {
+  label: string;
+  items: NavItem[];
+};
+
+const groups: SidebarGroup[] = [
+  {
+    label: "Inteligência e Gestão",
+    items: [
+      { title: "Dashboard Executivo", url: "/painel?tab=dashboard", icon: LayoutGrid },
+      { title: "Análise Epidemiológica", url: "/painel?tab=analise", icon: BarChart3 },
+      { title: "Mapa de Risco", url: "/painel?tab=mapa", icon: MapPin },
+      { title: "Central de Alertas", url: "/painel?tab=alertas", icon: Bell },
+      { title: "Indicadores", url: "/painel?tab=indicadores", icon: Activity },
+      { title: "Municípios", url: "/painel?tab=municipios", icon: Building },
+      { title: "Relatórios", url: "/painel?tab=relatorios", icon: FileText },
+      { title: "Assistente IA", url: "/painel?tab=ia", icon: Bot },
+    ],
+  },
+  {
+    label: "Cadastro e Operações",
+    items: [
+      { title: "Nova Ficha", url: "/nova-ficha", icon: FilePlus, permission: "fichas.create" },
+      { title: "Fichas Cadastradas", url: "/fichas", icon: List, permission: "fichas.view" },
+    ],
+  },
+  {
+    label: "Sistema",
+    items: [
+      { title: "Configurações", url: "/painel?tab=config", icon: Settings },
+    ],
+  },
 ];
 
 function initials(name: string) {
@@ -55,12 +87,22 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user, signOut, role, can } = useAuth();
 
-  const isActive = (url: string) =>
-    url === "/"
-      ? pathname === "/"
-      : pathname === url || pathname.startsWith(`${url}/`);
+  const isActive = (url: string) => {
+    const [path, query] = url.split("?");
+    const pathMatch = pathname === path;
+    if (!query) {
+      return url === "/"
+        ? pathname === "/"
+        : pathname === url || pathname.startsWith(`${url}/`);
+    }
 
-  const visibleItems = items.filter((it) => !it.permission || can(it.permission));
+    if (typeof window === "undefined") return false;
+    const searchParams = new URLSearchParams(window.location.search);
+    const tabParam = searchParams.get("tab") || "dashboard";
+    const tabMatch = query.includes(`tab=${tabParam}`);
+    return pathMatch && tabMatch;
+  };
+
   const roleLabel = role ? ROLE_LABELS[role] : "Sem perfil";
   const roleClass = role ? ROLE_BADGE_CLASSES[role] : "bg-muted text-muted-foreground border-border";
 
@@ -74,10 +116,10 @@ export function AppSidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <p className="truncate text-sm font-bold tracking-tight text-sidebar-foreground">
-                NOTIFICA - MA
+                Notifica-MA Intelligence
               </p>
-              <p className="truncate text-xs text-sidebar-foreground/60">
-                Vigilância Epidemiológica
+              <p className="truncate text-[10px] leading-tight text-sidebar-foreground/60">
+                Monitoramento e Decisão em Saúde
               </p>
             </div>
           )}
@@ -103,31 +145,48 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-2 py-3">
-        <SidebarMenu className="gap-1">
-          {visibleItems.map((item) => {
-            const active = isActive(item.url);
-            return (
-              <SidebarMenuItem key={item.url}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={active}
-                  tooltip={item.title}
-                  className={
-                    active
-                      ? "h-10 rounded-lg bg-primary text-primary-foreground shadow-md hover:bg-primary hover:text-primary-foreground data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
-                      : "h-10 rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground"
-                  }
-                >
-                  <Link to={item.url}>
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
+      <SidebarContent className="px-2 py-3 space-y-4">
+        {groups.map((group) => {
+          const visibleGroupItems = group.items.filter(
+            (it) => !it.permission || can(it.permission)
+          );
+
+          if (visibleGroupItems.length === 0) return null;
+
+          return (
+            <div key={group.label} className="space-y-1">
+              {!collapsed && (
+                <h4 className="px-3 text-[10px] font-bold text-sidebar-foreground/40 uppercase tracking-wider">
+                  {group.label}
+                </h4>
+              )}
+              <SidebarMenu className="gap-0.5">
+                {visibleGroupItems.map((item) => {
+                  const active = isActive(item.url);
+                  return (
+                    <SidebarMenuItem key={item.url}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={active}
+                        tooltip={item.title}
+                        className={
+                          active
+                            ? "h-9 rounded-lg bg-primary text-primary-foreground shadow-sm hover:bg-primary hover:text-primary-foreground data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
+                            : "h-9 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/40 hover:text-sidebar-foreground"
+                        }
+                      >
+                        <Link to={item.url}>
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </div>
+          );
+        })}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border/60 p-2">
