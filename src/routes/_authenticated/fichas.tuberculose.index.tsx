@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/_authenticated/fichas/tuberculose")({
+export const Route = createFileRoute("/_authenticated/fichas/tuberculose/")({
   head: () => ({ meta: [{ title: "Fichas — Tuberculose" }] }),
   component: FichasTuberculosePage,
 });

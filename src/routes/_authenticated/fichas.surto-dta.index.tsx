@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/_authenticated/fichas/surto-dta")({
+export const Route = createFileRoute("/_authenticated/fichas/surto-dta/")({
   head: () => ({ meta: [{ title: "Fichas — Surto DTA" }] }),
   component: FichasSurtoDtaPage,
 });

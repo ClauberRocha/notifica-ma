@@ -34,22 +34,22 @@ import { Route as AuthenticatedNovaFichaDifteriaRouteImport } from './routes/_au
 import { Route as AuthenticatedNovaFichaDengueRouteImport } from './routes/_authenticated/nova-ficha.dengue'
 import { Route as AuthenticatedNovaFichaCoquelucheRouteImport } from './routes/_authenticated/nova-ficha.coqueluche'
 import { Route as AuthenticatedNovaFichaChikungunyaRouteImport } from './routes/_authenticated/nova-ficha.chikungunya'
-import { Route as AuthenticatedFichasTuberculoseRouteImport } from './routes/_authenticated/fichas.tuberculose'
-import { Route as AuthenticatedFichasTetanoNeonatalRouteImport } from './routes/_authenticated/fichas.tetano-neonatal'
-import { Route as AuthenticatedFichasTetanoAcidentalRouteImport } from './routes/_authenticated/fichas.tetano-acidental'
-import { Route as AuthenticatedFichasSurtoDtaRouteImport } from './routes/_authenticated/fichas.surto-dta'
-import { Route as AuthenticatedFichasSragRouteImport } from './routes/_authenticated/fichas.srag'
-import { Route as AuthenticatedFichasSarampoRouteImport } from './routes/_authenticated/fichas.sarampo'
-import { Route as AuthenticatedFichasRubeolaRouteImport } from './routes/_authenticated/fichas.rubeola'
-import { Route as AuthenticatedFichasRaivaHumanaRouteImport } from './routes/_authenticated/fichas.raiva-humana'
-import { Route as AuthenticatedFichasOutrasMeningitesRouteImport } from './routes/_authenticated/fichas.outras-meningites'
-import { Route as AuthenticatedFichasHanseniaseRouteImport } from './routes/_authenticated/fichas.hanseniase'
-import { Route as AuthenticatedFichasFebreAmarelaRouteImport } from './routes/_authenticated/fichas.febre-amarela'
-import { Route as AuthenticatedFichasEpizootiaRouteImport } from './routes/_authenticated/fichas.epizootia'
-import { Route as AuthenticatedFichasDifteriaRouteImport } from './routes/_authenticated/fichas.difteria'
-import { Route as AuthenticatedFichasDengueRouteImport } from './routes/_authenticated/fichas.dengue'
-import { Route as AuthenticatedFichasCoquelucheRouteImport } from './routes/_authenticated/fichas.coqueluche'
-import { Route as AuthenticatedFichasChikungunyaRouteImport } from './routes/_authenticated/fichas.chikungunya'
+import { Route as AuthenticatedFichasTuberculoseIndexRouteImport } from './routes/_authenticated/fichas.tuberculose.index'
+import { Route as AuthenticatedFichasTetanoNeonatalIndexRouteImport } from './routes/_authenticated/fichas.tetano-neonatal.index'
+import { Route as AuthenticatedFichasTetanoAcidentalIndexRouteImport } from './routes/_authenticated/fichas.tetano-acidental.index'
+import { Route as AuthenticatedFichasSurtoDtaIndexRouteImport } from './routes/_authenticated/fichas.surto-dta.index'
+import { Route as AuthenticatedFichasSragIndexRouteImport } from './routes/_authenticated/fichas.srag.index'
+import { Route as AuthenticatedFichasSarampoIndexRouteImport } from './routes/_authenticated/fichas.sarampo.index'
+import { Route as AuthenticatedFichasRubeolaIndexRouteImport } from './routes/_authenticated/fichas.rubeola.index'
+import { Route as AuthenticatedFichasRaivaHumanaIndexRouteImport } from './routes/_authenticated/fichas.raiva-humana.index'
+import { Route as AuthenticatedFichasOutrasMeningitesIndexRouteImport } from './routes/_authenticated/fichas.outras-meningites.index'
+import { Route as AuthenticatedFichasHanseniaseIndexRouteImport } from './routes/_authenticated/fichas.hanseniase.index'
+import { Route as AuthenticatedFichasFebreAmarelaIndexRouteImport } from './routes/_authenticated/fichas.febre-amarela.index'
+import { Route as AuthenticatedFichasEpizootiaIndexRouteImport } from './routes/_authenticated/fichas.epizootia.index'
+import { Route as AuthenticatedFichasDifteriaIndexRouteImport } from './routes/_authenticated/fichas.difteria.index'
+import { Route as AuthenticatedFichasDengueIndexRouteImport } from './routes/_authenticated/fichas.dengue.index'
+import { Route as AuthenticatedFichasCoquelucheIndexRouteImport } from './routes/_authenticated/fichas.coqueluche.index'
+import { Route as AuthenticatedFichasChikungunyaIndexRouteImport } from './routes/_authenticated/fichas.chikungunya.index'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -212,99 +212,100 @@ const AuthenticatedNovaFichaChikungunyaRoute =
     path: '/nova-ficha/chikungunya',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasTuberculoseRoute =
-  AuthenticatedFichasTuberculoseRouteImport.update({
-    id: '/fichas/tuberculose',
-    path: '/fichas/tuberculose',
+const AuthenticatedFichasTuberculoseIndexRoute =
+  AuthenticatedFichasTuberculoseIndexRouteImport.update({
+    id: '/fichas/tuberculose/',
+    path: '/fichas/tuberculose/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasTetanoNeonatalRoute =
-  AuthenticatedFichasTetanoNeonatalRouteImport.update({
-    id: '/fichas/tetano-neonatal',
-    path: '/fichas/tetano-neonatal',
+const AuthenticatedFichasTetanoNeonatalIndexRoute =
+  AuthenticatedFichasTetanoNeonatalIndexRouteImport.update({
+    id: '/fichas/tetano-neonatal/',
+    path: '/fichas/tetano-neonatal/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasTetanoAcidentalRoute =
-  AuthenticatedFichasTetanoAcidentalRouteImport.update({
-    id: '/fichas/tetano-acidental',
-    path: '/fichas/tetano-acidental',
+const AuthenticatedFichasTetanoAcidentalIndexRoute =
+  AuthenticatedFichasTetanoAcidentalIndexRouteImport.update({
+    id: '/fichas/tetano-acidental/',
+    path: '/fichas/tetano-acidental/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasSurtoDtaRoute =
-  AuthenticatedFichasSurtoDtaRouteImport.update({
-    id: '/fichas/surto-dta',
-    path: '/fichas/surto-dta',
+const AuthenticatedFichasSurtoDtaIndexRoute =
+  AuthenticatedFichasSurtoDtaIndexRouteImport.update({
+    id: '/fichas/surto-dta/',
+    path: '/fichas/surto-dta/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasSragRoute = AuthenticatedFichasSragRouteImport.update({
-  id: '/fichas/srag',
-  path: '/fichas/srag',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedFichasSarampoRoute =
-  AuthenticatedFichasSarampoRouteImport.update({
-    id: '/fichas/sarampo',
-    path: '/fichas/sarampo',
+const AuthenticatedFichasSragIndexRoute =
+  AuthenticatedFichasSragIndexRouteImport.update({
+    id: '/fichas/srag/',
+    path: '/fichas/srag/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasRubeolaRoute =
-  AuthenticatedFichasRubeolaRouteImport.update({
-    id: '/fichas/rubeola',
-    path: '/fichas/rubeola',
+const AuthenticatedFichasSarampoIndexRoute =
+  AuthenticatedFichasSarampoIndexRouteImport.update({
+    id: '/fichas/sarampo/',
+    path: '/fichas/sarampo/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasRaivaHumanaRoute =
-  AuthenticatedFichasRaivaHumanaRouteImport.update({
-    id: '/fichas/raiva-humana',
-    path: '/fichas/raiva-humana',
+const AuthenticatedFichasRubeolaIndexRoute =
+  AuthenticatedFichasRubeolaIndexRouteImport.update({
+    id: '/fichas/rubeola/',
+    path: '/fichas/rubeola/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasOutrasMeningitesRoute =
-  AuthenticatedFichasOutrasMeningitesRouteImport.update({
-    id: '/fichas/outras-meningites',
-    path: '/fichas/outras-meningites',
+const AuthenticatedFichasRaivaHumanaIndexRoute =
+  AuthenticatedFichasRaivaHumanaIndexRouteImport.update({
+    id: '/fichas/raiva-humana/',
+    path: '/fichas/raiva-humana/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasHanseniaseRoute =
-  AuthenticatedFichasHanseniaseRouteImport.update({
-    id: '/fichas/hanseniase',
-    path: '/fichas/hanseniase',
+const AuthenticatedFichasOutrasMeningitesIndexRoute =
+  AuthenticatedFichasOutrasMeningitesIndexRouteImport.update({
+    id: '/fichas/outras-meningites/',
+    path: '/fichas/outras-meningites/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasFebreAmarelaRoute =
-  AuthenticatedFichasFebreAmarelaRouteImport.update({
-    id: '/fichas/febre-amarela',
-    path: '/fichas/febre-amarela',
+const AuthenticatedFichasHanseniaseIndexRoute =
+  AuthenticatedFichasHanseniaseIndexRouteImport.update({
+    id: '/fichas/hanseniase/',
+    path: '/fichas/hanseniase/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasEpizootiaRoute =
-  AuthenticatedFichasEpizootiaRouteImport.update({
-    id: '/fichas/epizootia',
-    path: '/fichas/epizootia',
+const AuthenticatedFichasFebreAmarelaIndexRoute =
+  AuthenticatedFichasFebreAmarelaIndexRouteImport.update({
+    id: '/fichas/febre-amarela/',
+    path: '/fichas/febre-amarela/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasDifteriaRoute =
-  AuthenticatedFichasDifteriaRouteImport.update({
-    id: '/fichas/difteria',
-    path: '/fichas/difteria',
+const AuthenticatedFichasEpizootiaIndexRoute =
+  AuthenticatedFichasEpizootiaIndexRouteImport.update({
+    id: '/fichas/epizootia/',
+    path: '/fichas/epizootia/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasDengueRoute =
-  AuthenticatedFichasDengueRouteImport.update({
-    id: '/fichas/dengue',
-    path: '/fichas/dengue',
+const AuthenticatedFichasDifteriaIndexRoute =
+  AuthenticatedFichasDifteriaIndexRouteImport.update({
+    id: '/fichas/difteria/',
+    path: '/fichas/difteria/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasCoquelucheRoute =
-  AuthenticatedFichasCoquelucheRouteImport.update({
-    id: '/fichas/coqueluche',
-    path: '/fichas/coqueluche',
+const AuthenticatedFichasDengueIndexRoute =
+  AuthenticatedFichasDengueIndexRouteImport.update({
+    id: '/fichas/dengue/',
+    path: '/fichas/dengue/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedFichasChikungunyaRoute =
-  AuthenticatedFichasChikungunyaRouteImport.update({
-    id: '/fichas/chikungunya',
-    path: '/fichas/chikungunya',
+const AuthenticatedFichasCoquelucheIndexRoute =
+  AuthenticatedFichasCoquelucheIndexRouteImport.update({
+    id: '/fichas/coqueluche/',
+    path: '/fichas/coqueluche/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFichasChikungunyaIndexRoute =
+  AuthenticatedFichasChikungunyaIndexRouteImport.update({
+    id: '/fichas/chikungunya/',
+    path: '/fichas/chikungunya/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const LovableEmailQueueProcessRoute =
@@ -325,99 +326,99 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
 } as any)
 const AuthenticatedFichasTuberculoseIdRoute =
   AuthenticatedFichasTuberculoseIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasTuberculoseRoute,
+    id: '/fichas/tuberculose/$id',
+    path: '/fichas/tuberculose/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasTetanoNeonatalIdRoute =
   AuthenticatedFichasTetanoNeonatalIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasTetanoNeonatalRoute,
+    id: '/fichas/tetano-neonatal/$id',
+    path: '/fichas/tetano-neonatal/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasTetanoAcidentalIdRoute =
   AuthenticatedFichasTetanoAcidentalIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasTetanoAcidentalRoute,
+    id: '/fichas/tetano-acidental/$id',
+    path: '/fichas/tetano-acidental/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasSurtoDtaIdRoute =
   AuthenticatedFichasSurtoDtaIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasSurtoDtaRoute,
+    id: '/fichas/surto-dta/$id',
+    path: '/fichas/surto-dta/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasSragIdRoute =
   AuthenticatedFichasSragIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasSragRoute,
+    id: '/fichas/srag/$id',
+    path: '/fichas/srag/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasSarampoIdRoute =
   AuthenticatedFichasSarampoIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasSarampoRoute,
+    id: '/fichas/sarampo/$id',
+    path: '/fichas/sarampo/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasRubeolaIdRoute =
   AuthenticatedFichasRubeolaIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasRubeolaRoute,
+    id: '/fichas/rubeola/$id',
+    path: '/fichas/rubeola/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasRaivaHumanaIdRoute =
   AuthenticatedFichasRaivaHumanaIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasRaivaHumanaRoute,
+    id: '/fichas/raiva-humana/$id',
+    path: '/fichas/raiva-humana/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasOutrasMeningitesIdRoute =
   AuthenticatedFichasOutrasMeningitesIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasOutrasMeningitesRoute,
+    id: '/fichas/outras-meningites/$id',
+    path: '/fichas/outras-meningites/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasHanseniaseIdRoute =
   AuthenticatedFichasHanseniaseIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasHanseniaseRoute,
+    id: '/fichas/hanseniase/$id',
+    path: '/fichas/hanseniase/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasFebreAmarelaIdRoute =
   AuthenticatedFichasFebreAmarelaIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasFebreAmarelaRoute,
+    id: '/fichas/febre-amarela/$id',
+    path: '/fichas/febre-amarela/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasEpizootiaIdRoute =
   AuthenticatedFichasEpizootiaIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasEpizootiaRoute,
+    id: '/fichas/epizootia/$id',
+    path: '/fichas/epizootia/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasDifteriaIdRoute =
   AuthenticatedFichasDifteriaIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasDifteriaRoute,
+    id: '/fichas/difteria/$id',
+    path: '/fichas/difteria/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasDengueIdRoute =
   AuthenticatedFichasDengueIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasDengueRoute,
+    id: '/fichas/dengue/$id',
+    path: '/fichas/dengue/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasCoquelucheIdRoute =
   AuthenticatedFichasCoquelucheIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasCoquelucheRoute,
+    id: '/fichas/coqueluche/$id',
+    path: '/fichas/coqueluche/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedFichasChikungunyaIdRoute =
   AuthenticatedFichasChikungunyaIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedFichasChikungunyaRoute,
+    id: '/fichas/chikungunya/$id',
+    path: '/fichas/chikungunya/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -427,22 +428,6 @@ export interface FileRoutesByFullPath {
   '/logs': typeof AuthenticatedLogsRoute
   '/painel': typeof AuthenticatedPainelRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
-  '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRouteWithChildren
-  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
-  '/fichas/dengue': typeof AuthenticatedFichasDengueRouteWithChildren
-  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRouteWithChildren
-  '/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRouteWithChildren
-  '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRouteWithChildren
-  '/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRouteWithChildren
-  '/fichas/outras-meningites': typeof AuthenticatedFichasOutrasMeningitesRouteWithChildren
-  '/fichas/raiva-humana': typeof AuthenticatedFichasRaivaHumanaRouteWithChildren
-  '/fichas/rubeola': typeof AuthenticatedFichasRubeolaRouteWithChildren
-  '/fichas/sarampo': typeof AuthenticatedFichasSarampoRouteWithChildren
-  '/fichas/srag': typeof AuthenticatedFichasSragRouteWithChildren
-  '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRouteWithChildren
-  '/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRouteWithChildren
-  '/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRouteWithChildren
-  '/fichas/tuberculose': typeof AuthenticatedFichasTuberculoseRouteWithChildren
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -480,6 +465,22 @@ export interface FileRoutesByFullPath {
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/fichas/chikungunya/': typeof AuthenticatedFichasChikungunyaIndexRoute
+  '/fichas/coqueluche/': typeof AuthenticatedFichasCoquelucheIndexRoute
+  '/fichas/dengue/': typeof AuthenticatedFichasDengueIndexRoute
+  '/fichas/difteria/': typeof AuthenticatedFichasDifteriaIndexRoute
+  '/fichas/epizootia/': typeof AuthenticatedFichasEpizootiaIndexRoute
+  '/fichas/febre-amarela/': typeof AuthenticatedFichasFebreAmarelaIndexRoute
+  '/fichas/hanseniase/': typeof AuthenticatedFichasHanseniaseIndexRoute
+  '/fichas/outras-meningites/': typeof AuthenticatedFichasOutrasMeningitesIndexRoute
+  '/fichas/raiva-humana/': typeof AuthenticatedFichasRaivaHumanaIndexRoute
+  '/fichas/rubeola/': typeof AuthenticatedFichasRubeolaIndexRoute
+  '/fichas/sarampo/': typeof AuthenticatedFichasSarampoIndexRoute
+  '/fichas/srag/': typeof AuthenticatedFichasSragIndexRoute
+  '/fichas/surto-dta/': typeof AuthenticatedFichasSurtoDtaIndexRoute
+  '/fichas/tetano-acidental/': typeof AuthenticatedFichasTetanoAcidentalIndexRoute
+  '/fichas/tetano-neonatal/': typeof AuthenticatedFichasTetanoNeonatalIndexRoute
+  '/fichas/tuberculose/': typeof AuthenticatedFichasTuberculoseIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
@@ -488,22 +489,6 @@ export interface FileRoutesByTo {
   '/painel': typeof AuthenticatedPainelRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/': typeof AuthenticatedIndexRoute
-  '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRouteWithChildren
-  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
-  '/fichas/dengue': typeof AuthenticatedFichasDengueRouteWithChildren
-  '/fichas/difteria': typeof AuthenticatedFichasDifteriaRouteWithChildren
-  '/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRouteWithChildren
-  '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRouteWithChildren
-  '/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRouteWithChildren
-  '/fichas/outras-meningites': typeof AuthenticatedFichasOutrasMeningitesRouteWithChildren
-  '/fichas/raiva-humana': typeof AuthenticatedFichasRaivaHumanaRouteWithChildren
-  '/fichas/rubeola': typeof AuthenticatedFichasRubeolaRouteWithChildren
-  '/fichas/sarampo': typeof AuthenticatedFichasSarampoRouteWithChildren
-  '/fichas/srag': typeof AuthenticatedFichasSragRouteWithChildren
-  '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRouteWithChildren
-  '/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRouteWithChildren
-  '/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRouteWithChildren
-  '/fichas/tuberculose': typeof AuthenticatedFichasTuberculoseRouteWithChildren
   '/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -541,6 +526,22 @@ export interface FileRoutesByTo {
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaIndexRoute
+  '/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheIndexRoute
+  '/fichas/dengue': typeof AuthenticatedFichasDengueIndexRoute
+  '/fichas/difteria': typeof AuthenticatedFichasDifteriaIndexRoute
+  '/fichas/epizootia': typeof AuthenticatedFichasEpizootiaIndexRoute
+  '/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaIndexRoute
+  '/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseIndexRoute
+  '/fichas/outras-meningites': typeof AuthenticatedFichasOutrasMeningitesIndexRoute
+  '/fichas/raiva-humana': typeof AuthenticatedFichasRaivaHumanaIndexRoute
+  '/fichas/rubeola': typeof AuthenticatedFichasRubeolaIndexRoute
+  '/fichas/sarampo': typeof AuthenticatedFichasSarampoIndexRoute
+  '/fichas/srag': typeof AuthenticatedFichasSragIndexRoute
+  '/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaIndexRoute
+  '/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalIndexRoute
+  '/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalIndexRoute
+  '/fichas/tuberculose': typeof AuthenticatedFichasTuberculoseIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -551,22 +552,6 @@ export interface FileRoutesById {
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/fichas/chikungunya': typeof AuthenticatedFichasChikungunyaRouteWithChildren
-  '/_authenticated/fichas/coqueluche': typeof AuthenticatedFichasCoquelucheRouteWithChildren
-  '/_authenticated/fichas/dengue': typeof AuthenticatedFichasDengueRouteWithChildren
-  '/_authenticated/fichas/difteria': typeof AuthenticatedFichasDifteriaRouteWithChildren
-  '/_authenticated/fichas/epizootia': typeof AuthenticatedFichasEpizootiaRouteWithChildren
-  '/_authenticated/fichas/febre-amarela': typeof AuthenticatedFichasFebreAmarelaRouteWithChildren
-  '/_authenticated/fichas/hanseniase': typeof AuthenticatedFichasHanseniaseRouteWithChildren
-  '/_authenticated/fichas/outras-meningites': typeof AuthenticatedFichasOutrasMeningitesRouteWithChildren
-  '/_authenticated/fichas/raiva-humana': typeof AuthenticatedFichasRaivaHumanaRouteWithChildren
-  '/_authenticated/fichas/rubeola': typeof AuthenticatedFichasRubeolaRouteWithChildren
-  '/_authenticated/fichas/sarampo': typeof AuthenticatedFichasSarampoRouteWithChildren
-  '/_authenticated/fichas/srag': typeof AuthenticatedFichasSragRouteWithChildren
-  '/_authenticated/fichas/surto-dta': typeof AuthenticatedFichasSurtoDtaRouteWithChildren
-  '/_authenticated/fichas/tetano-acidental': typeof AuthenticatedFichasTetanoAcidentalRouteWithChildren
-  '/_authenticated/fichas/tetano-neonatal': typeof AuthenticatedFichasTetanoNeonatalRouteWithChildren
-  '/_authenticated/fichas/tuberculose': typeof AuthenticatedFichasTuberculoseRouteWithChildren
   '/_authenticated/nova-ficha/chikungunya': typeof AuthenticatedNovaFichaChikungunyaRoute
   '/_authenticated/nova-ficha/coqueluche': typeof AuthenticatedNovaFichaCoquelucheRoute
   '/_authenticated/nova-ficha/dengue': typeof AuthenticatedNovaFichaDengueRoute
@@ -604,6 +589,22 @@ export interface FileRoutesById {
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/_authenticated/fichas/chikungunya/': typeof AuthenticatedFichasChikungunyaIndexRoute
+  '/_authenticated/fichas/coqueluche/': typeof AuthenticatedFichasCoquelucheIndexRoute
+  '/_authenticated/fichas/dengue/': typeof AuthenticatedFichasDengueIndexRoute
+  '/_authenticated/fichas/difteria/': typeof AuthenticatedFichasDifteriaIndexRoute
+  '/_authenticated/fichas/epizootia/': typeof AuthenticatedFichasEpizootiaIndexRoute
+  '/_authenticated/fichas/febre-amarela/': typeof AuthenticatedFichasFebreAmarelaIndexRoute
+  '/_authenticated/fichas/hanseniase/': typeof AuthenticatedFichasHanseniaseIndexRoute
+  '/_authenticated/fichas/outras-meningites/': typeof AuthenticatedFichasOutrasMeningitesIndexRoute
+  '/_authenticated/fichas/raiva-humana/': typeof AuthenticatedFichasRaivaHumanaIndexRoute
+  '/_authenticated/fichas/rubeola/': typeof AuthenticatedFichasRubeolaIndexRoute
+  '/_authenticated/fichas/sarampo/': typeof AuthenticatedFichasSarampoIndexRoute
+  '/_authenticated/fichas/srag/': typeof AuthenticatedFichasSragIndexRoute
+  '/_authenticated/fichas/surto-dta/': typeof AuthenticatedFichasSurtoDtaIndexRoute
+  '/_authenticated/fichas/tetano-acidental/': typeof AuthenticatedFichasTetanoAcidentalIndexRoute
+  '/_authenticated/fichas/tetano-neonatal/': typeof AuthenticatedFichasTetanoNeonatalIndexRoute
+  '/_authenticated/fichas/tuberculose/': typeof AuthenticatedFichasTuberculoseIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -614,22 +615,6 @@ export interface FileRouteTypes {
     | '/logs'
     | '/painel'
     | '/usuarios'
-    | '/fichas/chikungunya'
-    | '/fichas/coqueluche'
-    | '/fichas/dengue'
-    | '/fichas/difteria'
-    | '/fichas/epizootia'
-    | '/fichas/febre-amarela'
-    | '/fichas/hanseniase'
-    | '/fichas/outras-meningites'
-    | '/fichas/raiva-humana'
-    | '/fichas/rubeola'
-    | '/fichas/sarampo'
-    | '/fichas/srag'
-    | '/fichas/surto-dta'
-    | '/fichas/tetano-acidental'
-    | '/fichas/tetano-neonatal'
-    | '/fichas/tuberculose'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -667,6 +652,22 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/fichas/chikungunya/'
+    | '/fichas/coqueluche/'
+    | '/fichas/dengue/'
+    | '/fichas/difteria/'
+    | '/fichas/epizootia/'
+    | '/fichas/febre-amarela/'
+    | '/fichas/hanseniase/'
+    | '/fichas/outras-meningites/'
+    | '/fichas/raiva-humana/'
+    | '/fichas/rubeola/'
+    | '/fichas/sarampo/'
+    | '/fichas/srag/'
+    | '/fichas/surto-dta/'
+    | '/fichas/tetano-acidental/'
+    | '/fichas/tetano-neonatal/'
+    | '/fichas/tuberculose/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -675,22 +676,6 @@ export interface FileRouteTypes {
     | '/painel'
     | '/usuarios'
     | '/'
-    | '/fichas/chikungunya'
-    | '/fichas/coqueluche'
-    | '/fichas/dengue'
-    | '/fichas/difteria'
-    | '/fichas/epizootia'
-    | '/fichas/febre-amarela'
-    | '/fichas/hanseniase'
-    | '/fichas/outras-meningites'
-    | '/fichas/raiva-humana'
-    | '/fichas/rubeola'
-    | '/fichas/sarampo'
-    | '/fichas/srag'
-    | '/fichas/surto-dta'
-    | '/fichas/tetano-acidental'
-    | '/fichas/tetano-neonatal'
-    | '/fichas/tuberculose'
     | '/nova-ficha/chikungunya'
     | '/nova-ficha/coqueluche'
     | '/nova-ficha/dengue'
@@ -728,6 +713,22 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/fichas/chikungunya'
+    | '/fichas/coqueluche'
+    | '/fichas/dengue'
+    | '/fichas/difteria'
+    | '/fichas/epizootia'
+    | '/fichas/febre-amarela'
+    | '/fichas/hanseniase'
+    | '/fichas/outras-meningites'
+    | '/fichas/raiva-humana'
+    | '/fichas/rubeola'
+    | '/fichas/sarampo'
+    | '/fichas/srag'
+    | '/fichas/surto-dta'
+    | '/fichas/tetano-acidental'
+    | '/fichas/tetano-neonatal'
+    | '/fichas/tuberculose'
   id:
     | '__root__'
     | '/_authenticated'
@@ -737,22 +738,6 @@ export interface FileRouteTypes {
     | '/_authenticated/painel'
     | '/_authenticated/usuarios'
     | '/_authenticated/'
-    | '/_authenticated/fichas/chikungunya'
-    | '/_authenticated/fichas/coqueluche'
-    | '/_authenticated/fichas/dengue'
-    | '/_authenticated/fichas/difteria'
-    | '/_authenticated/fichas/epizootia'
-    | '/_authenticated/fichas/febre-amarela'
-    | '/_authenticated/fichas/hanseniase'
-    | '/_authenticated/fichas/outras-meningites'
-    | '/_authenticated/fichas/raiva-humana'
-    | '/_authenticated/fichas/rubeola'
-    | '/_authenticated/fichas/sarampo'
-    | '/_authenticated/fichas/srag'
-    | '/_authenticated/fichas/surto-dta'
-    | '/_authenticated/fichas/tetano-acidental'
-    | '/_authenticated/fichas/tetano-neonatal'
-    | '/_authenticated/fichas/tuberculose'
     | '/_authenticated/nova-ficha/chikungunya'
     | '/_authenticated/nova-ficha/coqueluche'
     | '/_authenticated/nova-ficha/dengue'
@@ -790,6 +775,22 @@ export interface FileRouteTypes {
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
+    | '/_authenticated/fichas/chikungunya/'
+    | '/_authenticated/fichas/coqueluche/'
+    | '/_authenticated/fichas/dengue/'
+    | '/_authenticated/fichas/difteria/'
+    | '/_authenticated/fichas/epizootia/'
+    | '/_authenticated/fichas/febre-amarela/'
+    | '/_authenticated/fichas/hanseniase/'
+    | '/_authenticated/fichas/outras-meningites/'
+    | '/_authenticated/fichas/raiva-humana/'
+    | '/_authenticated/fichas/rubeola/'
+    | '/_authenticated/fichas/sarampo/'
+    | '/_authenticated/fichas/srag/'
+    | '/_authenticated/fichas/surto-dta/'
+    | '/_authenticated/fichas/tetano-acidental/'
+    | '/_authenticated/fichas/tetano-neonatal/'
+    | '/_authenticated/fichas/tuberculose/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -978,116 +979,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNovaFichaChikungunyaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/tuberculose': {
-      id: '/_authenticated/fichas/tuberculose'
+    '/_authenticated/fichas/tuberculose/': {
+      id: '/_authenticated/fichas/tuberculose/'
       path: '/fichas/tuberculose'
-      fullPath: '/fichas/tuberculose'
-      preLoaderRoute: typeof AuthenticatedFichasTuberculoseRouteImport
+      fullPath: '/fichas/tuberculose/'
+      preLoaderRoute: typeof AuthenticatedFichasTuberculoseIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/tetano-neonatal': {
-      id: '/_authenticated/fichas/tetano-neonatal'
+    '/_authenticated/fichas/tetano-neonatal/': {
+      id: '/_authenticated/fichas/tetano-neonatal/'
       path: '/fichas/tetano-neonatal'
-      fullPath: '/fichas/tetano-neonatal'
-      preLoaderRoute: typeof AuthenticatedFichasTetanoNeonatalRouteImport
+      fullPath: '/fichas/tetano-neonatal/'
+      preLoaderRoute: typeof AuthenticatedFichasTetanoNeonatalIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/tetano-acidental': {
-      id: '/_authenticated/fichas/tetano-acidental'
+    '/_authenticated/fichas/tetano-acidental/': {
+      id: '/_authenticated/fichas/tetano-acidental/'
       path: '/fichas/tetano-acidental'
-      fullPath: '/fichas/tetano-acidental'
-      preLoaderRoute: typeof AuthenticatedFichasTetanoAcidentalRouteImport
+      fullPath: '/fichas/tetano-acidental/'
+      preLoaderRoute: typeof AuthenticatedFichasTetanoAcidentalIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/surto-dta': {
-      id: '/_authenticated/fichas/surto-dta'
+    '/_authenticated/fichas/surto-dta/': {
+      id: '/_authenticated/fichas/surto-dta/'
       path: '/fichas/surto-dta'
-      fullPath: '/fichas/surto-dta'
-      preLoaderRoute: typeof AuthenticatedFichasSurtoDtaRouteImport
+      fullPath: '/fichas/surto-dta/'
+      preLoaderRoute: typeof AuthenticatedFichasSurtoDtaIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/srag': {
-      id: '/_authenticated/fichas/srag'
+    '/_authenticated/fichas/srag/': {
+      id: '/_authenticated/fichas/srag/'
       path: '/fichas/srag'
-      fullPath: '/fichas/srag'
-      preLoaderRoute: typeof AuthenticatedFichasSragRouteImport
+      fullPath: '/fichas/srag/'
+      preLoaderRoute: typeof AuthenticatedFichasSragIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/sarampo': {
-      id: '/_authenticated/fichas/sarampo'
+    '/_authenticated/fichas/sarampo/': {
+      id: '/_authenticated/fichas/sarampo/'
       path: '/fichas/sarampo'
-      fullPath: '/fichas/sarampo'
-      preLoaderRoute: typeof AuthenticatedFichasSarampoRouteImport
+      fullPath: '/fichas/sarampo/'
+      preLoaderRoute: typeof AuthenticatedFichasSarampoIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/rubeola': {
-      id: '/_authenticated/fichas/rubeola'
+    '/_authenticated/fichas/rubeola/': {
+      id: '/_authenticated/fichas/rubeola/'
       path: '/fichas/rubeola'
-      fullPath: '/fichas/rubeola'
-      preLoaderRoute: typeof AuthenticatedFichasRubeolaRouteImport
+      fullPath: '/fichas/rubeola/'
+      preLoaderRoute: typeof AuthenticatedFichasRubeolaIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/raiva-humana': {
-      id: '/_authenticated/fichas/raiva-humana'
+    '/_authenticated/fichas/raiva-humana/': {
+      id: '/_authenticated/fichas/raiva-humana/'
       path: '/fichas/raiva-humana'
-      fullPath: '/fichas/raiva-humana'
-      preLoaderRoute: typeof AuthenticatedFichasRaivaHumanaRouteImport
+      fullPath: '/fichas/raiva-humana/'
+      preLoaderRoute: typeof AuthenticatedFichasRaivaHumanaIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/outras-meningites': {
-      id: '/_authenticated/fichas/outras-meningites'
+    '/_authenticated/fichas/outras-meningites/': {
+      id: '/_authenticated/fichas/outras-meningites/'
       path: '/fichas/outras-meningites'
-      fullPath: '/fichas/outras-meningites'
-      preLoaderRoute: typeof AuthenticatedFichasOutrasMeningitesRouteImport
+      fullPath: '/fichas/outras-meningites/'
+      preLoaderRoute: typeof AuthenticatedFichasOutrasMeningitesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/hanseniase': {
-      id: '/_authenticated/fichas/hanseniase'
+    '/_authenticated/fichas/hanseniase/': {
+      id: '/_authenticated/fichas/hanseniase/'
       path: '/fichas/hanseniase'
-      fullPath: '/fichas/hanseniase'
-      preLoaderRoute: typeof AuthenticatedFichasHanseniaseRouteImport
+      fullPath: '/fichas/hanseniase/'
+      preLoaderRoute: typeof AuthenticatedFichasHanseniaseIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/febre-amarela': {
-      id: '/_authenticated/fichas/febre-amarela'
+    '/_authenticated/fichas/febre-amarela/': {
+      id: '/_authenticated/fichas/febre-amarela/'
       path: '/fichas/febre-amarela'
-      fullPath: '/fichas/febre-amarela'
-      preLoaderRoute: typeof AuthenticatedFichasFebreAmarelaRouteImport
+      fullPath: '/fichas/febre-amarela/'
+      preLoaderRoute: typeof AuthenticatedFichasFebreAmarelaIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/epizootia': {
-      id: '/_authenticated/fichas/epizootia'
+    '/_authenticated/fichas/epizootia/': {
+      id: '/_authenticated/fichas/epizootia/'
       path: '/fichas/epizootia'
-      fullPath: '/fichas/epizootia'
-      preLoaderRoute: typeof AuthenticatedFichasEpizootiaRouteImport
+      fullPath: '/fichas/epizootia/'
+      preLoaderRoute: typeof AuthenticatedFichasEpizootiaIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/difteria': {
-      id: '/_authenticated/fichas/difteria'
+    '/_authenticated/fichas/difteria/': {
+      id: '/_authenticated/fichas/difteria/'
       path: '/fichas/difteria'
-      fullPath: '/fichas/difteria'
-      preLoaderRoute: typeof AuthenticatedFichasDifteriaRouteImport
+      fullPath: '/fichas/difteria/'
+      preLoaderRoute: typeof AuthenticatedFichasDifteriaIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/dengue': {
-      id: '/_authenticated/fichas/dengue'
+    '/_authenticated/fichas/dengue/': {
+      id: '/_authenticated/fichas/dengue/'
       path: '/fichas/dengue'
-      fullPath: '/fichas/dengue'
-      preLoaderRoute: typeof AuthenticatedFichasDengueRouteImport
+      fullPath: '/fichas/dengue/'
+      preLoaderRoute: typeof AuthenticatedFichasDengueIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/coqueluche': {
-      id: '/_authenticated/fichas/coqueluche'
+    '/_authenticated/fichas/coqueluche/': {
+      id: '/_authenticated/fichas/coqueluche/'
       path: '/fichas/coqueluche'
-      fullPath: '/fichas/coqueluche'
-      preLoaderRoute: typeof AuthenticatedFichasCoquelucheRouteImport
+      fullPath: '/fichas/coqueluche/'
+      preLoaderRoute: typeof AuthenticatedFichasCoquelucheIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/fichas/chikungunya': {
-      id: '/_authenticated/fichas/chikungunya'
+    '/_authenticated/fichas/chikungunya/': {
+      id: '/_authenticated/fichas/chikungunya/'
       path: '/fichas/chikungunya'
-      fullPath: '/fichas/chikungunya'
-      preLoaderRoute: typeof AuthenticatedFichasChikungunyaRouteImport
+      fullPath: '/fichas/chikungunya/'
+      preLoaderRoute: typeof AuthenticatedFichasChikungunyaIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/lovable/email/queue/process': {
@@ -1113,371 +1114,124 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/fichas/tuberculose/$id': {
       id: '/_authenticated/fichas/tuberculose/$id'
-      path: '/$id'
+      path: '/fichas/tuberculose/$id'
       fullPath: '/fichas/tuberculose/$id'
       preLoaderRoute: typeof AuthenticatedFichasTuberculoseIdRouteImport
-      parentRoute: typeof AuthenticatedFichasTuberculoseRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/tetano-neonatal/$id': {
       id: '/_authenticated/fichas/tetano-neonatal/$id'
-      path: '/$id'
+      path: '/fichas/tetano-neonatal/$id'
       fullPath: '/fichas/tetano-neonatal/$id'
       preLoaderRoute: typeof AuthenticatedFichasTetanoNeonatalIdRouteImport
-      parentRoute: typeof AuthenticatedFichasTetanoNeonatalRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/tetano-acidental/$id': {
       id: '/_authenticated/fichas/tetano-acidental/$id'
-      path: '/$id'
+      path: '/fichas/tetano-acidental/$id'
       fullPath: '/fichas/tetano-acidental/$id'
       preLoaderRoute: typeof AuthenticatedFichasTetanoAcidentalIdRouteImport
-      parentRoute: typeof AuthenticatedFichasTetanoAcidentalRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/surto-dta/$id': {
       id: '/_authenticated/fichas/surto-dta/$id'
-      path: '/$id'
+      path: '/fichas/surto-dta/$id'
       fullPath: '/fichas/surto-dta/$id'
       preLoaderRoute: typeof AuthenticatedFichasSurtoDtaIdRouteImport
-      parentRoute: typeof AuthenticatedFichasSurtoDtaRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/srag/$id': {
       id: '/_authenticated/fichas/srag/$id'
-      path: '/$id'
+      path: '/fichas/srag/$id'
       fullPath: '/fichas/srag/$id'
       preLoaderRoute: typeof AuthenticatedFichasSragIdRouteImport
-      parentRoute: typeof AuthenticatedFichasSragRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/sarampo/$id': {
       id: '/_authenticated/fichas/sarampo/$id'
-      path: '/$id'
+      path: '/fichas/sarampo/$id'
       fullPath: '/fichas/sarampo/$id'
       preLoaderRoute: typeof AuthenticatedFichasSarampoIdRouteImport
-      parentRoute: typeof AuthenticatedFichasSarampoRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/rubeola/$id': {
       id: '/_authenticated/fichas/rubeola/$id'
-      path: '/$id'
+      path: '/fichas/rubeola/$id'
       fullPath: '/fichas/rubeola/$id'
       preLoaderRoute: typeof AuthenticatedFichasRubeolaIdRouteImport
-      parentRoute: typeof AuthenticatedFichasRubeolaRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/raiva-humana/$id': {
       id: '/_authenticated/fichas/raiva-humana/$id'
-      path: '/$id'
+      path: '/fichas/raiva-humana/$id'
       fullPath: '/fichas/raiva-humana/$id'
       preLoaderRoute: typeof AuthenticatedFichasRaivaHumanaIdRouteImport
-      parentRoute: typeof AuthenticatedFichasRaivaHumanaRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/outras-meningites/$id': {
       id: '/_authenticated/fichas/outras-meningites/$id'
-      path: '/$id'
+      path: '/fichas/outras-meningites/$id'
       fullPath: '/fichas/outras-meningites/$id'
       preLoaderRoute: typeof AuthenticatedFichasOutrasMeningitesIdRouteImport
-      parentRoute: typeof AuthenticatedFichasOutrasMeningitesRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/hanseniase/$id': {
       id: '/_authenticated/fichas/hanseniase/$id'
-      path: '/$id'
+      path: '/fichas/hanseniase/$id'
       fullPath: '/fichas/hanseniase/$id'
       preLoaderRoute: typeof AuthenticatedFichasHanseniaseIdRouteImport
-      parentRoute: typeof AuthenticatedFichasHanseniaseRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/febre-amarela/$id': {
       id: '/_authenticated/fichas/febre-amarela/$id'
-      path: '/$id'
+      path: '/fichas/febre-amarela/$id'
       fullPath: '/fichas/febre-amarela/$id'
       preLoaderRoute: typeof AuthenticatedFichasFebreAmarelaIdRouteImport
-      parentRoute: typeof AuthenticatedFichasFebreAmarelaRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/epizootia/$id': {
       id: '/_authenticated/fichas/epizootia/$id'
-      path: '/$id'
+      path: '/fichas/epizootia/$id'
       fullPath: '/fichas/epizootia/$id'
       preLoaderRoute: typeof AuthenticatedFichasEpizootiaIdRouteImport
-      parentRoute: typeof AuthenticatedFichasEpizootiaRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/difteria/$id': {
       id: '/_authenticated/fichas/difteria/$id'
-      path: '/$id'
+      path: '/fichas/difteria/$id'
       fullPath: '/fichas/difteria/$id'
       preLoaderRoute: typeof AuthenticatedFichasDifteriaIdRouteImport
-      parentRoute: typeof AuthenticatedFichasDifteriaRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/dengue/$id': {
       id: '/_authenticated/fichas/dengue/$id'
-      path: '/$id'
+      path: '/fichas/dengue/$id'
       fullPath: '/fichas/dengue/$id'
       preLoaderRoute: typeof AuthenticatedFichasDengueIdRouteImport
-      parentRoute: typeof AuthenticatedFichasDengueRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/coqueluche/$id': {
       id: '/_authenticated/fichas/coqueluche/$id'
-      path: '/$id'
+      path: '/fichas/coqueluche/$id'
       fullPath: '/fichas/coqueluche/$id'
       preLoaderRoute: typeof AuthenticatedFichasCoquelucheIdRouteImport
-      parentRoute: typeof AuthenticatedFichasCoquelucheRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fichas/chikungunya/$id': {
       id: '/_authenticated/fichas/chikungunya/$id'
-      path: '/$id'
+      path: '/fichas/chikungunya/$id'
       fullPath: '/fichas/chikungunya/$id'
       preLoaderRoute: typeof AuthenticatedFichasChikungunyaIdRouteImport
-      parentRoute: typeof AuthenticatedFichasChikungunyaRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
-
-interface AuthenticatedFichasChikungunyaRouteChildren {
-  AuthenticatedFichasChikungunyaIdRoute: typeof AuthenticatedFichasChikungunyaIdRoute
-}
-
-const AuthenticatedFichasChikungunyaRouteChildren: AuthenticatedFichasChikungunyaRouteChildren =
-  {
-    AuthenticatedFichasChikungunyaIdRoute:
-      AuthenticatedFichasChikungunyaIdRoute,
-  }
-
-const AuthenticatedFichasChikungunyaRouteWithChildren =
-  AuthenticatedFichasChikungunyaRoute._addFileChildren(
-    AuthenticatedFichasChikungunyaRouteChildren,
-  )
-
-interface AuthenticatedFichasCoquelucheRouteChildren {
-  AuthenticatedFichasCoquelucheIdRoute: typeof AuthenticatedFichasCoquelucheIdRoute
-}
-
-const AuthenticatedFichasCoquelucheRouteChildren: AuthenticatedFichasCoquelucheRouteChildren =
-  {
-    AuthenticatedFichasCoquelucheIdRoute: AuthenticatedFichasCoquelucheIdRoute,
-  }
-
-const AuthenticatedFichasCoquelucheRouteWithChildren =
-  AuthenticatedFichasCoquelucheRoute._addFileChildren(
-    AuthenticatedFichasCoquelucheRouteChildren,
-  )
-
-interface AuthenticatedFichasDengueRouteChildren {
-  AuthenticatedFichasDengueIdRoute: typeof AuthenticatedFichasDengueIdRoute
-}
-
-const AuthenticatedFichasDengueRouteChildren: AuthenticatedFichasDengueRouteChildren =
-  {
-    AuthenticatedFichasDengueIdRoute: AuthenticatedFichasDengueIdRoute,
-  }
-
-const AuthenticatedFichasDengueRouteWithChildren =
-  AuthenticatedFichasDengueRoute._addFileChildren(
-    AuthenticatedFichasDengueRouteChildren,
-  )
-
-interface AuthenticatedFichasDifteriaRouteChildren {
-  AuthenticatedFichasDifteriaIdRoute: typeof AuthenticatedFichasDifteriaIdRoute
-}
-
-const AuthenticatedFichasDifteriaRouteChildren: AuthenticatedFichasDifteriaRouteChildren =
-  {
-    AuthenticatedFichasDifteriaIdRoute: AuthenticatedFichasDifteriaIdRoute,
-  }
-
-const AuthenticatedFichasDifteriaRouteWithChildren =
-  AuthenticatedFichasDifteriaRoute._addFileChildren(
-    AuthenticatedFichasDifteriaRouteChildren,
-  )
-
-interface AuthenticatedFichasEpizootiaRouteChildren {
-  AuthenticatedFichasEpizootiaIdRoute: typeof AuthenticatedFichasEpizootiaIdRoute
-}
-
-const AuthenticatedFichasEpizootiaRouteChildren: AuthenticatedFichasEpizootiaRouteChildren =
-  {
-    AuthenticatedFichasEpizootiaIdRoute: AuthenticatedFichasEpizootiaIdRoute,
-  }
-
-const AuthenticatedFichasEpizootiaRouteWithChildren =
-  AuthenticatedFichasEpizootiaRoute._addFileChildren(
-    AuthenticatedFichasEpizootiaRouteChildren,
-  )
-
-interface AuthenticatedFichasFebreAmarelaRouteChildren {
-  AuthenticatedFichasFebreAmarelaIdRoute: typeof AuthenticatedFichasFebreAmarelaIdRoute
-}
-
-const AuthenticatedFichasFebreAmarelaRouteChildren: AuthenticatedFichasFebreAmarelaRouteChildren =
-  {
-    AuthenticatedFichasFebreAmarelaIdRoute:
-      AuthenticatedFichasFebreAmarelaIdRoute,
-  }
-
-const AuthenticatedFichasFebreAmarelaRouteWithChildren =
-  AuthenticatedFichasFebreAmarelaRoute._addFileChildren(
-    AuthenticatedFichasFebreAmarelaRouteChildren,
-  )
-
-interface AuthenticatedFichasHanseniaseRouteChildren {
-  AuthenticatedFichasHanseniaseIdRoute: typeof AuthenticatedFichasHanseniaseIdRoute
-}
-
-const AuthenticatedFichasHanseniaseRouteChildren: AuthenticatedFichasHanseniaseRouteChildren =
-  {
-    AuthenticatedFichasHanseniaseIdRoute: AuthenticatedFichasHanseniaseIdRoute,
-  }
-
-const AuthenticatedFichasHanseniaseRouteWithChildren =
-  AuthenticatedFichasHanseniaseRoute._addFileChildren(
-    AuthenticatedFichasHanseniaseRouteChildren,
-  )
-
-interface AuthenticatedFichasOutrasMeningitesRouteChildren {
-  AuthenticatedFichasOutrasMeningitesIdRoute: typeof AuthenticatedFichasOutrasMeningitesIdRoute
-}
-
-const AuthenticatedFichasOutrasMeningitesRouteChildren: AuthenticatedFichasOutrasMeningitesRouteChildren =
-  {
-    AuthenticatedFichasOutrasMeningitesIdRoute:
-      AuthenticatedFichasOutrasMeningitesIdRoute,
-  }
-
-const AuthenticatedFichasOutrasMeningitesRouteWithChildren =
-  AuthenticatedFichasOutrasMeningitesRoute._addFileChildren(
-    AuthenticatedFichasOutrasMeningitesRouteChildren,
-  )
-
-interface AuthenticatedFichasRaivaHumanaRouteChildren {
-  AuthenticatedFichasRaivaHumanaIdRoute: typeof AuthenticatedFichasRaivaHumanaIdRoute
-}
-
-const AuthenticatedFichasRaivaHumanaRouteChildren: AuthenticatedFichasRaivaHumanaRouteChildren =
-  {
-    AuthenticatedFichasRaivaHumanaIdRoute:
-      AuthenticatedFichasRaivaHumanaIdRoute,
-  }
-
-const AuthenticatedFichasRaivaHumanaRouteWithChildren =
-  AuthenticatedFichasRaivaHumanaRoute._addFileChildren(
-    AuthenticatedFichasRaivaHumanaRouteChildren,
-  )
-
-interface AuthenticatedFichasRubeolaRouteChildren {
-  AuthenticatedFichasRubeolaIdRoute: typeof AuthenticatedFichasRubeolaIdRoute
-}
-
-const AuthenticatedFichasRubeolaRouteChildren: AuthenticatedFichasRubeolaRouteChildren =
-  {
-    AuthenticatedFichasRubeolaIdRoute: AuthenticatedFichasRubeolaIdRoute,
-  }
-
-const AuthenticatedFichasRubeolaRouteWithChildren =
-  AuthenticatedFichasRubeolaRoute._addFileChildren(
-    AuthenticatedFichasRubeolaRouteChildren,
-  )
-
-interface AuthenticatedFichasSarampoRouteChildren {
-  AuthenticatedFichasSarampoIdRoute: typeof AuthenticatedFichasSarampoIdRoute
-}
-
-const AuthenticatedFichasSarampoRouteChildren: AuthenticatedFichasSarampoRouteChildren =
-  {
-    AuthenticatedFichasSarampoIdRoute: AuthenticatedFichasSarampoIdRoute,
-  }
-
-const AuthenticatedFichasSarampoRouteWithChildren =
-  AuthenticatedFichasSarampoRoute._addFileChildren(
-    AuthenticatedFichasSarampoRouteChildren,
-  )
-
-interface AuthenticatedFichasSragRouteChildren {
-  AuthenticatedFichasSragIdRoute: typeof AuthenticatedFichasSragIdRoute
-}
-
-const AuthenticatedFichasSragRouteChildren: AuthenticatedFichasSragRouteChildren =
-  {
-    AuthenticatedFichasSragIdRoute: AuthenticatedFichasSragIdRoute,
-  }
-
-const AuthenticatedFichasSragRouteWithChildren =
-  AuthenticatedFichasSragRoute._addFileChildren(
-    AuthenticatedFichasSragRouteChildren,
-  )
-
-interface AuthenticatedFichasSurtoDtaRouteChildren {
-  AuthenticatedFichasSurtoDtaIdRoute: typeof AuthenticatedFichasSurtoDtaIdRoute
-}
-
-const AuthenticatedFichasSurtoDtaRouteChildren: AuthenticatedFichasSurtoDtaRouteChildren =
-  {
-    AuthenticatedFichasSurtoDtaIdRoute: AuthenticatedFichasSurtoDtaIdRoute,
-  }
-
-const AuthenticatedFichasSurtoDtaRouteWithChildren =
-  AuthenticatedFichasSurtoDtaRoute._addFileChildren(
-    AuthenticatedFichasSurtoDtaRouteChildren,
-  )
-
-interface AuthenticatedFichasTetanoAcidentalRouteChildren {
-  AuthenticatedFichasTetanoAcidentalIdRoute: typeof AuthenticatedFichasTetanoAcidentalIdRoute
-}
-
-const AuthenticatedFichasTetanoAcidentalRouteChildren: AuthenticatedFichasTetanoAcidentalRouteChildren =
-  {
-    AuthenticatedFichasTetanoAcidentalIdRoute:
-      AuthenticatedFichasTetanoAcidentalIdRoute,
-  }
-
-const AuthenticatedFichasTetanoAcidentalRouteWithChildren =
-  AuthenticatedFichasTetanoAcidentalRoute._addFileChildren(
-    AuthenticatedFichasTetanoAcidentalRouteChildren,
-  )
-
-interface AuthenticatedFichasTetanoNeonatalRouteChildren {
-  AuthenticatedFichasTetanoNeonatalIdRoute: typeof AuthenticatedFichasTetanoNeonatalIdRoute
-}
-
-const AuthenticatedFichasTetanoNeonatalRouteChildren: AuthenticatedFichasTetanoNeonatalRouteChildren =
-  {
-    AuthenticatedFichasTetanoNeonatalIdRoute:
-      AuthenticatedFichasTetanoNeonatalIdRoute,
-  }
-
-const AuthenticatedFichasTetanoNeonatalRouteWithChildren =
-  AuthenticatedFichasTetanoNeonatalRoute._addFileChildren(
-    AuthenticatedFichasTetanoNeonatalRouteChildren,
-  )
-
-interface AuthenticatedFichasTuberculoseRouteChildren {
-  AuthenticatedFichasTuberculoseIdRoute: typeof AuthenticatedFichasTuberculoseIdRoute
-}
-
-const AuthenticatedFichasTuberculoseRouteChildren: AuthenticatedFichasTuberculoseRouteChildren =
-  {
-    AuthenticatedFichasTuberculoseIdRoute:
-      AuthenticatedFichasTuberculoseIdRoute,
-  }
-
-const AuthenticatedFichasTuberculoseRouteWithChildren =
-  AuthenticatedFichasTuberculoseRoute._addFileChildren(
-    AuthenticatedFichasTuberculoseRouteChildren,
-  )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedLogsRoute: typeof AuthenticatedLogsRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedFichasChikungunyaRoute: typeof AuthenticatedFichasChikungunyaRouteWithChildren
-  AuthenticatedFichasCoquelucheRoute: typeof AuthenticatedFichasCoquelucheRouteWithChildren
-  AuthenticatedFichasDengueRoute: typeof AuthenticatedFichasDengueRouteWithChildren
-  AuthenticatedFichasDifteriaRoute: typeof AuthenticatedFichasDifteriaRouteWithChildren
-  AuthenticatedFichasEpizootiaRoute: typeof AuthenticatedFichasEpizootiaRouteWithChildren
-  AuthenticatedFichasFebreAmarelaRoute: typeof AuthenticatedFichasFebreAmarelaRouteWithChildren
-  AuthenticatedFichasHanseniaseRoute: typeof AuthenticatedFichasHanseniaseRouteWithChildren
-  AuthenticatedFichasOutrasMeningitesRoute: typeof AuthenticatedFichasOutrasMeningitesRouteWithChildren
-  AuthenticatedFichasRaivaHumanaRoute: typeof AuthenticatedFichasRaivaHumanaRouteWithChildren
-  AuthenticatedFichasRubeolaRoute: typeof AuthenticatedFichasRubeolaRouteWithChildren
-  AuthenticatedFichasSarampoRoute: typeof AuthenticatedFichasSarampoRouteWithChildren
-  AuthenticatedFichasSragRoute: typeof AuthenticatedFichasSragRouteWithChildren
-  AuthenticatedFichasSurtoDtaRoute: typeof AuthenticatedFichasSurtoDtaRouteWithChildren
-  AuthenticatedFichasTetanoAcidentalRoute: typeof AuthenticatedFichasTetanoAcidentalRouteWithChildren
-  AuthenticatedFichasTetanoNeonatalRoute: typeof AuthenticatedFichasTetanoNeonatalRouteWithChildren
-  AuthenticatedFichasTuberculoseRoute: typeof AuthenticatedFichasTuberculoseRouteWithChildren
   AuthenticatedNovaFichaChikungunyaRoute: typeof AuthenticatedNovaFichaChikungunyaRoute
   AuthenticatedNovaFichaCoquelucheRoute: typeof AuthenticatedNovaFichaCoquelucheRoute
   AuthenticatedNovaFichaDengueRoute: typeof AuthenticatedNovaFichaDengueRoute
@@ -1496,6 +1250,38 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNovaFichaTuberculoseRoute: typeof AuthenticatedNovaFichaTuberculoseRoute
   AuthenticatedFichasIndexRoute: typeof AuthenticatedFichasIndexRoute
   AuthenticatedNovaFichaIndexRoute: typeof AuthenticatedNovaFichaIndexRoute
+  AuthenticatedFichasChikungunyaIdRoute: typeof AuthenticatedFichasChikungunyaIdRoute
+  AuthenticatedFichasCoquelucheIdRoute: typeof AuthenticatedFichasCoquelucheIdRoute
+  AuthenticatedFichasDengueIdRoute: typeof AuthenticatedFichasDengueIdRoute
+  AuthenticatedFichasDifteriaIdRoute: typeof AuthenticatedFichasDifteriaIdRoute
+  AuthenticatedFichasEpizootiaIdRoute: typeof AuthenticatedFichasEpizootiaIdRoute
+  AuthenticatedFichasFebreAmarelaIdRoute: typeof AuthenticatedFichasFebreAmarelaIdRoute
+  AuthenticatedFichasHanseniaseIdRoute: typeof AuthenticatedFichasHanseniaseIdRoute
+  AuthenticatedFichasOutrasMeningitesIdRoute: typeof AuthenticatedFichasOutrasMeningitesIdRoute
+  AuthenticatedFichasRaivaHumanaIdRoute: typeof AuthenticatedFichasRaivaHumanaIdRoute
+  AuthenticatedFichasRubeolaIdRoute: typeof AuthenticatedFichasRubeolaIdRoute
+  AuthenticatedFichasSarampoIdRoute: typeof AuthenticatedFichasSarampoIdRoute
+  AuthenticatedFichasSragIdRoute: typeof AuthenticatedFichasSragIdRoute
+  AuthenticatedFichasSurtoDtaIdRoute: typeof AuthenticatedFichasSurtoDtaIdRoute
+  AuthenticatedFichasTetanoAcidentalIdRoute: typeof AuthenticatedFichasTetanoAcidentalIdRoute
+  AuthenticatedFichasTetanoNeonatalIdRoute: typeof AuthenticatedFichasTetanoNeonatalIdRoute
+  AuthenticatedFichasTuberculoseIdRoute: typeof AuthenticatedFichasTuberculoseIdRoute
+  AuthenticatedFichasChikungunyaIndexRoute: typeof AuthenticatedFichasChikungunyaIndexRoute
+  AuthenticatedFichasCoquelucheIndexRoute: typeof AuthenticatedFichasCoquelucheIndexRoute
+  AuthenticatedFichasDengueIndexRoute: typeof AuthenticatedFichasDengueIndexRoute
+  AuthenticatedFichasDifteriaIndexRoute: typeof AuthenticatedFichasDifteriaIndexRoute
+  AuthenticatedFichasEpizootiaIndexRoute: typeof AuthenticatedFichasEpizootiaIndexRoute
+  AuthenticatedFichasFebreAmarelaIndexRoute: typeof AuthenticatedFichasFebreAmarelaIndexRoute
+  AuthenticatedFichasHanseniaseIndexRoute: typeof AuthenticatedFichasHanseniaseIndexRoute
+  AuthenticatedFichasOutrasMeningitesIndexRoute: typeof AuthenticatedFichasOutrasMeningitesIndexRoute
+  AuthenticatedFichasRaivaHumanaIndexRoute: typeof AuthenticatedFichasRaivaHumanaIndexRoute
+  AuthenticatedFichasRubeolaIndexRoute: typeof AuthenticatedFichasRubeolaIndexRoute
+  AuthenticatedFichasSarampoIndexRoute: typeof AuthenticatedFichasSarampoIndexRoute
+  AuthenticatedFichasSragIndexRoute: typeof AuthenticatedFichasSragIndexRoute
+  AuthenticatedFichasSurtoDtaIndexRoute: typeof AuthenticatedFichasSurtoDtaIndexRoute
+  AuthenticatedFichasTetanoAcidentalIndexRoute: typeof AuthenticatedFichasTetanoAcidentalIndexRoute
+  AuthenticatedFichasTetanoNeonatalIndexRoute: typeof AuthenticatedFichasTetanoNeonatalIndexRoute
+  AuthenticatedFichasTuberculoseIndexRoute: typeof AuthenticatedFichasTuberculoseIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1503,34 +1289,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedFichasChikungunyaRoute:
-    AuthenticatedFichasChikungunyaRouteWithChildren,
-  AuthenticatedFichasCoquelucheRoute:
-    AuthenticatedFichasCoquelucheRouteWithChildren,
-  AuthenticatedFichasDengueRoute: AuthenticatedFichasDengueRouteWithChildren,
-  AuthenticatedFichasDifteriaRoute:
-    AuthenticatedFichasDifteriaRouteWithChildren,
-  AuthenticatedFichasEpizootiaRoute:
-    AuthenticatedFichasEpizootiaRouteWithChildren,
-  AuthenticatedFichasFebreAmarelaRoute:
-    AuthenticatedFichasFebreAmarelaRouteWithChildren,
-  AuthenticatedFichasHanseniaseRoute:
-    AuthenticatedFichasHanseniaseRouteWithChildren,
-  AuthenticatedFichasOutrasMeningitesRoute:
-    AuthenticatedFichasOutrasMeningitesRouteWithChildren,
-  AuthenticatedFichasRaivaHumanaRoute:
-    AuthenticatedFichasRaivaHumanaRouteWithChildren,
-  AuthenticatedFichasRubeolaRoute: AuthenticatedFichasRubeolaRouteWithChildren,
-  AuthenticatedFichasSarampoRoute: AuthenticatedFichasSarampoRouteWithChildren,
-  AuthenticatedFichasSragRoute: AuthenticatedFichasSragRouteWithChildren,
-  AuthenticatedFichasSurtoDtaRoute:
-    AuthenticatedFichasSurtoDtaRouteWithChildren,
-  AuthenticatedFichasTetanoAcidentalRoute:
-    AuthenticatedFichasTetanoAcidentalRouteWithChildren,
-  AuthenticatedFichasTetanoNeonatalRoute:
-    AuthenticatedFichasTetanoNeonatalRouteWithChildren,
-  AuthenticatedFichasTuberculoseRoute:
-    AuthenticatedFichasTuberculoseRouteWithChildren,
   AuthenticatedNovaFichaChikungunyaRoute:
     AuthenticatedNovaFichaChikungunyaRoute,
   AuthenticatedNovaFichaCoquelucheRoute: AuthenticatedNovaFichaCoquelucheRoute,
@@ -1556,6 +1314,52 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedNovaFichaTuberculoseRoute,
   AuthenticatedFichasIndexRoute: AuthenticatedFichasIndexRoute,
   AuthenticatedNovaFichaIndexRoute: AuthenticatedNovaFichaIndexRoute,
+  AuthenticatedFichasChikungunyaIdRoute: AuthenticatedFichasChikungunyaIdRoute,
+  AuthenticatedFichasCoquelucheIdRoute: AuthenticatedFichasCoquelucheIdRoute,
+  AuthenticatedFichasDengueIdRoute: AuthenticatedFichasDengueIdRoute,
+  AuthenticatedFichasDifteriaIdRoute: AuthenticatedFichasDifteriaIdRoute,
+  AuthenticatedFichasEpizootiaIdRoute: AuthenticatedFichasEpizootiaIdRoute,
+  AuthenticatedFichasFebreAmarelaIdRoute:
+    AuthenticatedFichasFebreAmarelaIdRoute,
+  AuthenticatedFichasHanseniaseIdRoute: AuthenticatedFichasHanseniaseIdRoute,
+  AuthenticatedFichasOutrasMeningitesIdRoute:
+    AuthenticatedFichasOutrasMeningitesIdRoute,
+  AuthenticatedFichasRaivaHumanaIdRoute: AuthenticatedFichasRaivaHumanaIdRoute,
+  AuthenticatedFichasRubeolaIdRoute: AuthenticatedFichasRubeolaIdRoute,
+  AuthenticatedFichasSarampoIdRoute: AuthenticatedFichasSarampoIdRoute,
+  AuthenticatedFichasSragIdRoute: AuthenticatedFichasSragIdRoute,
+  AuthenticatedFichasSurtoDtaIdRoute: AuthenticatedFichasSurtoDtaIdRoute,
+  AuthenticatedFichasTetanoAcidentalIdRoute:
+    AuthenticatedFichasTetanoAcidentalIdRoute,
+  AuthenticatedFichasTetanoNeonatalIdRoute:
+    AuthenticatedFichasTetanoNeonatalIdRoute,
+  AuthenticatedFichasTuberculoseIdRoute: AuthenticatedFichasTuberculoseIdRoute,
+  AuthenticatedFichasChikungunyaIndexRoute:
+    AuthenticatedFichasChikungunyaIndexRoute,
+  AuthenticatedFichasCoquelucheIndexRoute:
+    AuthenticatedFichasCoquelucheIndexRoute,
+  AuthenticatedFichasDengueIndexRoute: AuthenticatedFichasDengueIndexRoute,
+  AuthenticatedFichasDifteriaIndexRoute: AuthenticatedFichasDifteriaIndexRoute,
+  AuthenticatedFichasEpizootiaIndexRoute:
+    AuthenticatedFichasEpizootiaIndexRoute,
+  AuthenticatedFichasFebreAmarelaIndexRoute:
+    AuthenticatedFichasFebreAmarelaIndexRoute,
+  AuthenticatedFichasHanseniaseIndexRoute:
+    AuthenticatedFichasHanseniaseIndexRoute,
+  AuthenticatedFichasOutrasMeningitesIndexRoute:
+    AuthenticatedFichasOutrasMeningitesIndexRoute,
+  AuthenticatedFichasRaivaHumanaIndexRoute:
+    AuthenticatedFichasRaivaHumanaIndexRoute,
+  AuthenticatedFichasRubeolaIndexRoute: AuthenticatedFichasRubeolaIndexRoute,
+  AuthenticatedFichasSarampoIndexRoute: AuthenticatedFichasSarampoIndexRoute,
+  AuthenticatedFichasSragIndexRoute: AuthenticatedFichasSragIndexRoute,
+  AuthenticatedFichasSurtoDtaIndexRoute: AuthenticatedFichasSurtoDtaIndexRoute,
+  AuthenticatedFichasTetanoAcidentalIndexRoute:
+    AuthenticatedFichasTetanoAcidentalIndexRoute,
+  AuthenticatedFichasTetanoNeonatalIndexRoute:
+    AuthenticatedFichasTetanoNeonatalIndexRoute,
+  AuthenticatedFichasTuberculoseIndexRoute:
+    AuthenticatedFichasTuberculoseIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
