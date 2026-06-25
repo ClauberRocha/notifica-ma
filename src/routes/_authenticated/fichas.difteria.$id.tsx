@@ -310,7 +310,7 @@ function FichaDifteriaDetalhesPage() {
       <SectionCard title="Dados Gerais">
         <InfoItem label="Agravo" value="Difteria (A36.9)" />
         <InfoItem label="Data Notificação" value={fmtDate(ficha.data_notificacao)} />
-        <InfoItem label="S.E." value={seNotif} />
+        <InfoItem label="Sem.Epd." value={seNotif ? seNotif.replace("SE ", "") : null} />
         <InfoItem label="UF" value={ficha.uf_notificacao} />
         <InfoItem label="Município" value={ficha.municipio_notificacao} />
         <InfoItem label="Unidade de Saúde" value={ficha.unidade_saude} />

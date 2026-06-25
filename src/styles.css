@@ -144,23 +144,51 @@
 }
 
 @utility glass-card {
-  background: rgba(20, 24, 35, 0.7);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.08);
+  color: var(--foreground);
+
+  &:is(.dark *) {
+    background: rgba(20, 24, 35, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
 @utility glass-card-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   &:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  }
+  &:is(.dark *):hover {
     background: rgba(20, 24, 35, 0.85);
     border-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
   }
 }
 
+/* Custom styles for Leaflet popups to support dark/light theme correctly */
+.leaflet-popup-content-wrapper {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.leaflet-popup-tip {
+  background-color: var(--background) !important;
+}
+
 @utility tech-gradient {
   background: linear-gradient(135deg, oklch(0.48 0.15 245) 0%, oklch(0.36 0.12 250) 100%);
+}
+
+.recharts-pie-label-text {
+  fill: var(--foreground) !important;
+  font-size: 10px;
 }
 

@@ -9,6 +9,8 @@ import { ArrowLeft, Trash2, Loader2, CheckCircle, Bug } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
 import { toast } from "sonner";
+import { getSemanaEpidemiologica } from "@/data/semana-epd";
+import { getSeNumber } from "@/lib/seUtils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +29,16 @@ export const Route = createFileRoute(
   head: () => ({ meta: [{ title: "Detalhes da Ficha — Coqueluche" }] }),
   component: FichaCoquelucheDetalhesPage,
 });
+
+function getSE(dateStr: string | null | undefined): string {
+  if (!dateStr) return "";
+  const isoDate = dateStr.slice(0, 10);
+  const mapped = getSemanaEpidemiologica(isoDate);
+  if (mapped !== null) return String(mapped);
+  const dateObj = new Date(dateStr);
+  const computed = getSeNumber(dateObj);
+  return computed > 0 ? String(computed) : "";
+}
 
 const LABEL_MAP: Record<string, string> = {
   sim: "Sim",
@@ -299,6 +311,7 @@ function FichaCoquelucheDetalhesPage() {
       <SectionCard title="Dados Gerais">
         <InfoItem label="Agravo" value="Coqueluche (A37.9)" />
         <InfoItem label="Data Notificação" value={fmtDate(ficha.data_notificacao)} />
+        <InfoItem label="Sem.Epd." value={ficha.data_notificacao ? getSE(ficha.data_notificacao) : "—"} />
         <InfoItem label="UF" value={ficha.uf_notificacao} />
         <InfoItem label="Município" value={ficha.municipio_notificacao} />
         <InfoItem label="Unidade de Saúde" value={ficha.unidade_saude} />

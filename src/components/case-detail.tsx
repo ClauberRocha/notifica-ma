@@ -10,6 +10,8 @@ import { ArrowLeft, Trash2, Loader2, CheckCircle, FileText } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
 import { toast } from "sonner";
+import { getSemanaEpidemiologica } from "@/data/semana-epd";
+import { getSeNumber } from "@/lib/seUtils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +26,16 @@ import {
 
 type AnyObj = Record<string, unknown>;
 type TableName = keyof Database["public"]["Tables"];
+
+function getSE(dateStr: string | null | undefined): string {
+  if (!dateStr) return "";
+  const isoDate = dateStr.slice(0, 10);
+  const mapped = getSemanaEpidemiologica(isoDate);
+  if (mapped !== null) return String(mapped);
+  const dateObj = new Date(dateStr);
+  const computed = getSeNumber(dateObj);
+  return computed > 0 ? String(computed) : "";
+}
 
 const LABEL_MAP: Record<string, string> = {
   sim: "Sim",
@@ -185,6 +197,7 @@ const SKIP_KEYS = new Set([
   "agravo",
   "status",
   "nome_paciente",
+  "semana_epidemiologica",
 ]);
 
 // Field grouping by prefix/keyword
@@ -560,7 +573,17 @@ export function CaseDetail({
               {section.title === "Paciente" ? (
                 <InfoItem label="Nome" value={ficha.nome_paciente} />
               ) : null}
-              {keys.map((k) => renderField(k, ficha[k]))}
+              {keys.map((k) => (
+                <div key={k} className="contents">
+                  {renderField(k, ficha[k])}
+                  {(k === "data_notificacao" || k === "data" || k === "data_preenchimento" || k === "data_diagnostico_notificacao") && (
+                    <InfoItem
+                      label="Sem.Epd."
+                      value={ficha[k] ? getSE(ficha[k] as string) : "—"}
+                    />
+                  )}
+                </div>
+              ))}
               {section.title === "Conclusão" && encerDias !== null ? (
                 <InfoItem label="Encer./Dias" value={String(encerDias)} />
               ) : null}

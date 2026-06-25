@@ -41,6 +41,18 @@ import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
+import { getSemanaEpidemiologica } from "@/data/semana-epd";
+import { getSeNumber } from "@/lib/seUtils";
+
+function getSE(dateStr: string | null | undefined): string {
+  if (!dateStr) return "";
+  const isoDate = dateStr.slice(0, 10);
+  const mapped = getSemanaEpidemiologica(isoDate);
+  if (mapped !== null) return String(mapped);
+  const dateObj = new Date(dateStr);
+  const computed = getSeNumber(dateObj);
+  return computed > 0 ? String(computed) : "";
+}
 
 export const Route = createFileRoute("/_authenticated/fichas/")({
   head: () => ({ meta: [{ title: "Fichas de Investigação" }] }),
@@ -107,6 +119,7 @@ type CaseRow = {
   nome_paciente: string | null;
   municipio_notificacao: string | null;
   data_notificacao: string | null;
+  semana_epidemiologica: string | null;
   status: string | null;
   created_at: string | null;
   _tipo: string;
@@ -127,20 +140,24 @@ async function fetchAll(): Promise<CaseRow[]> {
         .order("created_at", { ascending: false })
         .limit(200);
       if (error) return [];
-      return (data ?? []).map((r: Record<string, unknown>) => ({
-        id: r.id as string,
-        numero_ficha: (r.numero_ficha as string) ?? null,
-        nome_paciente: (r.nome_paciente as string) ?? null,
-        municipio_notificacao: (r.municipio_notificacao as string) ?? null,
-        status: (r.status as string) ?? null,
-        created_at: (r.created_at as string) ?? null,
-        data_notificacao: (r[a.dateField] as string) ?? null,
-        _tipo: a.tipo,
-        _slug: (typeof r.agravo === "string" ? r.agravo : a.slug).replace(/_/g, "-"),
-        _label: a.label,
-        _table: a.table,
-        _listPath: a.listPath,
-      }));
+      return (data ?? []).map((r: Record<string, unknown>) => {
+        const dateVal = (r[a.dateField] as string) ?? null;
+        return {
+          id: r.id as string,
+          numero_ficha: (r.numero_ficha as string) ?? null,
+          nome_paciente: (r.nome_paciente as string) ?? null,
+          municipio_notificacao: (r.municipio_notificacao as string) ?? null,
+          status: (r.status as string) ?? null,
+          created_at: (r.created_at as string) ?? null,
+          data_notificacao: dateVal,
+          semana_epidemiologica: dateVal ? getSE(dateVal) : null,
+          _tipo: a.tipo,
+          _slug: (typeof r.agravo === "string" ? r.agravo : a.slug).replace(/_/g, "-"),
+          _label: a.label,
+          _table: a.table,
+          _listPath: a.listPath,
+        };
+      });
     }),
   );
   return results.flat();
@@ -342,6 +359,9 @@ function FichasListPage() {
                 <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
                   Data Notif.
                 </th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
+                  Sem.Epd.
+                </th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground hidden md:table-cell">
                   Nº Ficha
                 </th>
@@ -359,7 +379,7 @@ function FichasListPage() {
                   .fill(0)
                   .map((_, i) => (
                     <tr key={i} className="border-b border-border/50">
-                      {Array(7)
+                      {Array(8)
                         .fill(0)
                         .map((_, j) => (
                           <td key={j} className="px-4 py-3">
@@ -371,7 +391,7 @@ function FichasListPage() {
               ) : paginated.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-4 py-12 text-center text-muted-foreground"
                   >
                     Nenhuma ficha encontrada.
@@ -413,6 +433,9 @@ function FichasListPage() {
                         {c.data_notificacao
                           ? format(new Date(c.data_notificacao), "dd/MM/yyyy")
                           : "—"}
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground font-mono text-xs">
+                        {c.semana_epidemiologica || "—"}
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell text-muted-foreground text-xs">
                         {c.numero_ficha || "—"}
