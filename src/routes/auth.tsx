@@ -90,6 +90,11 @@ function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
+          <img
+            src="/logo-ses.png?v=2"
+            alt="Governo do Maranhão"
+            className="h-20 mx-auto mb-6 object-contain"
+          />
           <h1 className="text-2xl font-bold text-foreground tracking-tight">
             Notifica-MA Intelligence
           </h1>

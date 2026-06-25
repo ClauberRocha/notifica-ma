@@ -486,7 +486,7 @@ export function CaseDetail({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
-            <Link to={listPath}>
+            <Link to="/fichas">
               <ArrowLeft className="w-4 h-4" />
             </Link>
           </Button>

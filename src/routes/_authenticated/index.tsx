@@ -46,16 +46,18 @@ function Home() {
     <div className="min-h-[80vh] flex flex-col justify-center">
       <div className="max-w-2xl mx-auto w-full px-2 py-8">
         <div className="mb-8 text-center">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-primary">
-            {firstName[0].toUpperCase()}
-          </div>
+          <img
+            src="/logo-ses.png?v=2"
+            alt="Governo do Maranhão"
+            className="h-20 mx-auto mb-6 object-contain"
+          />
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
             Notifica-MA Intelligence
           </h1>
           <p className="text-sm font-medium text-primary mt-1">
             Plataforma Estadual de Monitoramento e Decisão em Saúde
           </p>
-          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+          <p className="text-muted-foreground mt-4 text-sm sm:text-base">
             {loading ? "Carregando..." : `${greeting}, ${firstName}. O que você deseja fazer hoje?`}
           </p>
           <p className="text-xs text-muted-foreground/60 mt-1">

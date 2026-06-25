@@ -227,7 +227,7 @@ function FichaCoquelucheDetalhesPage() {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => navigate({ to: "/fichas/coqueluche" })}
+            onClick={() => navigate({ to: "/fichas" })}
           >
             <ArrowLeft className="w-4 h-4" />
           </Button>
