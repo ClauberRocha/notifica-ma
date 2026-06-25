@@ -100,6 +100,7 @@ type FormState = {
   email: string;
   cargo: string;
   role: Role;
+  password?: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -127,8 +128,14 @@ const FormSchema = z.object({
   }),
 });
 
-function validateForm(form: FormState): FormErrors {
-  const result = FormSchema.safeParse(form);
+function validateForm(form: FormState, isCreate?: boolean): FormErrors {
+  let schema = FormSchema;
+  if (isCreate) {
+    schema = FormSchema.extend({
+      password: z.string().min(6, { message: "Senha temporária deve ter pelo menos 6 caracteres." }),
+    });
+  }
+  const result = schema.safeParse(form);
   if (result.success) return {};
   const errs: FormErrors = {};
   for (const issue of result.error.issues) {
@@ -230,6 +237,7 @@ function UsuariosPage() {
           email: form.email,
           cargo: form.cargo || null,
           role: form.role,
+          password: form.password || "",
         },
       }),
     onSuccess: (res) => {
@@ -238,7 +246,7 @@ function UsuariosPage() {
       setLastCreatedId(res.id);
       setConfirmInfo({
         title: "Usuário criado com sucesso!",
-        description: `Um e-mail foi enviado para ${res.email} com instruções para definir a senha de acesso.`,
+        description: `Um e-mail contendo a senha temporária foi enviado para ${res.email}. A troca de senha será solicitada no primeiro acesso.`,
       });
       setConfirmOpen(true);
     },
@@ -540,7 +548,8 @@ function UsuariosPage() {
             <DialogTitle>Adicionar Novo Usuário</DialogTitle>
           </DialogHeader>
           <UserFormFields
-            initial={{ full_name: "", email: "", cargo: "", role: "user" }}
+            initial={{ full_name: "", email: "", cargo: "", role: "user", password: "" }}
+            isCreate={true}
             saving={createMutation.isPending}
             onClose={() => setCreateOpen(false)}
             onSubmit={(form) => createMutation.mutate(form)}
@@ -666,40 +675,59 @@ function UsuariosPage() {
   );
 }
 
+function generateRandomPassword() {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*()";
+  let pwd = "";
+  for (let i = 0; i < 12; i++) {
+    pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  if (!/[A-Z]/.test(pwd) || !/[a-z]/.test(pwd) || !/[0-9]/.test(pwd) || !/[!@#$%&*()]/.test(pwd)) {
+    return generateRandomPassword();
+  }
+  return pwd;
+}
+
 function UserFormFields({
   initial,
   saving,
   onClose,
   onSubmit,
   submitLabel,
+  isCreate,
 }: {
   initial: FormState;
   saving: boolean;
   onClose: () => void;
   onSubmit: (f: FormState) => void;
   submitLabel: string;
+  isCreate?: boolean;
 }) {
-  const [form, setForm] = useState<FormState>(initial);
+  const [form, setForm] = useState<FormState>(() => {
+    if (isCreate) {
+      return { ...initial, password: generateRandomPassword() };
+    }
+    return initial;
+  });
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => {
     setForm((p) => {
       const next = { ...p, [k]: v };
-      if (touched[k]) setErrors(validateForm(next));
+      if (touched[k]) setErrors(validateForm(next, isCreate));
       return next;
     });
   };
 
   const blur = (k: keyof FormState) => {
     setTouched((p) => ({ ...p, [k]: true }));
-    setErrors(validateForm(form));
+    setErrors(validateForm(form, isCreate));
   };
 
   const handleSubmit = () => {
-    const errs = validateForm(form);
+    const errs = validateForm(form, isCreate);
     setErrors(errs);
-    setTouched({ full_name: true, email: true, cargo: true, role: true });
+    setTouched({ full_name: true, email: true, cargo: true, role: true, password: true });
     if (Object.keys(errs).length > 0) {
       toast.warning("⚠️ Corrija os campos destacados.");
       return;
@@ -776,6 +804,38 @@ function UserFormFields({
           <p className="text-xs text-destructive">{errors.role}</p>
         )}
       </div>
+
+      {isCreate && (
+        <div className="space-y-1">
+          <Label>Senha Temporária *</Label>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="Senha temporária"
+              value={form.password || ""}
+              onChange={(e) => set("password", e.target.value)}
+              onBlur={() => blur("password")}
+              aria-invalid={!!errors.password}
+              disabled={saving}
+              className="flex-1 font-mono"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => set("password", generateRandomPassword())}
+              disabled={saving}
+              className="px-3"
+              title="Gerar nova senha"
+            >
+              Recriar
+            </Button>
+          </div>
+          {errors.password && (
+            <p className="text-xs text-destructive">{errors.password}</p>
+          )}
+        </div>
+      )}
+
       <DialogFooter>
         <Button variant="outline" onClick={onClose} disabled={saving}>
           Cancelar

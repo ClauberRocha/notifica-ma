@@ -10,6 +10,7 @@ const CreateUserSchema = z.object({
   email: z.string().trim().email().max(255),
   cargo: z.string().trim().max(150).optional().nullable(),
   role: RoleEnum,
+  password: z.string().min(6),
 });
 
 const UpdateUserSchema = z.object({
@@ -119,13 +120,16 @@ export const createUser = createServerFn({ method: "POST" })
       "@/integrations/supabase/client.server"
     );
 
-    const tempPassword = crypto.randomUUID().replace(/-/g, "") + "Aa1!";
     const { data: created, error: cErr } =
       await supabaseAdmin.auth.admin.createUser({
         email: data.email,
-        password: tempPassword,
+        password: data.password,
         email_confirm: true,
-        user_metadata: { full_name: data.full_name, cargo: data.cargo ?? null },
+        user_metadata: {
+          full_name: data.full_name,
+          cargo: data.cargo ?? null,
+          must_change_password: true,
+        },
       });
     if (cErr || !created.user) {
       throw new Error(cErr?.message || "Falha ao criar usuário.");
@@ -151,14 +155,70 @@ export const createUser = createServerFn({ method: "POST" })
       .insert({ user_id: newId, role: data.role });
     if (rErr) throw new Error(rErr.message);
 
-    await supabaseAdmin.auth.admin.generateLink({
-      type: "recovery",
-      email: data.email,
+    // Enqueue welcome email with temporary password
+    const messageId = crypto.randomUUID();
+    await supabaseAdmin.from("email_send_log").insert({
+      message_id: messageId,
+      template_name: "invite_with_password",
+      recipient_email: data.email,
+      status: "pending",
     });
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #ffffff; color: #1e293b;">
+        <h2 style="color: #2563eb; margin-bottom: 20px;">Bem-vindo ao Notifica-MA Intelligence</h2>
+        <p>Olá, <strong>${data.full_name}</strong>,</p>
+        <p>Sua conta foi criada com sucesso na Plataforma Estadual de Monitoramento e Decisão em Saúde.</p>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0 0 10px 0;"><strong>Dados de Acesso:</strong></p>
+          <p style="margin: 0 0 5px 0;"><strong>E-mail:</strong> ${data.email}</p>
+          <p style="margin: 0;"><strong>Senha Temporária:</strong> <code style="background-color: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${data.password}</code></p>
+        </div>
+        <p>Por favor, acesse o sistema no link abaixo e altere sua senha no primeiro acesso.</p>
+        <p style="margin-top: 30px; text-align: center;">
+          <a href="https://notify.consulti.slz.br" style="background-color: #2563eb; color: #ffffff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">Acessar a Plataforma</a>
+        </p>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+        <p style="font-size: 11px; color: #64748b; text-align: center;">
+          Ministério da Saúde — Secretaria de Vigilância em Saúde e Ambiente (SVSA)
+        </p>
+      </div>
+    `;
+
+    const textContent = `
+      Olá, ${data.full_name},
+      Sua conta foi criada com sucesso na Plataforma Estadual de Monitoramento e Decisão em Saúde (Notifica-MA Intelligence).
+
+      E-mail: ${data.email}
+      Senha Temporária: ${data.password}
+
+      Por favor, acesse a plataforma em https://notify.consulti.slz.br e altere sua senha no primeiro acesso.
+    `;
+
+    const { error: enqueueError } = await supabaseAdmin.rpc("enqueue_email", {
+      queue_name: "auth_emails",
+      payload: {
+        run_id: crypto.randomUUID(),
+        message_id: messageId,
+        to: data.email,
+        from: `Notifica-MA Intelligence <noreply@consulti.slz.br>`,
+        sender_domain: "notify.consulti.slz.br",
+        subject: "Sua conta no Notifica-MA Intelligence",
+        html: htmlContent,
+        text: textContent,
+        purpose: "transactional",
+        label: "invite_with_password",
+        queued_at: new Date().toISOString(),
+      },
+    });
+
+    if (enqueueError) {
+      console.error("Failed to enqueue invite email:", enqueueError);
+    }
 
     await audit(
       "invite_user",
-      `Criou usuário ${data.email} com perfil ${data.role}`,
+      `Criou usuário ${data.email} com perfil ${data.role} e enviou e-mail de senha temporária.`,
       { id: context.userId, email: context.claims?.email ?? null, role: actorTop },
       newId,
       { role: data.role, full_name: data.full_name },
