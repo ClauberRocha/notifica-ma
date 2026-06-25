@@ -131,16 +131,7 @@ export function DadosClinicosPanel({
     }));
 
   // Validações cruzadas
-  const dataInternMenorSintoma =
-    !!form.dc_data_primeiros_sintomas &&
-    !!form.dc_data_internacao &&
-    form.dc_data_internacao < form.dc_data_primeiros_sintomas;
-
-  const hospSimSemData =
-    form.dc_houve_hospitalizacao === "1" && !form.dc_data_internacao;
-
-  const hospNaoComData =
-    form.dc_houve_hospitalizacao === "2" && !!form.dc_data_internacao;
+  // Removidas por simplificação do formulário e eliminação de campos duplicados.
 
   return (
     <div className="space-y-8">
@@ -335,58 +326,6 @@ export function DadosClinicosPanel({
 
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="dc_data_primeiros_sintomas" className="text-xs">
-            Data dos primeiros sintomas
-          </Label>
-          <Input
-            id="dc_data_primeiros_sintomas"
-            type="date"
-            value={form.dc_data_primeiros_sintomas ?? ""}
-            onChange={(e) => set("dc_data_primeiros_sintomas", e.target.value)}
-            className={cn(
-              "mt-1",
-              dataInternMenorSintoma && "border-destructive focus-visible:ring-destructive"
-            )}
-          />
-        </div>
-        <div>
-          <Label htmlFor="dc_houve_hospitalizacao" className="text-xs">
-            Houve hospitalização?
-          </Label>
-          <Select
-            value={form.dc_houve_hospitalizacao || undefined}
-            onValueChange={(v) => set("dc_houve_hospitalizacao", v)}
-          >
-            <SelectTrigger
-              id="dc_houve_hospitalizacao"
-              className={cn(
-                "mt-1",
-                (hospSimSemData || hospNaoComData) &&
-                  "border-destructive focus-visible:ring-destructive"
-              )}
-            >
-              <SelectValue placeholder="Selecione" />
-            </SelectTrigger>
-            <SelectContent>
-              {SIM_NAO_IGN.map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {hospSimSemData && (
-            <p className="text-xs text-destructive mt-1">
-              Informe a data de internação.
-            </p>
-          )}
-          {hospNaoComData && (
-            <p className="text-xs text-destructive mt-1">
-              Data de internação informada, mas hospitalização = Não.
-            </p>
-          )}
-        </div>
-        <div>
           <Label htmlFor="dc_data_internacao" className="text-xs">
             Data de internação
           </Label>
@@ -395,37 +334,8 @@ export function DadosClinicosPanel({
             type="date"
             value={form.dc_data_internacao ?? ""}
             onChange={(e) => set("dc_data_internacao", e.target.value)}
-            className={cn(
-              "mt-1",
-              (dataInternMenorSintoma || hospSimSemData || hospNaoComData) &&
-                "border-destructive focus-visible:ring-destructive"
-            )}
+            className="mt-1"
           />
-          {dataInternMenorSintoma && (
-            <p className="text-xs text-destructive mt-1">
-              Data de internação anterior à data dos primeiros sintomas.
-            </p>
-          )}
-        </div>
-        <div>
-          <Label htmlFor="dc_evolucao_clinica" className="text-xs">
-            Evolução clínica
-          </Label>
-          <Select
-            value={form.dc_evolucao_clinica || undefined}
-            onValueChange={(v) => set("dc_evolucao_clinica", v)}
-          >
-            <SelectTrigger id="dc_evolucao_clinica" className="mt-1">
-              <SelectValue placeholder="Selecione" />
-            </SelectTrigger>
-            <SelectContent>
-              {EVOLUCAO_CLINICA_OPCOES.map((o) => (
-                <SelectItem key={o.value} value={o.value}>
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
       </section>
     </div>

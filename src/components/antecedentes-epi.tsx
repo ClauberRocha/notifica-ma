@@ -20,15 +20,17 @@ import {
 /* ============== Listas compartilhadas ============== */
 
 export const DOENCAS_PREEXISTENTES_OPCOES: { value: string; label: string }[] = [
-  { value: "diabetes", label: "Diabetes mellitus" },
-  { value: "hipertensao", label: "Hipertensão arterial" },
+  { value: "diabetes", label: "Diabetes" },
+  { value: "hipertensao", label: "Hipertensão" },
+  { value: "doencas_autoimunes", label: "Doenças autoimunes" },
+  { value: "doencas_hematologicas", label: "Doenças hematológicas" },
+  { value: "doenca_acido_peptica", label: "Doença ácido-péptica" },
+  { value: "hepatopatias", label: "Hepatopatias" },
+  { value: "doenca_renal_cronica", label: "Doença renal crônica" },
   { value: "obesidade", label: "Obesidade" },
   { value: "cardiopatia", label: "Doença cardiovascular crônica" },
   { value: "pneumopatia", label: "Doença respiratória crônica (DPOC/asma)" },
-  { value: "nefropatia", label: "Doença renal crônica" },
-  { value: "hepatopatia", label: "Doença hepática crônica" },
   { value: "doenca_neurologica", label: "Doença neurológica crônica" },
-  { value: "doenca_hematologica", label: "Doença hematológica crônica" },
   { value: "imunodepressao", label: "Imunodepressão / imunossupressão" },
   { value: "hiv_aids", label: "HIV/AIDS" },
   { value: "tuberculose", label: "Tuberculose" },
@@ -86,7 +88,15 @@ export function AntecedentesEpidemiologicosPanel({
   form: FormState;
   setForm: SetForm;
 }) {
-  const doencas = useMemo(() => parseCsv(form.antecedentes_doencas), [form.antecedentes_doencas]);
+  const doencas = useMemo(() => {
+    const raw = parseCsv(form.antecedentes_doencas);
+    return raw.map((d) => {
+      if (d === "nefropatia") return "doenca_renal_cronica";
+      if (d === "hepatopatia") return "hepatopatias";
+      if (d === "doenca_hematologica") return "doencas_hematologicas";
+      return d;
+    });
+  }, [form.antecedentes_doencas]);
   const vacinas = useMemo(() => parseCsv(form.antecedentes_vacinas), [form.antecedentes_vacinas]);
   
   const [vacOpen, setVacOpen] = useState(false);

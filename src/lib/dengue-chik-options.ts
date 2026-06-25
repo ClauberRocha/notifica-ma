@@ -111,6 +111,7 @@ export const CASO_AUTOCTONE = [
 
 export const EVOLUCAO = [
   opt("cura", "Cura"),
+  opt("internado", "Internado(a)"),
   opt("obito_agravo", "Óbito pelo agravo"),
   opt("obito_outras_causas", "Óbito por outras causas"),
   opt("obito_em_investigacao", "Óbito em investigação"),
@@ -118,7 +119,7 @@ export const EVOLUCAO = [
 ];
 
 export const STATUS = [
-  opt("em_investigacao", "Em investigação"),
+  opt("em_investigacao", "Em Aberto"),
   opt("encerrado", "Encerrado"),
 ];
 

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -80,12 +80,10 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
         { name: "criterio_confirmacao", label: "Critério de confirmação", type: "select", options: CRITERIO_CONFIRMACAO },
         { name: "caso_autoctone", label: "Caso autóctone", type: "select", options: CASO_AUTOCTONE },
         { name: "evolucao", label: "Evolução", type: "select", options: EVOLUCAO },
-        { name: "data_obito", label: "Data do óbito", type: "date" },
+        { name: "data_obito", label: "Data da Evolução", type: "date" },
         { name: "data_encerramento", label: "Data de encerramento", type: "date" },
         { name: "status", label: "Status", type: "select", options: STATUS },
         { name: "observacoes_adicionais", label: "Observações adicionais", type: "textarea", col: 3 },
-        { name: "municipio_unidade_investigador", label: "Município da unidade do investigador", type: "text", col: 2 },
-        { name: "codigo_unidade_investigador", label: "Código da unidade do investigador", type: "text" },
         { name: "nome_investigador", label: "Nome do investigador", type: "text", col: 2 },
         { name: "funcao_investigador", label: "Função do investigador", type: "text" },
       ]
@@ -94,12 +92,10 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
         { name: "criterio_confirmacao", label: "Critério de confirmação", type: "select", options: CRITERIO_CONFIRMACAO },
         { name: "caso_autoctone", label: "Caso autóctone", type: "select", options: CASO_AUTOCTONE },
         { name: "evolucao", label: "Evolução", type: "select", options: EVOLUCAO },
-        { name: "data_obito", label: "Data do óbito", type: "date" },
+        { name: "data_obito", label: "Data da Evolução", type: "date" },
         { name: "data_encerramento", label: "Data de encerramento", type: "date" },
         { name: "status", label: "Status", type: "select", options: STATUS },
         { name: "observacoes_adicionais", label: "Observações adicionais", type: "textarea", col: 3 },
-        { name: "municipio_unidade_investigador", label: "Município da unidade do investigador", type: "text", col: 2 },
-        { name: "codigo_unidade_investigador", label: "Código da unidade do investigador", type: "text" },
         { name: "nome_investigador", label: "Nome do investigador", type: "text", col: 2 },
         { name: "funcao_investigador", label: "Função do investigador", type: "text" },
       ];
@@ -113,6 +109,7 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
         { name: "data_notificacao", label: "Data da notificação", type: "date", required: true },
         { name: "semana_epidemiologica", label: "Semana Epidemiológica", type: "text" },
         { name: "data_primeiros_sintomas", label: "Data dos primeiros sintomas", type: "date" },
+        { name: "data_investigacao", label: "Data da investigação", type: "date" },
         { name: "uf_notificacao", label: "UF da notificação", type: "text" },
         { name: "municipio_notificacao", label: "Município da notificação", type: "text" },
         { name: "codigo_ibge_notificacao", label: "Código IBGE", type: "text" },
@@ -155,12 +152,10 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
     {
       title: "Investigação",
       fields: [
-        { name: "data_investigacao", label: "Data da investigação", type: "date" },
         { name: "ocupacao", label: "Ocupação", type: "text", col: 2 },
       ],
     },
-    { title: "Doenças preexistentes", description: "Marque as doenças preexistentes.", custom: "doencas" },
-  { title: "Dados Clínicos", description: "Sinais, sintomas, hospitalização e evolução.", custom: "dados_clinicos" },
+    { title: "Dados Clínicos", description: "Sinais, sintomas, hospitalização e evolução.", custom: "dados_clinicos" },
     { title: "Antecedentes Epidemiológicos", description: "Doenças pré-existentes e vacinas recebidas.", custom: "antecedentes_epi" },
     { title: "Laboratório", description: "Resultados de exames.", fields: labLab },
     {
@@ -198,6 +193,19 @@ export function DengueChikForm({
   const [sinais, setSinais] = useState<Record<string, string>>({});
   const [doencas, setDoencas] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+
+  // Automate status based on data_encerramento
+  useEffect(() => {
+    if (form.data_encerramento && form.data_encerramento.trim() !== "") {
+      if (form.status !== "encerrado") {
+        setForm((prev) => ({ ...prev, status: "encerrado" }));
+      }
+    } else {
+      if (form.status !== "em_investigacao") {
+        setForm((prev) => ({ ...prev, status: "em_investigacao" }));
+      }
+    }
+  }, [form.data_encerramento]);
 
   const current = STEPS[step];
   const isLast = step === STEPS.length - 1;
@@ -299,7 +307,6 @@ export function DengueChikForm({
         )}
 
         {current.custom === "sinais" && <SimNaoGrid items={SINAIS_CLINICOS_KEYS} values={sinais} onChange={setSinais} />}
-        {current.custom === "doencas" && <SimNaoGrid items={DOENCAS_PREEXISTENTES_KEYS} values={doencas} onChange={setDoencas} />}
                 {current.custom === "dados_clinicos" && (
           <DadosClinicosPanel form={form} setForm={setForm} />
         )}
@@ -350,7 +357,7 @@ function FieldRenderer({
       ) : field.type === "textarea" ? (
         <Textarea id={field.name} value={value} onChange={(e) => onChange(field.type === "text" || field.type === "textarea" ? e.target.value.toUpperCase() : e.target.value)} rows={3} className="mt-1" />
       ) : field.type === "select" ? (
-        <Select value={value || undefined} onValueChange={onChange}>
+        <Select value={value || undefined} onValueChange={onChange} disabled={field.name === "status"}>
           <SelectTrigger id={field.name} className="mt-1">
             <SelectValue placeholder="Selecione" />
           </SelectTrigger>

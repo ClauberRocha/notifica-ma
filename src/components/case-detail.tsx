@@ -56,11 +56,105 @@ const LABEL_MAP: Record<string, string> = {
   horas: "horas",
   individual: "Individual",
   surto: "Surto",
+  internado: "Internado(a)",
+  obito_agravo: "Óbito pelo agravo",
+  obito_outras_causas: "Óbito por outras causas",
+  obito_em_investigacao: "Óbito em investigação",
+
+  // Doenças Pré-Existentes / Antecedentes
+  diabetes: "Diabetes",
+  hipertensao: "Hipertensão",
+  doencas_autoimunes: "Doenças autoimunes",
+  doencas_hematologicas: "Doenças hematológicas",
+  doenca_acido_peptica: "Doença ácido-péptica",
+  hepatopatias: "Hepatopatias",
+  doenca_renal_cronica: "Doença renal crônica",
+  obesidade: "Obesidade",
+  cardiopatia: "Doença cardiovascular crônica",
+  pneumopatia: "Doença respiratória crônica (DPOC/asma)",
+  doenca_neurologica: "Doença neurológica crônica",
+  imunodepressao: "Imunodepressão / imunossupressão",
+  hiv_aids: "HIV/AIDS",
+  tuberculose: "Tuberculose",
+  neoplasia: "Neoplasia (câncer)",
+  transplantado: "Transplantado",
+  gestante_alto_risco: "Gestante de alto risco",
+  puerpera: "Puérpera (até 45 dias)",
+  sindrome_down: "Síndrome de Down",
+  tabagismo: "Tabagismo",
+  etilismo: "Etilismo",
+  desnutricao: "Desnutrição",
+  nefropatia: "Doença renal crônica",
+  hepatopatia: "Doença hepática crônica",
+  doenca_hematologica: "Doença hematológica crônica",
+
+  // Vacinas
+  bcg: "BCG",
+  hepatite_b: "Hepatite B",
+  penta: "Penta (DTP+Hib+HepB)",
+  dtp: "DTP (Tríplice bacteriana)",
+  dt_adulto: "dT (Dupla adulto)",
+  dtpa: "dTpa (gestante)",
+  vip_vop: "Poliomielite (VIP/VOP)",
+  rotavirus: "Rotavírus",
+  pneumo_10: "Pneumocócica 10-valente",
+  pneumo_23: "Pneumocócica 23-valente",
+  meningo_c: "Meningocócica C",
+  meningo_acwy: "Meningocócica ACWY",
+  meningo_b: "Meningocócica B",
+  febre_amarela: "Febre amarela",
+  triplice_viral: "Tríplice viral (SCR)",
+  tetra_viral: "Tetra viral (SCRV)",
+  varicela: "Varicela",
+  hpv: "HPV",
+  influenza: "Influenza",
+  covid_19: "COVID-19",
+  hepatite_a: "Hepatite A",
+  raiva: "Raiva (humana)",
+
+  // Sintomas comuns (Dados Clínicos)
+  febre: "Febre",
+  calafrios: "Calafrios",
+  sudorese: "Sudorese",
+  cefaleia: "Cefaleia",
+  mialgia: "Mialgia",
+  artralgia: "Artralgia",
+  dor_retroocular: "Dor retroocular",
+  tosse: "Tosse",
+  coriza: "Coriza",
+  dor_garganta: "Dor de garganta",
+  dispneia: "Dispneia",
+  dor_toracica: "Dor torácica",
+  nausea: "Náusea",
+  vomito: "Vômito",
+  diarreia: "Diarreia",
+  dor_abdominal: "Dor abdominal",
+  exantema: "Exantema",
+  prurido: "Prurido",
+  conjuntivite: "Conjuntivite",
+  rigidez_nuca: "Rigidez de nuca",
+  convulsao: "Convulsão",
+  alteracao_consciencia: "Alteração da consciência",
+  petequias: "Petéquias",
+  hemorragia: "Hemorragia",
+  ictericia: "Icterícia",
+  perda_olfato_paladar: "Perda de olfato/paladar",
+  fadiga: "Fadiga / astenia",
+  linfadenopatia: "Linfadenopatia",
+  hepatoesplenomegalia: "Hepato/esplenomegalia",
+  lesao_pele: "Lesão de pele",
 };
 
 const lbl = (v: unknown): string => {
   if (v === null || v === undefined || v === "") return "";
   const s = String(v);
+  if (s.includes(",")) {
+    return s
+      .split(",")
+      .map((item) => item.trim())
+      .map((item) => LABEL_MAP[item] ?? item.replace(/_/g, " "))
+      .join(", ");
+  }
   return LABEL_MAP[s] ?? s.replace(/_/g, " ");
 };
 

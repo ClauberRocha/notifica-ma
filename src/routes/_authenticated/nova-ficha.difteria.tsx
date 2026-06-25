@@ -176,8 +176,6 @@ const STEPS: Step[] = [
       { name: "data_encerramento", label: "Data de encerramento", type: "date" },
       { name: "status", label: "Status", type: "select", options: STATUS },
       { name: "observacoes_adicionais", label: "Observações adicionais", type: "textarea", col: 3 },
-      { name: "municipio_unidade_investigador", label: "Município da unidade do investigador", type: "text", col: 2 },
-      { name: "codigo_unidade_investigador", label: "Código da unidade do investigador", type: "text" },
       { name: "nome_investigador", label: "Nome do investigador", type: "text", col: 2 },
       { name: "funcao_investigador", label: "Função do investigador", type: "text" },
     ],
