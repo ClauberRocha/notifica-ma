@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { checkEmailExists } from "@/lib/users.functions";
+import { Eye, EyeOff } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -23,6 +24,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const checkEmailExistsFn = useServerFn(checkEmailExists);
 
@@ -133,15 +135,24 @@ function AuthPage() {
           </div>
           <div>
             <label className="text-sm font-medium">Senha</label>
-            <input
-              required
-              minLength={6}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              placeholder="••••••••"
-            />
+            <div className="relative mt-1">
+              <input
+                required
+                minLength={6}
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 pr-10 py-2 text-sm"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           <button
