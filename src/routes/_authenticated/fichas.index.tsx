@@ -122,7 +122,7 @@ async function fetchAll(): Promise<CaseRow[]> {
       const { data, error } = await supabase
         .from(a.table as never)
         .select(
-          `id, numero_ficha, nome_paciente, municipio_notificacao, status, created_at, ${a.dateField}`,
+          `id, numero_ficha, nome_paciente, municipio_notificacao, status, created_at, agravo, ${a.dateField}`,
         )
         .order("created_at", { ascending: false })
         .limit(200);
@@ -136,7 +136,7 @@ async function fetchAll(): Promise<CaseRow[]> {
         created_at: (r.created_at as string) ?? null,
         data_notificacao: (r[a.dateField] as string) ?? null,
         _tipo: a.tipo,
-        _slug: a.slug,
+        _slug: (typeof r.agravo === "string" ? r.agravo : a.slug).replace(/_/g, "-"),
         _label: a.label,
         _table: a.table,
         _listPath: a.listPath,
@@ -436,9 +436,9 @@ function FichasListPage() {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
-                            title="Ver lista do agravo"
-                            aria-label="Ver lista do agravo"
-                            onClick={() => navigate({ to: c._listPath })}
+                            title="Visualizar ficha"
+                            aria-label="Visualizar ficha"
+                            onClick={() => navigate({ to: `/fichas/${c._slug}/${c.id}` })}
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
