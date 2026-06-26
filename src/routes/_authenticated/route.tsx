@@ -10,31 +10,41 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, LogOut, KeyRound } from "lucide-react";
 
+// In-memory cache of role per user id for the current tab session.
+// Avoids re-querying user_roles on every navigation.
+const roleCache = new Map<string, string>();
+
+async function getRoleCached(userId: string): Promise<string> {
+  const cached = roleCache.get(userId);
+  if (cached) return cached;
+  const { data: rows } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId);
+  const role = rows?.[0]?.role || "user";
+  roleCache.set(userId, role);
+  return role;
+}
+
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ location }) => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
+    // getSession() reads from localStorage (instant) instead of hitting the auth API.
+    const { data: sessionData } = await supabase.auth.getSession();
+    const user = sessionData.session?.user;
+    if (!user) {
       throw redirect({ to: "/auth" });
     }
 
-    // Fetch user role
-    const { data: rows } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", data.user.id);
-    const role = rows?.[0]?.role || "user";
-
+    const role = await getRoleCached(user.id);
     const path = location.pathname;
 
-    // Gestor can't access fichas or nova-ficha
     if (role === "gestor") {
       if (path.startsWith("/fichas") || path.startsWith("/nova-ficha")) {
         throw redirect({ to: "/" });
       }
     }
 
-    // Standard user can't access painel, usuarios, or logs
     if (role === "user") {
       if (
         path.startsWith("/painel") ||
@@ -45,7 +55,7 @@ export const Route = createFileRoute("/_authenticated")({
       }
     }
 
-    return { user: data.user, role };
+    return { user, role };
   },
   component: AuthenticatedLayout,
 });
