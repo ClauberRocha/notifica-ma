@@ -86,6 +86,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const search = useRouterState({ select: (s) => s.location.search as Record<string, unknown> });
   const { user, signOut, role, can } = useAuth();
 
   const isActive = (url: string) => {
@@ -97,10 +98,8 @@ export function AppSidebar() {
         : pathname === url || pathname.startsWith(`${url}/`);
     }
 
-    if (typeof window === "undefined") return false;
-    const searchParams = new URLSearchParams(window.location.search);
-    const tabParam = searchParams.get("tab") || "dashboard";
-    const tabMatch = query.includes(`tab=${tabParam}`);
+    const currentTab = (search?.tab as string) || "dashboard";
+    const tabMatch = query.includes(`tab=${currentTab}`);
     return pathMatch && tabMatch;
   };
 
