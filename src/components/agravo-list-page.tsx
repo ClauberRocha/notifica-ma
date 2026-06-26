@@ -17,7 +17,7 @@ type CaseRow = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  em_investigacao: "Em investigação",
+  em_investigacao: "Em Aberto",
   encerrado: "Encerrado",
 };
 
