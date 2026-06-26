@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, LogOut, KeyRound } from "lucide-react";
 import { OfflineBanner } from "@/components/offline-banner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useSidebar } from "@/components/ui/sidebar";
 
 type AppRole = "admin" | "gestor" | "user";
 
@@ -188,7 +190,7 @@ function AuthenticatedLayout() {
         <AppSidebar />
         <div className="flex flex-1 flex-col">
           <header className="flex h-12 items-center gap-2 border-b border-border bg-card/50 px-3">
-            <SidebarTrigger aria-label="Abrir/fechar menu lateral" />
+            <SidebarTriggerWithTooltip />
             <span className="text-sm font-bold tracking-tight md:hidden">Notifica-MA Intelligence</span>
           </header>
           <OfflineBanner />
@@ -200,3 +202,19 @@ function AuthenticatedLayout() {
     </SidebarProvider>
   );
 }
+
+function SidebarTriggerWithTooltip() {
+  const { state } = useSidebar();
+  const label = state === "collapsed" ? "Expandir menu" : "Recolher menu";
+  return (
+    <TooltipProvider delayDuration={150}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <SidebarTrigger aria-label={label} />
+        </TooltipTrigger>
+        <TooltipContent side="right">{label}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
