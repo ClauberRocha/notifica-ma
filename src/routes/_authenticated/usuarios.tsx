@@ -680,41 +680,34 @@ function UserFormFields({
   onClose,
   onSubmit,
   submitLabel,
-  isCreate,
 }: {
   initial: FormState;
   saving: boolean;
   onClose: () => void;
   onSubmit: (f: FormState) => void;
   submitLabel: string;
-  isCreate?: boolean;
 }) {
-  const [form, setForm] = useState<FormState>(() => {
-    if (isCreate) {
-      return { ...initial, password: generateRandomPassword() };
-    }
-    return initial;
-  });
+  const [form, setForm] = useState<FormState>(initial);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => {
     setForm((p) => {
       const next = { ...p, [k]: v };
-      if (touched[k]) setErrors(validateForm(next, isCreate));
+      if (touched[k]) setErrors(validateForm(next));
       return next;
     });
   };
 
   const blur = (k: keyof FormState) => {
     setTouched((p) => ({ ...p, [k]: true }));
-    setErrors(validateForm(form, isCreate));
+    setErrors(validateForm(form));
   };
 
   const handleSubmit = () => {
-    const errs = validateForm(form, isCreate);
+    const errs = validateForm(form);
     setErrors(errs);
-    setTouched({ full_name: true, email: true, cargo: true, role: true, password: true });
+    setTouched({ full_name: true, email: true, cargo: true, role: true });
     if (Object.keys(errs).length > 0) {
       toast.warning("⚠️ Corrija os campos destacados.");
       return;
@@ -792,36 +785,11 @@ function UserFormFields({
         )}
       </div>
 
-      {isCreate && (
-        <div className="space-y-1">
-          <Label>Senha Temporária *</Label>
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              placeholder="Senha temporária"
-              value={form.password || ""}
-              onChange={(e) => set("password", e.target.value)}
-              onBlur={() => blur("password")}
-              aria-invalid={!!errors.password}
-              disabled={saving}
-              className="flex-1 font-mono"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => set("password", generateRandomPassword())}
-              disabled={saving}
-              className="px-3"
-              title="Gerar nova senha"
-            >
-              Recriar
-            </Button>
-          </div>
-          {errors.password && (
-            <p className="text-xs text-destructive">{errors.password}</p>
-          )}
-        </div>
-      )}
+      <p className="text-xs text-muted-foreground bg-muted/40 border border-border/60 rounded-md p-3">
+        Ao salvar, o usuário receberá um e-mail com um link seguro para definir
+        a própria senha. Nenhuma senha é trafegada por e-mail.
+      </p>
+
 
       <DialogFooter>
         <Button variant="outline" onClick={onClose} disabled={saving}>
