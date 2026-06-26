@@ -662,17 +662,6 @@ function UsuariosPage() {
   );
 }
 
-function generateRandomPassword() {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*()";
-  let pwd = "";
-  for (let i = 0; i < 12; i++) {
-    pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  if (!/[A-Z]/.test(pwd) || !/[a-z]/.test(pwd) || !/[0-9]/.test(pwd) || !/[!@#$%&*()]/.test(pwd)) {
-    return generateRandomPassword();
-  }
-  return pwd;
-}
 
 function UserFormFields({
   initial,
