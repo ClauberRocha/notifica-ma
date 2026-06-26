@@ -24,6 +24,7 @@ import {
   Pencil,
   Save,
   X,
+  Printer,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
@@ -649,9 +650,11 @@ export function CaseDetail({
                 {(ficha.nome_paciente as string) || "(sem nome)"}
               </h1>
               <div className="flex items-center gap-2 mt-1">
-                <Badge className="bg-primary/10 text-primary border border-primary/20">
-                  {agravoLabel}
-                </Badge>
+                {agravo !== "outras_meningites" && (
+                  <Badge className="bg-primary/10 text-primary border border-primary/20">
+                    {agravoLabel}
+                  </Badge>
+                )}
                 <Badge
                   variant={status === "encerrado" ? "secondary" : "default"}
                 >
@@ -670,6 +673,15 @@ export function CaseDetail({
               disabled={encerrarMutation.isPending}
             >
               <CheckCircle className="w-4 h-4" /> Encerrar
+            </Button>
+          )}
+          {!editing && (
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => window.print()}
+            >
+              <Printer className="w-4 h-4" /> Imprimir
             </Button>
           )}
           {!editing && canEdit && (
@@ -802,7 +814,7 @@ export function CaseDetail({
         const used = new Set<string>();
         SECTIONS.forEach((s) => flatKeys.forEach((k) => s.match(k) && used.add(k)));
         const leftover = flatKeys.filter((k) => !used.has(k));
-        if (leftover.length === 0) return null;
+        if (leftover.length === 0 && editing) return null;
         return (
           <SectionCard title="Outras Informações">
             <>
@@ -817,6 +829,12 @@ export function CaseDetail({
                 ) : (
                   renderField(k, ficha[k])
                 ),
+              )}
+              {!editing && !leftover.includes("data_encerramento") && (
+                <InfoItem
+                  label="Data do Encerramento"
+                  value={fmtDate(ficha.data_encerramento) ?? "—"}
+                />
               )}
             </>
           </SectionCard>
