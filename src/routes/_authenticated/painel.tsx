@@ -988,15 +988,6 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           </p>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-center">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={toggleDark}
-            title={darkMode ? "Tema Claro" : "Tema Escuro"}
-            className="h-9 w-9 bg-card border-border/80 text-foreground"
-          >
-            {darkMode ? <Sun className="w-4.5 h-4.5 text-yellow-400" /> : <Moon className="w-4.5 h-4.5 text-blue-400" />}
-          </Button>
           <Button asChild className="gap-2 h-9 tech-gradient text-white border-0 hover:opacity-90">
             <Link to="/nova-ficha">
               <FilePlus className="w-4 h-4" /> Cadastrar Ficha
