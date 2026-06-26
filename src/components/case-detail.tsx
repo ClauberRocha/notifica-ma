@@ -394,6 +394,70 @@ function renderField(key: string, value: unknown) {
   return <InfoItem key={key} label={label} value={lbl(value)} />;
 }
 
+const BOOL_FIELDS = new Set(["doenca_relacionada_trabalho"]);
+
+function EditField({
+  fieldKey,
+  value,
+  onChange,
+}: {
+  fieldKey: string;
+  value: unknown;
+  onChange: (v: unknown) => void;
+}) {
+  const label = humanizeLabel(fieldKey);
+  const isDate = isDateField(fieldKey);
+  const isBool = typeof value === "boolean" || BOOL_FIELDS.has(fieldKey);
+  const longText = fieldKey.startsWith("observ") || fieldKey.includes("descricao");
+  const str =
+    value === null || value === undefined
+      ? ""
+      : typeof value === "object"
+        ? JSON.stringify(value)
+        : String(value);
+
+  return (
+    <div>
+      <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mb-1">
+        {label}
+      </p>
+      {isBool ? (
+        <Select
+          value={value === true ? "true" : value === false ? "false" : ""}
+          onValueChange={(v) => onChange(v === "" ? null : v === "true")}
+        >
+          <SelectTrigger className="h-9">
+            <SelectValue placeholder="—" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="true">Sim</SelectItem>
+            <SelectItem value="false">Não</SelectItem>
+          </SelectContent>
+        </Select>
+      ) : isDate ? (
+        <Input
+          type="date"
+          value={str.slice(0, 10)}
+          onChange={(e) => onChange(e.target.value || null)}
+          className="h-9"
+        />
+      ) : longText ? (
+        <Textarea
+          value={str}
+          onChange={(e) => onChange(e.target.value)}
+          rows={3}
+        />
+      ) : (
+        <Input
+          value={str}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-9"
+        />
+      )}
+    </div>
+  );
+}
+
 export interface CaseDetailProps {
   tableName: TableName;
   agravo: string;
