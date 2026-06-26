@@ -95,7 +95,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const search = useRouterState({ select: (s) => s.location.search as Record<string, unknown> });
-  const { user, signOut, role, can } = useAuth();
+  const { user, signOut, role, can, loading } = useAuth();
 
   const isActive = (url: string) => {
     const [path, query] = url.split("?");
