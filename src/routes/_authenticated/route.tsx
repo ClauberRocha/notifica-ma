@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, LogOut, KeyRound } from "lucide-react";
 import { OfflineBanner } from "@/components/offline-banner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useSidebar } from "@/components/ui/sidebar";
 
 type AppRole = "admin" | "gestor" | "user";
 
