@@ -174,6 +174,7 @@ function AuthenticatedLayout() {
             <SidebarTrigger aria-label="Abrir/fechar menu lateral" />
             <span className="text-sm font-bold tracking-tight md:hidden">Notifica-MA Intelligence</span>
           </header>
+          <OfflineBanner />
           <main className="flex-1 p-4 md:p-6">
             <Outlet />
           </main>
