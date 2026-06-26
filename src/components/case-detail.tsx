@@ -814,7 +814,7 @@ export function CaseDetail({
         const used = new Set<string>();
         SECTIONS.forEach((s) => flatKeys.forEach((k) => s.match(k) && used.add(k)));
         const leftover = flatKeys.filter((k) => !used.has(k));
-        if (leftover.length === 0) return null;
+        if (leftover.length === 0 && editing) return null;
         return (
           <SectionCard title="Outras Informações">
             <>
