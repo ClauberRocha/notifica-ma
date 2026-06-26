@@ -10,8 +10,16 @@ const CreateUserSchema = z.object({
   email: z.string().trim().email().max(255),
   cargo: z.string().trim().max(150).optional().nullable(),
   role: RoleEnum,
-  password: z.string().min(6),
 });
+
+function generateStrongPassword(): string {
+  // 32 bytes of entropy -> base64url. Nunca sai do servidor.
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  let s = "";
+  for (const b of bytes) s += String.fromCharCode(b);
+  return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
 
 const UpdateUserSchema = z.object({
   id: z.string().uuid(),
