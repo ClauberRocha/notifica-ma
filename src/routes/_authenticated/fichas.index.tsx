@@ -28,6 +28,7 @@ import {
   Search,
   Plus,
   Eye,
+  Pencil,
   ChevronLeft,
   ChevronRight,
   Shield,
@@ -170,6 +171,7 @@ function FichasListPage() {
   const navigate = useNavigate();
   const { can } = useAuth();
   const canDelete = can("fichas.delete");
+  const canEdit = can("fichas.edit");
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ["fichas-all"],
@@ -447,6 +449,22 @@ function FichasListPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
+                          {canEdit && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-primary"
+                              title="Editar ficha"
+                              aria-label="Editar ficha"
+                              onClick={() =>
+                                navigate({
+                                  to: `/fichas/${c._slug}/${c.id}?edit=1`,
+                                })
+                              }
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                          )}
                           {canDelete && (
                             <AlertDialog>
                               <AlertDialogTrigger asChild>

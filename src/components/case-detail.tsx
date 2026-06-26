@@ -26,6 +26,7 @@ import {
   Save,
   X,
   Printer,
+  FileDown,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
@@ -485,6 +486,7 @@ export function CaseDetail({
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<AnyObj>({});
+  const [exportingPdf, setExportingPdf] = useState(false);
 
   const queryKey = [agravo, "case", id];
   const listKey = [agravo, "cases"];
@@ -548,6 +550,64 @@ export function CaseDetail({
   useEffect(() => {
     if (!editing && ficha) setDraft(ficha);
   }, [ficha, editing]);
+
+  // Auto-enter edit mode when navigated with ?edit=1
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("edit") === "1" && ficha && canEdit && !editing) {
+      setDraft(ficha);
+      setEditing(true);
+      params.delete("edit");
+      const qs = params.toString();
+      window.history.replaceState(
+        {},
+        "",
+        window.location.pathname + (qs ? `?${qs}` : ""),
+      );
+    }
+  }, [ficha, canEdit, editing]);
+
+  const handleExportPdf = async () => {
+    const node = document.getElementById("ficha-pdf-root");
+    if (!node) return;
+    setExportingPdf(true);
+    try {
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(node, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({ unit: "pt", format: "a4" });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      const nome = (ficha?.nome_paciente as string) || "ficha";
+      const safe = nome.replace(/[^a-z0-9]+/gi, "_").toLowerCase();
+      pdf.save(`${safe}_${id.slice(0, 8)}.pdf`);
+      toast.success("PDF exportado.");
+    } catch (e) {
+      toast.error(`Falha ao exportar PDF: ${(e as Error).message}`);
+    } finally {
+      setExportingPdf(false);
+    }
+  };
 
   const setDraftField = (key: string, value: unknown) =>
     setDraft((d) => ({ ...d, [key]: value }));
@@ -625,7 +685,7 @@ export function CaseDetail({
       : null;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+    <div id="ficha-pdf-root" className="max-w-5xl mx-auto px-4 py-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
@@ -674,6 +734,21 @@ export function CaseDetail({
               onClick={() => window.print()}
             >
               <Printer className="w-4 h-4" /> Imprimir
+            </Button>
+          )}
+          {!editing && (
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={handleExportPdf}
+              disabled={exportingPdf}
+            >
+              {exportingPdf ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FileDown className="w-4 h-4" />
+              )}
+              Exportar PDF
             </Button>
           )}
           {!editing && canEdit && (
