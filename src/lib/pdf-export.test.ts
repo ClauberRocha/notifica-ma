@@ -36,14 +36,14 @@ function fakeLibs() {
   const addImage = vi.fn();
   const addPage = vi.fn();
   const save = vi.fn();
-  const JsPdfCtor = vi.fn().mockImplementation(() => ({
-    addImage,
-    addPage,
-    save,
-    internal: {
+  const JsPdfCtor = vi.fn(function (this: Record<string, unknown>) {
+    this.addImage = addImage;
+    this.addPage = addPage;
+    this.save = save;
+    this.internal = {
       pageSize: { getWidth: () => 595, getHeight: () => 842 },
-    },
-  }));
+    };
+  });
   const html2canvas = vi.fn().mockResolvedValue({
     width: 1190,
     height: 1684,
