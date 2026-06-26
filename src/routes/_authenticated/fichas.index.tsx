@@ -42,6 +42,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { getSemanaEpidemiologica } from "@/data/semana-epd";
 import { getSeNumber } from "@/lib/seUtils";
+import { deleteCase } from "@/lib/offline/db";
 
 function getSE(dateStr: string | null | undefined): string {
   if (!dateStr) return "";
