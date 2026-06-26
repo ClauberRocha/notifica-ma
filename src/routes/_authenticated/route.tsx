@@ -11,18 +11,41 @@ import { toast } from "sonner";
 import { Loader2, LogOut, KeyRound } from "lucide-react";
 import { OfflineBanner } from "@/components/offline-banner";
 
+type AppRole = "admin" | "gestor" | "user";
+
+const ROLE_RANK: Record<AppRole, number> = {
+  admin: 3,
+  gestor: 2,
+  user: 1,
+};
+
+function resolveHighestRole(rows: Array<{ role: string }> | null | undefined): AppRole {
+  const valid = (rows ?? []).filter(
+    (row): row is { role: AppRole } =>
+      row.role === "admin" || row.role === "gestor" || row.role === "user",
+  );
+  if (valid.length === 0) return "user";
+  return valid.reduce((best, row) =>
+    ROLE_RANK[row.role] > ROLE_RANK[best] ? row.role : best,
+  "user" as AppRole);
+}
+
 // In-memory cache of role per user id for the current tab session.
 // Avoids re-querying user_roles on every navigation.
-const roleCache = new Map<string, string>();
+const roleCache = new Map<string, AppRole>();
 
-async function getRoleCached(userId: string): Promise<string> {
+async function getRoleCached(userId: string): Promise<AppRole> {
   const cached = roleCache.get(userId);
   if (cached) return cached;
-  const { data: rows } = await supabase
+  const { data: rows, error } = await supabase
     .from("user_roles")
     .select("role")
     .eq("user_id", userId);
-  const role = rows?.[0]?.role || "user";
+  if (error) {
+    console.error("Falha ao carregar perfil de acesso:", error.message);
+    throw error;
+  }
+  const role = resolveHighestRole(rows);
   roleCache.set(userId, role);
   return role;
 }
@@ -39,12 +62,6 @@ export const Route = createFileRoute("/_authenticated")({
 
     const role = await getRoleCached(user.id);
     const path = location.pathname;
-
-    if (role === "gestor") {
-      if (path.startsWith("/fichas") || path.startsWith("/nova-ficha")) {
-        throw redirect({ to: "/" });
-      }
-    }
 
     if (role === "user") {
       if (

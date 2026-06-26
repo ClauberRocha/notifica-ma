@@ -38,7 +38,7 @@ async function loadProfileAndRoles(
     (authUser.user_metadata?.name as string | undefined) ||
     "";
 
-  const [{ data: profile }, { data: roleRows }] = await Promise.all([
+  const [profileResult, rolesResult] = await Promise.all([
     supabase
       .from("profiles")
       .select("full_name")
@@ -46,6 +46,17 @@ async function loadProfileAndRoles(
       .maybeSingle(),
     supabase.from("user_roles").select("role").eq("user_id", authUser.id),
   ]);
+
+  if (profileResult.error) {
+    console.error("Falha ao carregar perfil do usuário:", profileResult.error.message);
+  }
+
+  if (rolesResult.error) {
+    console.error("Falha ao carregar perfil de acesso do usuário:", rolesResult.error.message);
+  }
+
+  const profile = profileResult.data;
+  const roleRows = rolesResult.data;
 
   return {
     profile: {
@@ -96,6 +107,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loadProfileAndRoles(data.session.user).then((res) => {
           if (!mounted) return;
           apply(res.profile, res.roles);
+          setLoading(false);
+        }).catch((error) => {
+          console.error("Falha ao inicializar usuário autenticado:", error);
+          if (!mounted) return;
+          apply(null, []);
           setLoading(false);
         });
       } else {

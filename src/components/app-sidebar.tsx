@@ -111,7 +111,7 @@ export function AppSidebar() {
     return pathMatch && tabMatch;
   };
 
-  const roleLabel = role ? ROLE_LABELS[role] : "Sem perfil";
+  const roleLabel = loading ? "Carregando perfil" : role ? ROLE_LABELS[role] : "Sem perfil";
   const roleClass = role ? ROLE_BADGE_CLASSES[role] : "bg-muted text-muted-foreground border-border";
 
   return (
