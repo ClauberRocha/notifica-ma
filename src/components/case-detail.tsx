@@ -24,6 +24,7 @@ import {
   Pencil,
   Save,
   X,
+  Printer,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
