@@ -95,7 +95,6 @@ type FormState = {
   email: string;
   cargo: string;
   role: Role;
-  password?: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -123,14 +122,8 @@ const FormSchema = z.object({
   }),
 });
 
-function validateForm(form: FormState, isCreate?: boolean): FormErrors {
-  let schema = FormSchema;
-  if (isCreate) {
-    schema = FormSchema.extend({
-      password: z.string().min(6, { message: "Senha temporária deve ter pelo menos 6 caracteres." }),
-    });
-  }
-  const result = schema.safeParse(form);
+function validateForm(form: FormState): FormErrors {
+  const result = FormSchema.safeParse(form);
   if (result.success) return {};
   const errs: FormErrors = {};
   for (const issue of result.error.issues) {
