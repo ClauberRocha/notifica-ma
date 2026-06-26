@@ -805,24 +805,49 @@ export function CaseDetail({
         if (leftover.length === 0) return null;
         return (
           <SectionCard title="Outras Informações">
-            <>{leftover.map((k) => renderField(k, ficha[k]))}</>
+            <>
+              {leftover.map((k) =>
+                editing ? (
+                  <EditField
+                    key={k}
+                    fieldKey={k}
+                    value={draft[k]}
+                    onChange={(v) => setDraftField(k, v)}
+                  />
+                ) : (
+                  renderField(k, ficha[k])
+                ),
+              )}
+            </>
           </SectionCard>
         );
       })()}
 
-      {jsonGroups.map(({ title, obj }) => (
-        <SectionCard key={title} title={title}>
-          <>
-            {Object.entries(obj).map(([k, v]) =>
-              v === null || v === undefined || v === "" ? null : (
-                <InfoItem key={k} label={humanizeLabel(k)} value={lbl(v)} />
-              ),
-            )}
-          </>
-        </SectionCard>
-      ))}
+      {jsonGroups.map(({ key: groupKey, title, obj }) => {
+        const source = (editing ? (draft[groupKey] as AnyObj | undefined) : obj) ?? {};
+        const entries = editing ? Object.entries(obj) : Object.entries(source);
+        if (entries.length === 0) return null;
+        return (
+          <SectionCard key={title} title={title}>
+            <>
+              {entries.map(([k, v]) =>
+                editing ? (
+                  <EditField
+                    key={k}
+                    fieldKey={k}
+                    value={(source as AnyObj)[k] ?? v}
+                    onChange={(nv) => setDraftJsonField(groupKey, k, nv)}
+                  />
+                ) : v === null || v === undefined || v === "" ? null : (
+                  <InfoItem key={k} label={humanizeLabel(k)} value={lbl(v)} />
+                ),
+              )}
+            </>
+          </SectionCard>
+        );
+      })}
 
-      {obs ? (
+      {(editing || obs) && (
         <Card className="border-primary/10">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold text-primary">
@@ -830,10 +855,22 @@ export function CaseDetail({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{obs}</p>
+            {editing ? (
+              <Textarea
+                rows={4}
+                value={(draft.observacoes_adicionais as string) ?? ""}
+                onChange={(e) =>
+                  setDraftField("observacoes_adicionais", e.target.value)
+                }
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {obs}
+              </p>
+            )}
           </CardContent>
         </Card>
-      ) : null}
+      )}
     </div>
   );
 }
