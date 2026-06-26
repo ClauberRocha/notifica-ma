@@ -468,16 +468,6 @@ function FichasListPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-blue-600"
-                            title="Imprimir"
-                            aria-label="Imprimir ficha"
-                            onClick={() => printFicha(c)}
-                          >
-                            <Printer className="w-4 h-4" />
-                          </Button>
                           {canDelete && (
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
