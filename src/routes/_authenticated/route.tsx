@@ -202,3 +202,19 @@ function AuthenticatedLayout() {
     </SidebarProvider>
   );
 }
+
+function SidebarTriggerWithTooltip() {
+  const { state } = useSidebar();
+  const label = state === "collapsed" ? "Expandir menu" : "Recolher menu";
+  return (
+    <TooltipProvider delayDuration={150}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <SidebarTrigger aria-label={label} />
+        </TooltipTrigger>
+        <TooltipContent side="right">{label}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
