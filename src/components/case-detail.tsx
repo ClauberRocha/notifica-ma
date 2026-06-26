@@ -650,9 +650,11 @@ export function CaseDetail({
                 {(ficha.nome_paciente as string) || "(sem nome)"}
               </h1>
               <div className="flex items-center gap-2 mt-1">
-                <Badge className="bg-primary/10 text-primary border border-primary/20">
-                  {agravoLabel}
-                </Badge>
+                {agravo !== "outras_meningites" && (
+                  <Badge className="bg-primary/10 text-primary border border-primary/20">
+                    {agravoLabel}
+                  </Badge>
+                )}
                 <Badge
                   variant={status === "encerrado" ? "secondary" : "default"}
                 >
