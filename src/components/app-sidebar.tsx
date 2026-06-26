@@ -63,6 +63,13 @@ const groups: SidebarGroup[] = [
     ],
   },
   {
+    label: "Administração",
+    items: [
+      { title: "Usuários", url: "/usuarios", icon: Users, permission: "users.view" },
+      { title: "Logs do Sistema", url: "/logs", icon: ClipboardList, permission: "logs.view" },
+    ],
+  },
+  {
     label: "Sistema",
     items: [
       { title: "Configurações", url: "/painel?tab=config", icon: Settings, permission: "system.settings" },
@@ -70,6 +77,7 @@ const groups: SidebarGroup[] = [
   },
 
 ];
+
 
 function initials(name: string) {
   return (
