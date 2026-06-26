@@ -65,6 +65,9 @@ import {
 } from "recharts";
 import { getSeNumber } from "@/lib/seUtils";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
 
 const SmartMap = lazy(() => import("@/components/SmartMap"));
 
