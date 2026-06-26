@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+import { insertCase } from "@/lib/offline/db";
   Select,
   SelectContent,
   SelectItem,
@@ -288,9 +289,7 @@ export function MeningiteForm({ agravo }: { agravo: MeningiteAgravo }) {
       }
       payload.exame_quimiocitologico = quimioNum;
 
-      const { error } = await supabase
-        .from("meningite_cases")
-        .insert(payload as never);
+      const { error } = await insertCase("meningite_cases", payload as Record<string, unknown>);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
       navigate({ to: FICHAS_PATH[agravo] });

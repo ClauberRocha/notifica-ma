@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+import { insertCase } from "@/lib/offline/db";
   Select,
   SelectContent,
   SelectItem,
@@ -233,9 +234,7 @@ function NovaFichaTuberculosePage() {
         outras: form.doencas_outras ?? "",
       };
 
-      const { error } = await supabase
-        .from("tuberculose_cases")
-        .insert(payload as never);
+      const { error } = await insertCase("tuberculose_cases", payload as Record<string, unknown>);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
       navigate({ to: "/fichas/tuberculose" });

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+import { insertCase } from "@/lib/offline/db";
   Select,
   SelectContent,
   SelectItem,
@@ -258,9 +259,7 @@ export function DengueChikForm({
       payload.sinais_clinicos = sinais;
       payload.doencas_preexistentes = doencas;
 
-      const { error } = await supabase
-        .from("dengue_chikungunya_cases")
-        .insert(payload as never);
+      const { error } = await insertCase("dengue_chikungunya_cases", payload as Record<string, unknown>);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
       navigate({ to: redirectTo });

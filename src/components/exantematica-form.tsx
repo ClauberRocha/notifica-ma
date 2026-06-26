@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+import { insertCase } from "@/lib/offline/db";
   Select,
   SelectContent,
   SelectItem,
@@ -221,9 +222,7 @@ export function ExantematicaForm({ agravo }: { agravo: ExantemaAgravo }) {
       }
       payload.sinais_sintomas = sintomas;
 
-      const { error } = await supabase
-        .from("exantematica_cases")
-        .insert(payload as never);
+      const { error } = await insertCase("exantematica_cases", payload as Record<string, unknown>);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
       navigate({ to: agravo === "sarampo" ? "/fichas/sarampo" : "/fichas/rubeola" });

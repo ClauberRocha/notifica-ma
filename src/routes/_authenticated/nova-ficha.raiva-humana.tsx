@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+import { insertCase } from "@/lib/offline/db";
   Select,
   SelectContent,
   SelectItem,
@@ -255,9 +256,7 @@ function NovaFichaRaivaHumanaPage() {
       payload.sinais_sintomas = sintomas;
       payload.diagnostico_laboratorial = diagLab;
 
-      const { error } = await supabase
-        .from("raiva_humana_cases")
-        .insert(payload as never);
+      const { error } = await insertCase("raiva_humana_cases", payload as Record<string, unknown>);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
       navigate({ to: "/fichas/raiva-humana" });

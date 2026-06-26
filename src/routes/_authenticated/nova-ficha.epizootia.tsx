@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+import { insertCase } from "@/lib/offline/db";
   Select,
   SelectContent,
   SelectItem,
@@ -201,9 +202,7 @@ function NovaFichaEpizootiaPage() {
         ...(resultadoOutro ? { outro_especificar: resultadoOutro } : {}),
       };
 
-      const { error } = await supabase
-        .from("epizootia_cases")
-        .insert(payload as never);
+      const { error } = await insertCase("epizootia_cases", payload as Record<string, unknown>);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
       navigate({ to: "/fichas/epizootia" });
