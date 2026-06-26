@@ -311,7 +311,7 @@ function FichaCoquelucheDetalhesPage() {
       <SectionCard title="Dados Gerais">
         <InfoItem label="Agravo" value="Coqueluche (A37.9)" />
         <InfoItem label="Data Notificação" value={fmtDate(ficha.data_notificacao)} />
-        <InfoItem label="Sem.Epd." value={ficha.data_notificacao ? getSE(ficha.data_notificacao) : "—"} />
+        <InfoItem label="Sem.Epd." value={ficha.data_notificacao ? getSE(String(ficha.data_notificacao)) : "—"} />
         <InfoItem label="UF" value={ficha.uf_notificacao} />
         <InfoItem label="Município" value={ficha.municipio_notificacao} />
         <InfoItem label="Unidade de Saúde" value={ficha.unidade_saude} />
