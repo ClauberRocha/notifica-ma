@@ -175,7 +175,10 @@ export function AppSidebar() {
               <SidebarMenu className="gap-0.5">
                 {visibleGroupItems.map((item) => {
                   const active = isActive(item.url);
-                  const isDisabled = role === "user" && item.url.startsWith("/painel");
+                  const gestorDisabledUrls = ["/nova-ficha", "/fichas", "/usuarios"];
+                  const isDisabled =
+                    (role === "user" && item.url.startsWith("/painel")) ||
+                    (role === "gestor" && gestorDisabledUrls.includes(item.url));
 
                   if (isDisabled) {
                     return (
