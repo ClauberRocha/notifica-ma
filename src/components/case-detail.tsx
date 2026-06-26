@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Children, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { updateCase, deleteCase } from "@/lib/offline/db";
 import type { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -503,11 +504,8 @@ export function CaseDetail({
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase
-        .from(tableName as never)
-        .delete()
-        .eq("id", id);
-      if (error) throw error;
+      const { error } = await deleteCase(tableName, id);
+      if (error) throw new Error(error.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: listKey });
@@ -519,14 +517,11 @@ export function CaseDetail({
 
   const encerrarMutation = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase
-        .from(tableName as never)
-        .update({
-          status: "encerrado",
-          data_encerramento: new Date().toISOString().split("T")[0],
-        } as never)
-        .eq("id", id);
-      if (error) throw error;
+      const { error } = await updateCase(tableName, id, {
+        status: "encerrado",
+        data_encerramento: new Date().toISOString().split("T")[0],
+      });
+      if (error) throw new Error(error.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
@@ -538,11 +533,8 @@ export function CaseDetail({
 
   const saveMutation = useMutation({
     mutationFn: async (payload: AnyObj) => {
-      const { error } = await supabase
-        .from(tableName as never)
-        .update(payload as never)
-        .eq("id", id);
-      if (error) throw error;
+      const { error } = await updateCase(tableName, id, payload as Record<string, unknown>);
+      if (error) throw new Error(error.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });

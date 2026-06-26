@@ -5,11 +5,63 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
     server: { entry: "server" },
+  },
+  vite: {
+    plugins: [
+      VitePWA({
+        registerType: "autoUpdate",
+        injectRegister: "auto",
+        manifest: {
+          name: "Notifica-MA Intelligence",
+          short_name: "Notifica-MA",
+          description:
+            "Sistema de notificação de agravos em saúde — Maranhão",
+          theme_color: "#0b1320",
+          background_color: "#0b1320",
+          display: "standalone",
+          start_url: "/",
+          scope: "/",
+          icons: [
+            {
+              src: "/favicon.ico",
+              sizes: "64x64 32x32 24x24 16x16",
+              type: "image/x-icon",
+            },
+          ],
+        },
+        workbox: {
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+          navigateFallback: "/",
+          navigateFallbackDenylist: [/^\/api\//, /^\/_/],
+          runtimeCaching: [
+            {
+              urlPattern: ({ request }) =>
+                request.destination === "image" ||
+                request.destination === "font",
+              handler: "CacheFirst",
+              options: {
+                cacheName: "static-assets",
+                expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              },
+            },
+            {
+              // Supabase REST/RPC — usar cache de leitura como fallback offline
+              urlPattern: /https:\/\/.*\.supabase\.co\/(rest|storage)\/.*/i,
+              handler: "NetworkFirst",
+              options: {
+                cacheName: "supabase-api",
+                networkTimeoutSeconds: 5,
+                expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 },
+              },
+            },
+          ],
+        },
+      }),
+    ],
   },
 });

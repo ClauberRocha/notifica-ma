@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, LogOut, KeyRound } from "lucide-react";
+import { OfflineBanner } from "@/components/offline-banner";
 
 // In-memory cache of role per user id for the current tab session.
 // Avoids re-querying user_roles on every navigation.
@@ -173,6 +174,7 @@ function AuthenticatedLayout() {
             <SidebarTrigger aria-label="Abrir/fechar menu lateral" />
             <span className="text-sm font-bold tracking-tight md:hidden">Notifica-MA Intelligence</span>
           </header>
+          <OfflineBanner />
           <main className="flex-1 p-4 md:p-6">
             <Outlet />
           </main>

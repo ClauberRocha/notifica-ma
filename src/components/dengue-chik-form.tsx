@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { insertCase } from "@/lib/offline/db";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -258,9 +259,7 @@ export function DengueChikForm({
       payload.sinais_clinicos = sinais;
       payload.doencas_preexistentes = doencas;
 
-      const { error } = await supabase
-        .from("dengue_chikungunya_cases")
-        .insert(payload as never);
+      const { error } = await insertCase("dengue_chikungunya_cases", payload as Record<string, unknown>);
       if (error) throw error;
       toast.success("Ficha salva com sucesso!");
       navigate({ to: redirectTo });

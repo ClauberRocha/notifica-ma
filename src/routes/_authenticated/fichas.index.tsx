@@ -42,6 +42,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { getSemanaEpidemiologica } from "@/data/semana-epd";
 import { getSeNumber } from "@/lib/seUtils";
+import { deleteCase } from "@/lib/offline/db";
 
 function getSE(dateStr: string | null | undefined): string {
   if (!dateStr) return "";
@@ -203,15 +204,16 @@ function FichasListPage() {
   const paginated = filtered.slice(page * pageSize, (page + 1) * pageSize);
 
   async function handleDelete(caso: CaseRow) {
-    const { error } = await supabase
-      .from(caso._table as never)
-      .delete()
-      .eq("id", caso.id);
+    const { error, localOnly } = await deleteCase(caso._table, caso.id);
     if (error) {
       toast.error(error.message);
       return;
     }
-    toast.success("Ficha excluída.");
+    toast.success(
+      localOnly
+        ? "Ficha removida localmente — será apagada do servidor quando a internet voltar."
+        : "Ficha excluída.",
+    );
     queryClient.invalidateQueries({ queryKey: ["fichas-all"] });
   }
 
