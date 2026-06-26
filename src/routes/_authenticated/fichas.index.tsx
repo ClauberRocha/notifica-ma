@@ -34,7 +34,6 @@ import {
   Bug,
   Syringe,
   Trash2,
-  Printer,
   ArrowLeft,
 } from "lucide-react";
 import { format } from "date-fns";
