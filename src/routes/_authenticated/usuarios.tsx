@@ -536,14 +536,10 @@ function UsuariosPage() {
             <DialogTitle>Adicionar Novo Usuário</DialogTitle>
           </DialogHeader>
           <UserFormFields
-            initial={{ full_name: "", email: "", cargo: "", role: "user", password: "" }}
-            isCreate={true}
+            initial={{ full_name: "", email: "", cargo: "", role: "user" }}
             saving={createMutation.isPending}
             onClose={() => setCreateOpen(false)}
-            onSubmit={(form) => {
-              setCreatedUserPassword(form.password || "");
-              createMutation.mutate(form);
-            }}
+            onSubmit={(form) => createMutation.mutate(form)}
             submitLabel="Salvar"
           />
         </DialogContent>
