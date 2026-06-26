@@ -673,6 +673,15 @@ export function CaseDetail({
               <CheckCircle className="w-4 h-4" /> Encerrar
             </Button>
           )}
+          {!editing && (
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => window.print()}
+            >
+              <Printer className="w-4 h-4" /> Imprimir
+            </Button>
+          )}
           {!editing && canEdit && (
             <Button
               variant="outline"
