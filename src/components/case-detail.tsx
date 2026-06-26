@@ -768,13 +768,25 @@ export function CaseDetail({
               ) : null}
               {keys.map((k) => (
                 <div key={k} className="contents">
-                  {renderField(k, ficha[k])}
-                  {(k === "data_notificacao" || k === "data" || k === "data_preenchimento" || k === "data_diagnostico_notificacao") && (
-                    <InfoItem
-                      label="Sem.Epd."
-                      value={ficha[k] ? getSE(ficha[k] as string) : "—"}
+                  {editing ? (
+                    <EditField
+                      fieldKey={k}
+                      value={draft[k]}
+                      onChange={(v) => setDraftField(k, v)}
                     />
+                  ) : (
+                    renderField(k, ficha[k])
                   )}
+                  {!editing &&
+                    (k === "data_notificacao" ||
+                      k === "data" ||
+                      k === "data_preenchimento" ||
+                      k === "data_diagnostico_notificacao") && (
+                      <InfoItem
+                        label="Sem.Epd."
+                        value={ficha[k] ? getSE(ficha[k] as string) : "—"}
+                      />
+                    )}
                 </div>
               ))}
               {section.title === "Conclusão" && encerDias !== null ? (
