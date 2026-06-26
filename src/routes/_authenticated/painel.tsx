@@ -65,6 +65,9 @@ import {
 } from "recharts";
 import { getSeNumber } from "@/lib/seUtils";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
 
 const SmartMap = lazy(() => import("@/components/SmartMap"));
 
@@ -74,23 +77,17 @@ type PainelSearch = {
 
 export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({ meta: [{ title: "Notifica-MA Intelligence — Monitoramento e Decisão" }] }),
-  beforeLoad: async ({ search }) => {
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) throw redirect({ to: "/auth" });
-    const { data: rows } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", auth.user.id);
-    const allowed = !!rows?.some(
-      (r) => r.role === "admin" || r.role === "gestor",
-    );
-    if (!allowed) throw redirect({ to: "/" });
-
-    const role = rows?.[0]?.role;
+  beforeLoad: ({ search, context }) => {
+    // role já vem do layout pai (_authenticated) — sem fetch extra aqui.
+    const role = (context as { role?: string }).role;
+    if (role !== "admin" && role !== "gestor") {
+      throw redirect({ to: "/" });
+    }
     if (role === "gestor" && search.tab === "config") {
-      throw redirect({ to: "/painel?tab=dashboard" });
+      throw redirect({ to: "/painel", search: { tab: "dashboard" } });
     }
   },
+
 
   validateSearch: (search: Record<string, unknown>): PainelSearch => {
     return {
@@ -840,12 +837,11 @@ function PainelPage() {
 
   const handleTabChange = (newTab: string) => {
     navigate({
-      search: (prev) => ({
-        ...prev,
-        tab: newTab as any,
-      }),
+      to: "/painel",
+      search: { tab: newTab as PainelSearch["tab"] },
     });
   };
+
 
   // CSV Export helper
   const handleExportCSV = () => {

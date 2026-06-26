@@ -37,16 +37,11 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/logs")({
   head: () => ({ meta: [{ title: "Logs do Sistema" }] }),
-  beforeLoad: async () => {
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) throw redirect({ to: "/auth" });
-    const { data: rows } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", auth.user.id);
-    const isAdmin = !!rows?.some((r) => r.role === "admin");
-    if (!isAdmin) throw redirect({ to: "/" });
+  beforeLoad: ({ context }) => {
+    const role = (context as { role?: string }).role;
+    if (role !== "admin") throw redirect({ to: "/" });
   },
+
   component: LogsPage,
 });
 
