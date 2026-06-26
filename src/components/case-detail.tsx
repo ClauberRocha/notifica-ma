@@ -479,6 +479,10 @@ export function CaseDetail({
   const queryClient = useQueryClient();
   const { can } = useAuth();
   const canDelete = can("fichas.delete");
+  const canEdit = can("fichas.edit");
+
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<AnyObj>({});
 
   const queryKey = [agravo, "case", id];
   const listKey = [agravo, "cases"];
