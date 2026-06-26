@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FilePlus, List, LayoutDashboard, Users, LogOut } from "lucide-react";
+import { FilePlus, List, LayoutDashboard, Users, LogOut, Sun, Moon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/")({
