@@ -754,7 +754,8 @@ export function CaseDetail({
           </>
         </SectionCard>
       )}
-      </div>
+
+
 
       {SECTIONS.map((section) => {
         const keys = flatKeys.filter((k) => section.match(k));
