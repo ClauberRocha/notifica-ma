@@ -736,6 +736,21 @@ export function CaseDetail({
               <Printer className="w-4 h-4" /> Imprimir
             </Button>
           )}
+          {!editing && (
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={handleExportPdf}
+              disabled={exportingPdf}
+            >
+              {exportingPdf ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FileDown className="w-4 h-4" />
+              )}
+              Exportar PDF
+            </Button>
+          )}
           {!editing && canEdit && (
             <Button
               variant="outline"
