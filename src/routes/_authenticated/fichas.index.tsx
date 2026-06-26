@@ -458,8 +458,7 @@ function FichasListPage() {
                               aria-label="Editar ficha"
                               onClick={() =>
                                 navigate({
-                                  to: `/fichas/${c._slug}/${c.id}`,
-                                  search: { edit: "1" } as never,
+                                  to: `/fichas/${c._slug}/${c.id}?edit=1`,
                                 })
                               }
                             >
