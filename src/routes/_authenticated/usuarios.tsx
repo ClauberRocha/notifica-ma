@@ -95,7 +95,6 @@ type FormState = {
   email: string;
   cargo: string;
   role: Role;
-  password?: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -123,14 +122,8 @@ const FormSchema = z.object({
   }),
 });
 
-function validateForm(form: FormState, isCreate?: boolean): FormErrors {
-  let schema = FormSchema;
-  if (isCreate) {
-    schema = FormSchema.extend({
-      password: z.string().min(6, { message: "Senha temporária deve ter pelo menos 6 caracteres." }),
-    });
-  }
-  const result = schema.safeParse(form);
+function validateForm(form: FormState): FormErrors {
+  const result = FormSchema.safeParse(form);
   if (result.success) return {};
   const errs: FormErrors = {};
   for (const issue of result.error.issues) {
@@ -188,7 +181,7 @@ function UsuariosPage() {
   const deleteUserFn = useServerFn(deleteUser);
   const resendInviteFn = useServerFn(resendInvite);
   const [lastCreatedId, setLastCreatedId] = useState<string | null>(null);
-  const [createdUserPassword, setCreatedUserPassword] = useState("");
+  
 
   useEffect(() => {
     (async () => {
@@ -233,7 +226,6 @@ function UsuariosPage() {
           email: form.email,
           cargo: form.cargo || null,
           role: form.role,
-          password: form.password || "",
         },
       }),
     onSuccess: (res) => {
@@ -242,7 +234,7 @@ function UsuariosPage() {
       setLastCreatedId(res.id);
       setConfirmInfo({
         title: "Usuário criado com sucesso!",
-        description: `O usuário foi pré-registrado no sistema.\n\nE-mail: ${res.email}\nSenha Temporária: ${createdUserPassword}\n\nCopie os dados acima e envie para o usuário. A troca de senha será solicitada obrigatoriamente no primeiro acesso.`,
+        description: `Um e-mail foi enviado para ${res.email} com um link seguro para que o usuário defina a própria senha de acesso.\n\nO link expira em 1 hora. Caso não chegue, use "Reenviar convite".`,
       });
       setConfirmOpen(true);
     },
@@ -544,14 +536,10 @@ function UsuariosPage() {
             <DialogTitle>Adicionar Novo Usuário</DialogTitle>
           </DialogHeader>
           <UserFormFields
-            initial={{ full_name: "", email: "", cargo: "", role: "user", password: "" }}
-            isCreate={true}
+            initial={{ full_name: "", email: "", cargo: "", role: "user" }}
             saving={createMutation.isPending}
             onClose={() => setCreateOpen(false)}
-            onSubmit={(form) => {
-              setCreatedUserPassword(form.password || "");
-              createMutation.mutate(form);
-            }}
+            onSubmit={(form) => createMutation.mutate(form)}
             submitLabel="Salvar"
           />
         </DialogContent>
@@ -674,17 +662,6 @@ function UsuariosPage() {
   );
 }
 
-function generateRandomPassword() {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*()";
-  let pwd = "";
-  for (let i = 0; i < 12; i++) {
-    pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  if (!/[A-Z]/.test(pwd) || !/[a-z]/.test(pwd) || !/[0-9]/.test(pwd) || !/[!@#$%&*()]/.test(pwd)) {
-    return generateRandomPassword();
-  }
-  return pwd;
-}
 
 function UserFormFields({
   initial,
@@ -692,41 +669,34 @@ function UserFormFields({
   onClose,
   onSubmit,
   submitLabel,
-  isCreate,
 }: {
   initial: FormState;
   saving: boolean;
   onClose: () => void;
   onSubmit: (f: FormState) => void;
   submitLabel: string;
-  isCreate?: boolean;
 }) {
-  const [form, setForm] = useState<FormState>(() => {
-    if (isCreate) {
-      return { ...initial, password: generateRandomPassword() };
-    }
-    return initial;
-  });
+  const [form, setForm] = useState<FormState>(initial);
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Partial<Record<keyof FormState, boolean>>>({});
 
   const set = <K extends keyof FormState>(k: K, v: FormState[K]) => {
     setForm((p) => {
       const next = { ...p, [k]: v };
-      if (touched[k]) setErrors(validateForm(next, isCreate));
+      if (touched[k]) setErrors(validateForm(next));
       return next;
     });
   };
 
   const blur = (k: keyof FormState) => {
     setTouched((p) => ({ ...p, [k]: true }));
-    setErrors(validateForm(form, isCreate));
+    setErrors(validateForm(form));
   };
 
   const handleSubmit = () => {
-    const errs = validateForm(form, isCreate);
+    const errs = validateForm(form);
     setErrors(errs);
-    setTouched({ full_name: true, email: true, cargo: true, role: true, password: true });
+    setTouched({ full_name: true, email: true, cargo: true, role: true });
     if (Object.keys(errs).length > 0) {
       toast.warning("⚠️ Corrija os campos destacados.");
       return;
@@ -804,36 +774,11 @@ function UserFormFields({
         )}
       </div>
 
-      {isCreate && (
-        <div className="space-y-1">
-          <Label>Senha Temporária *</Label>
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              placeholder="Senha temporária"
-              value={form.password || ""}
-              onChange={(e) => set("password", e.target.value)}
-              onBlur={() => blur("password")}
-              aria-invalid={!!errors.password}
-              disabled={saving}
-              className="flex-1 font-mono"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => set("password", generateRandomPassword())}
-              disabled={saving}
-              className="px-3"
-              title="Gerar nova senha"
-            >
-              Recriar
-            </Button>
-          </div>
-          {errors.password && (
-            <p className="text-xs text-destructive">{errors.password}</p>
-          )}
-        </div>
-      )}
+      <p className="text-xs text-muted-foreground bg-muted/40 border border-border/60 rounded-md p-3">
+        Ao salvar, o usuário receberá um e-mail com um link seguro para definir
+        a própria senha. Nenhuma senha é trafegada por e-mail.
+      </p>
+
 
       <DialogFooter>
         <Button variant="outline" onClick={onClose} disabled={saving}>
