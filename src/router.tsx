@@ -25,7 +25,9 @@ export const getRouter = () => {
         throttleTime: 1000,
       });
       persistQueryClient({
-        queryClient,
+        // cast: persist-client traz sua própria cópia do query-core,
+        // mas em runtime a interface é idêntica.
+        queryClient: queryClient as unknown as Parameters<typeof persistQueryClient>[0]["queryClient"],
         persister,
         maxAge: 1000 * 60 * 60 * 24, // 24h
         buster: "v1",
