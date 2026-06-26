@@ -662,7 +662,7 @@ export function CaseDetail({
           </div>
         </div>
         <div className="flex gap-2">
-          {status !== "encerrado" && (
+          {!editing && status !== "encerrado" && (
             <Button
               variant="outline"
               className="gap-2"
@@ -672,7 +672,44 @@ export function CaseDetail({
               <CheckCircle className="w-4 h-4" /> Encerrar
             </Button>
           )}
-          {canDelete && (
+          {!editing && canEdit && (
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => {
+                if (ficha) setDraft(ficha);
+                setEditing(true);
+              }}
+            >
+              <Pencil className="w-4 h-4" /> Editar
+            </Button>
+          )}
+          {editing && (
+            <>
+              <Button
+                variant="default"
+                className="gap-2"
+                onClick={handleSave}
+                disabled={saveMutation.isPending}
+              >
+                {saveMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}{" "}
+                Salvar
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={handleCancel}
+                disabled={saveMutation.isPending}
+              >
+                <X className="w-4 h-4" /> Cancelar
+              </Button>
+            </>
+          )}
+          {!editing && canDelete && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
@@ -699,6 +736,24 @@ export function CaseDetail({
             </AlertDialog>
           )}
         </div>
+      </div>
+
+      {editing && (
+        <SectionCard title="Identificação">
+          <>
+            <EditField
+              fieldKey="nome_paciente"
+              value={draft.nome_paciente}
+              onChange={(v) => setDraftField("nome_paciente", v)}
+            />
+            <EditField
+              fieldKey="status"
+              value={draft.status}
+              onChange={(v) => setDraftField("status", v)}
+            />
+          </>
+        </SectionCard>
+      )}
       </div>
 
       {SECTIONS.map((section) => {
