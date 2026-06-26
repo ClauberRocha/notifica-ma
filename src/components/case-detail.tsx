@@ -610,14 +610,14 @@ export function CaseDetail({
 
   const allKeys = Object.keys(ficha).filter((k) => !SKIP_KEYS.has(k));
 
-  const jsonGroups: Array<{ title: string; obj: AnyObj }> = [];
+  const jsonGroups: Array<{ key: string; title: string; obj: AnyObj }> = [];
   const flatKeys: string[] = [];
 
   for (const k of allKeys) {
     if (k === "observacoes_adicionais") continue;
     const v = ficha[k];
     if (JSON_SECTIONS[k] && v && typeof v === "object") {
-      jsonGroups.push({ title: JSON_SECTIONS[k], obj: v as AnyObj });
+      jsonGroups.push({ key: k, title: JSON_SECTIONS[k], obj: v as AnyObj });
     } else {
       flatKeys.push(k);
     }
