@@ -840,12 +840,11 @@ function PainelPage() {
 
   const handleTabChange = (newTab: string) => {
     navigate({
-      search: (prev) => ({
-        ...prev,
-        tab: newTab as any,
-      }),
+      to: "/painel",
+      search: { tab: newTab as PainelSearch["tab"] },
     });
   };
+
 
   // CSV Export helper
   const handleExportCSV = () => {
