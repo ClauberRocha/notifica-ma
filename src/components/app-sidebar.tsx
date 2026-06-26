@@ -95,7 +95,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const search = useRouterState({ select: (s) => s.location.search as Record<string, unknown> });
-  const { user, signOut, role, can } = useAuth();
+  const { user, signOut, role, can, loading } = useAuth();
 
   const isActive = (url: string) => {
     const [path, query] = url.split("?");
@@ -156,8 +156,9 @@ export function AppSidebar() {
       <SidebarContent className="px-2 py-3 space-y-4">
         {groups.map((group) => {
           const visibleGroupItems = group.items.filter(
-            (it) => !it.permission || can(it.permission)
+            (it) => !it.permission || loading || can(it.permission)
           );
+
 
           if (visibleGroupItems.length === 0) return null;
 
