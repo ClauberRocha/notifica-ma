@@ -216,11 +216,6 @@ function PainelPage() {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [heatmapMode, setHeatmapMode] = useState(false);
   const [mapMetric, setMapMetric] = useState<"notificados" | "confirmados">("confirmados");
-  const [darkMode, setDarkMode] = useState(() =>
-    typeof document !== "undefined"
-      ? document.documentElement.classList.contains("dark")
-      : true
-  );
 
   // Chat AI State
   const [chatMessages, setChatMessages] = useState<Array<{ sender: "user" | "ai"; text: string }>>([
@@ -236,11 +231,6 @@ function PainelPage() {
   const [alertThreshold, setAlertThreshold] = useState("20");
   const [enableEmails, setEnableEmails] = useState(true);
 
-  const toggleDark = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    document.documentElement.classList.toggle("dark", next);
-  };
 
   const queries = AGRAVOS.map((a) =>
     useQuery({
