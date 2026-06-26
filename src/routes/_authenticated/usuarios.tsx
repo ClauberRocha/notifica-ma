@@ -57,18 +57,13 @@ import { createUser, updateUser, deleteUser, resendInvite } from "@/lib/users.fu
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuários" }] }),
-  beforeLoad: async () => {
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) throw redirect({ to: "/auth" });
-    const { data: rows } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", auth.user.id);
-    const allowed = !!rows?.some(
-      (r) => r.role === "admin" || r.role === "gestor",
-    );
-    if (!allowed) throw redirect({ to: "/" });
+  beforeLoad: ({ context }) => {
+    const role = (context as { role?: string }).role;
+    if (role !== "admin" && role !== "gestor") {
+      throw redirect({ to: "/" });
+    }
   },
+
   component: UsuariosPage,
 });
 
