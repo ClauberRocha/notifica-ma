@@ -24,8 +24,6 @@ import {
   Users,
   XCircle,
   Heart,
-  Moon,
-  Sun,
   Skull,
   MapPin,
   TrendingUp,
