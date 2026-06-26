@@ -61,6 +61,9 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     "users.create",
     "users.edit",
     "users.deactivate",
+    "fichas.view",
+    "fichas.create",
+    "fichas.edit",
     "reports.view",
   ],
 
