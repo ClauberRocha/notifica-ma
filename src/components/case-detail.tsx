@@ -1,12 +1,30 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Children, type ReactNode } from "react";
+import { Children, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Trash2, Loader2, CheckCircle, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ArrowLeft,
+  Trash2,
+  Loader2,
+  CheckCircle,
+  FileText,
+  Pencil,
+  Save,
+  X,
+} from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
 import { toast } from "sonner";
