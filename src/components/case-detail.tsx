@@ -1,12 +1,30 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Children, type ReactNode } from "react";
+import { Children, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Trash2, Loader2, CheckCircle, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ArrowLeft,
+  Trash2,
+  Loader2,
+  CheckCircle,
+  FileText,
+  Pencil,
+  Save,
+  X,
+} from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { format, differenceInDays } from "date-fns";
 import { toast } from "sonner";
@@ -376,6 +394,70 @@ function renderField(key: string, value: unknown) {
   return <InfoItem key={key} label={label} value={lbl(value)} />;
 }
 
+const BOOL_FIELDS = new Set(["doenca_relacionada_trabalho"]);
+
+function EditField({
+  fieldKey,
+  value,
+  onChange,
+}: {
+  fieldKey: string;
+  value: unknown;
+  onChange: (v: unknown) => void;
+}) {
+  const label = humanizeLabel(fieldKey);
+  const isDate = isDateField(fieldKey);
+  const isBool = typeof value === "boolean" || BOOL_FIELDS.has(fieldKey);
+  const longText = fieldKey.startsWith("observ") || fieldKey.includes("descricao");
+  const str =
+    value === null || value === undefined
+      ? ""
+      : typeof value === "object"
+        ? JSON.stringify(value)
+        : String(value);
+
+  return (
+    <div>
+      <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mb-1">
+        {label}
+      </p>
+      {isBool ? (
+        <Select
+          value={value === true ? "true" : value === false ? "false" : ""}
+          onValueChange={(v) => onChange(v === "" ? null : v === "true")}
+        >
+          <SelectTrigger className="h-9">
+            <SelectValue placeholder="—" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="true">Sim</SelectItem>
+            <SelectItem value="false">Não</SelectItem>
+          </SelectContent>
+        </Select>
+      ) : isDate ? (
+        <Input
+          type="date"
+          value={str.slice(0, 10)}
+          onChange={(e) => onChange(e.target.value || null)}
+          className="h-9"
+        />
+      ) : longText ? (
+        <Textarea
+          value={str}
+          onChange={(e) => onChange(e.target.value)}
+          rows={3}
+        />
+      ) : (
+        <Input
+          value={str}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-9"
+        />
+      )}
+    </div>
+  );
+}
+
 export interface CaseDetailProps {
   tableName: TableName;
   agravo: string;
@@ -397,6 +479,10 @@ export function CaseDetail({
   const queryClient = useQueryClient();
   const { can } = useAuth();
   const canDelete = can("fichas.delete");
+  const canEdit = can("fichas.edit");
+
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<AnyObj>({});
 
   const queryKey = [agravo, "case", id];
   const listKey = [agravo, "cases"];
@@ -449,6 +535,57 @@ export function CaseDetail({
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const saveMutation = useMutation({
+    mutationFn: async (payload: AnyObj) => {
+      const { error } = await supabase
+        .from(tableName as never)
+        .update(payload as never)
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: listKey });
+      toast.success("Ficha atualizada com sucesso.");
+      setEditing(false);
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  useEffect(() => {
+    if (!editing && ficha) setDraft(ficha);
+  }, [ficha, editing]);
+
+  const setDraftField = (key: string, value: unknown) =>
+    setDraft((d) => ({ ...d, [key]: value }));
+
+  const setDraftJsonField = (group: string, key: string, value: unknown) =>
+    setDraft((d) => ({
+      ...d,
+      [group]: { ...(d[group] as AnyObj | undefined), [key]: value },
+    }));
+
+  const handleSave = () => {
+    const READONLY = new Set([
+      "id",
+      "user_id",
+      "created_at",
+      "updated_at",
+    ]);
+    const payload: AnyObj = {};
+    for (const k of Object.keys(draft)) {
+      if (READONLY.has(k)) continue;
+      payload[k] = draft[k];
+    }
+    saveMutation.mutate(payload);
+  };
+
+  const handleCancel = () => {
+    if (ficha) setDraft(ficha);
+    setEditing(false);
+  };
+
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -473,14 +610,14 @@ export function CaseDetail({
 
   const allKeys = Object.keys(ficha).filter((k) => !SKIP_KEYS.has(k));
 
-  const jsonGroups: Array<{ title: string; obj: AnyObj }> = [];
+  const jsonGroups: Array<{ key: string; title: string; obj: AnyObj }> = [];
   const flatKeys: string[] = [];
 
   for (const k of allKeys) {
     if (k === "observacoes_adicionais") continue;
     const v = ficha[k];
     if (JSON_SECTIONS[k] && v && typeof v === "object") {
-      jsonGroups.push({ title: JSON_SECTIONS[k], obj: v as AnyObj });
+      jsonGroups.push({ key: k, title: JSON_SECTIONS[k], obj: v as AnyObj });
     } else {
       flatKeys.push(k);
     }
@@ -525,7 +662,7 @@ export function CaseDetail({
           </div>
         </div>
         <div className="flex gap-2">
-          {status !== "encerrado" && (
+          {!editing && status !== "encerrado" && (
             <Button
               variant="outline"
               className="gap-2"
@@ -535,7 +672,44 @@ export function CaseDetail({
               <CheckCircle className="w-4 h-4" /> Encerrar
             </Button>
           )}
-          {canDelete && (
+          {!editing && canEdit && (
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => {
+                if (ficha) setDraft(ficha);
+                setEditing(true);
+              }}
+            >
+              <Pencil className="w-4 h-4" /> Editar
+            </Button>
+          )}
+          {editing && (
+            <>
+              <Button
+                variant="default"
+                className="gap-2"
+                onClick={handleSave}
+                disabled={saveMutation.isPending}
+              >
+                {saveMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}{" "}
+                Salvar
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={handleCancel}
+                disabled={saveMutation.isPending}
+              >
+                <X className="w-4 h-4" /> Cancelar
+              </Button>
+            </>
+          )}
+          {!editing && canDelete && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
@@ -564,6 +738,25 @@ export function CaseDetail({
         </div>
       </div>
 
+      {editing && (
+        <SectionCard title="Identificação">
+          <>
+            <EditField
+              fieldKey="nome_paciente"
+              value={draft.nome_paciente}
+              onChange={(v) => setDraftField("nome_paciente", v)}
+            />
+            <EditField
+              fieldKey="status"
+              value={draft.status}
+              onChange={(v) => setDraftField("status", v)}
+            />
+          </>
+        </SectionCard>
+      )}
+
+
+
       {SECTIONS.map((section) => {
         const keys = flatKeys.filter((k) => section.match(k));
         if (keys.length === 0) return null;
@@ -575,13 +768,25 @@ export function CaseDetail({
               ) : null}
               {keys.map((k) => (
                 <div key={k} className="contents">
-                  {renderField(k, ficha[k])}
-                  {(k === "data_notificacao" || k === "data" || k === "data_preenchimento" || k === "data_diagnostico_notificacao") && (
-                    <InfoItem
-                      label="Sem.Epd."
-                      value={ficha[k] ? getSE(ficha[k] as string) : "—"}
+                  {editing ? (
+                    <EditField
+                      fieldKey={k}
+                      value={draft[k]}
+                      onChange={(v) => setDraftField(k, v)}
                     />
+                  ) : (
+                    renderField(k, ficha[k])
                   )}
+                  {!editing &&
+                    (k === "data_notificacao" ||
+                      k === "data" ||
+                      k === "data_preenchimento" ||
+                      k === "data_diagnostico_notificacao") && (
+                      <InfoItem
+                        label="Sem.Epd."
+                        value={ficha[k] ? getSE(ficha[k] as string) : "—"}
+                      />
+                    )}
                 </div>
               ))}
               {section.title === "Conclusão" && encerDias !== null ? (
@@ -600,24 +805,49 @@ export function CaseDetail({
         if (leftover.length === 0) return null;
         return (
           <SectionCard title="Outras Informações">
-            <>{leftover.map((k) => renderField(k, ficha[k]))}</>
+            <>
+              {leftover.map((k) =>
+                editing ? (
+                  <EditField
+                    key={k}
+                    fieldKey={k}
+                    value={draft[k]}
+                    onChange={(v) => setDraftField(k, v)}
+                  />
+                ) : (
+                  renderField(k, ficha[k])
+                ),
+              )}
+            </>
           </SectionCard>
         );
       })()}
 
-      {jsonGroups.map(({ title, obj }) => (
-        <SectionCard key={title} title={title}>
-          <>
-            {Object.entries(obj).map(([k, v]) =>
-              v === null || v === undefined || v === "" ? null : (
-                <InfoItem key={k} label={humanizeLabel(k)} value={lbl(v)} />
-              ),
-            )}
-          </>
-        </SectionCard>
-      ))}
+      {jsonGroups.map(({ key: groupKey, title, obj }) => {
+        const source = (editing ? (draft[groupKey] as AnyObj | undefined) : obj) ?? {};
+        const entries = editing ? Object.entries(obj) : Object.entries(source);
+        if (entries.length === 0) return null;
+        return (
+          <SectionCard key={title} title={title}>
+            <>
+              {entries.map(([k, v]) =>
+                editing ? (
+                  <EditField
+                    key={k}
+                    fieldKey={k}
+                    value={(source as AnyObj)[k] ?? v}
+                    onChange={(nv) => setDraftJsonField(groupKey, k, nv)}
+                  />
+                ) : v === null || v === undefined || v === "" ? null : (
+                  <InfoItem key={k} label={humanizeLabel(k)} value={lbl(v)} />
+                ),
+              )}
+            </>
+          </SectionCard>
+        );
+      })}
 
-      {obs ? (
+      {(editing || obs) && (
         <Card className="border-primary/10">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold text-primary">
@@ -625,10 +855,22 @@ export function CaseDetail({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{obs}</p>
+            {editing ? (
+              <Textarea
+                rows={4}
+                value={(draft.observacoes_adicionais as string) ?? ""}
+                onChange={(e) =>
+                  setDraftField("observacoes_adicionais", e.target.value)
+                }
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {obs}
+              </p>
+            )}
           </CardContent>
         </Card>
-      ) : null}
+      )}
     </div>
   );
 }

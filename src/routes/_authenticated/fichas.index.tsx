@@ -34,7 +34,6 @@ import {
   Bug,
   Syringe,
   Trash2,
-  Printer,
   ArrowLeft,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -164,28 +163,6 @@ async function fetchAll(): Promise<CaseRow[]> {
   return results.flat();
 }
 
-function printFicha(caso: CaseRow) {
-  const w = window.open("", "_blank");
-  if (!w) return;
-  const rows = Object.entries(caso)
-    .filter(([k]) => !k.startsWith("_") && k !== "id")
-    .map(([k, v]) => {
-      const label = k.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-      const val =
-        v === null || v === undefined
-          ? "—"
-          : typeof v === "object"
-            ? JSON.stringify(v)
-            : String(v);
-      return `<tr><td style="padding:6px 10px;font-weight:600;border:1px solid #ddd;width:35%">${label}</td><td style="padding:6px 10px;border:1px solid #ddd">${val}</td></tr>`;
-    })
-    .join("");
-  w.document.write(`<html><head><title>Ficha — ${caso.nome_paciente || caso.id}</title>
-<style>body{font-family:Arial,sans-serif;font-size:12px;padding:20px}table{border-collapse:collapse;width:100%}h2{text-align:center;margin-bottom:16px}</style></head>
-<body><h2>Ficha de Investigação — ${caso._label}</h2><table>${rows}</table>
-<script>window.onload=()=>window.print()</script></body></html>`);
-  w.document.close();
-}
 
 function FichasListPage() {
   const queryClient = useQueryClient();
@@ -467,16 +444,6 @@ function FichasListPage() {
                             onClick={() => navigate({ to: `/fichas/${c._slug}/${c.id}` })}
                           >
                             <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-blue-600"
-                            title="Imprimir"
-                            aria-label="Imprimir ficha"
-                            onClick={() => printFicha(c)}
-                          >
-                            <Printer className="w-4 h-4" />
                           </Button>
                           {canDelete && (
                             <AlertDialog>
