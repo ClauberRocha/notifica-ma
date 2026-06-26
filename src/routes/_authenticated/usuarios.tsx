@@ -226,7 +226,6 @@ function UsuariosPage() {
           email: form.email,
           cargo: form.cargo || null,
           role: form.role,
-          password: form.password || "",
         },
       }),
     onSuccess: (res) => {
@@ -235,7 +234,7 @@ function UsuariosPage() {
       setLastCreatedId(res.id);
       setConfirmInfo({
         title: "Usuário criado com sucesso!",
-        description: `O usuário foi pré-registrado no sistema.\n\nE-mail: ${res.email}\nSenha Temporária: ${createdUserPassword}\n\nCopie os dados acima e envie para o usuário. A troca de senha será solicitada obrigatoriamente no primeiro acesso.`,
+        description: `Um e-mail foi enviado para ${res.email} com um link seguro para que o usuário defina a própria senha de acesso.\n\nO link expira em 1 hora. Caso não chegue, use "Reenviar convite".`,
       });
       setConfirmOpen(true);
     },
