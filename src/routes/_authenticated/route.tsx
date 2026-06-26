@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2, LogOut, KeyRound } from "lucide-react";
+import { OfflineBanner } from "@/components/offline-banner";
 
 // In-memory cache of role per user id for the current tab session.
 // Avoids re-querying user_roles on every navigation.
