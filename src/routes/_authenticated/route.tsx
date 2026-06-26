@@ -190,7 +190,7 @@ function AuthenticatedLayout() {
         <AppSidebar />
         <div className="flex flex-1 flex-col">
           <header className="flex h-12 items-center gap-2 border-b border-border bg-card/50 px-3">
-            <SidebarTrigger aria-label="Abrir/fechar menu lateral" />
+            <SidebarTriggerWithTooltip />
             <span className="text-sm font-bold tracking-tight md:hidden">Notifica-MA Intelligence</span>
           </header>
           <OfflineBanner />
