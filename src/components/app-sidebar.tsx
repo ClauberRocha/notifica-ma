@@ -155,10 +155,13 @@ export function AppSidebar() {
 
       <SidebarContent className="px-2 py-3 space-y-4">
         {groups.map((group) => {
-          const visibleGroupItems = group.items.filter(
-            (it) => !it.permission || loading || can(it.permission)
-          );
-
+          const visibleGroupItems = group.items.filter((it) => {
+            // Esconde itens do painel/configurações para usuário comum
+            if (role === "user" && it.url.startsWith("/painel")) return false;
+            if (!it.permission) return true;
+            if (loading) return true;
+            return can(it.permission);
+          });
 
           if (visibleGroupItems.length === 0) return null;
 
