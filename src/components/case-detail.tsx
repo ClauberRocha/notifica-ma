@@ -62,7 +62,7 @@ const LABEL_MAP: Record<string, string> = {
   ignorado: "Ignorado",
   masculino: "Masculino",
   feminino: "Feminino",
-  em_investigacao: "Em investigação",
+  em_investigacao: "Em Aberto",
   encerrado: "Encerrado",
   confirmado: "Confirmado",
   descartado: "Descartado",
