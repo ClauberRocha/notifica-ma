@@ -28,6 +28,7 @@ import {
   Search,
   Plus,
   Eye,
+  Pencil,
   ChevronLeft,
   ChevronRight,
   Shield,
