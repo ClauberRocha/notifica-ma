@@ -535,6 +535,57 @@ export function CaseDetail({
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const saveMutation = useMutation({
+    mutationFn: async (payload: AnyObj) => {
+      const { error } = await supabase
+        .from(tableName as never)
+        .update(payload as never)
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: listKey });
+      toast.success("Ficha atualizada com sucesso.");
+      setEditing(false);
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  useEffect(() => {
+    if (!editing && ficha) setDraft(ficha);
+  }, [ficha, editing]);
+
+  const setDraftField = (key: string, value: unknown) =>
+    setDraft((d) => ({ ...d, [key]: value }));
+
+  const setDraftJsonField = (group: string, key: string, value: unknown) =>
+    setDraft((d) => ({
+      ...d,
+      [group]: { ...(d[group] as AnyObj | undefined), [key]: value },
+    }));
+
+  const handleSave = () => {
+    const READONLY = new Set([
+      "id",
+      "user_id",
+      "created_at",
+      "updated_at",
+    ]);
+    const payload: AnyObj = {};
+    for (const k of Object.keys(draft)) {
+      if (READONLY.has(k)) continue;
+      payload[k] = draft[k];
+    }
+    saveMutation.mutate(payload);
+  };
+
+  const handleCancel = () => {
+    if (ficha) setDraft(ficha);
+    setEditing(false);
+  };
+
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
