@@ -830,6 +830,12 @@ export function CaseDetail({
                   renderField(k, ficha[k])
                 ),
               )}
+              {!editing && !leftover.includes("data_encerramento") && (
+                <InfoItem
+                  label="Data do Encerramento"
+                  value={fmtDate(ficha.data_encerramento) ?? "—"}
+                />
+              )}
             </>
           </SectionCard>
         );
