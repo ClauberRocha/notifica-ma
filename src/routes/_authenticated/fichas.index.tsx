@@ -449,6 +449,23 @@ function FichasListPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
+                          {canEdit && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-primary"
+                              title="Editar ficha"
+                              aria-label="Editar ficha"
+                              onClick={() =>
+                                navigate({
+                                  to: `/fichas/${c._slug}/${c.id}`,
+                                  search: { edit: "1" } as never,
+                                })
+                              }
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                          )}
                           {canDelete && (
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
