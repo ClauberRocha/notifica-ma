@@ -24,8 +24,6 @@ import {
   Users,
   XCircle,
   Heart,
-  Moon,
-  Sun,
   Skull,
   MapPin,
   TrendingUp,
@@ -216,11 +214,6 @@ function PainelPage() {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [heatmapMode, setHeatmapMode] = useState(false);
   const [mapMetric, setMapMetric] = useState<"notificados" | "confirmados">("confirmados");
-  const [darkMode, setDarkMode] = useState(() =>
-    typeof document !== "undefined"
-      ? document.documentElement.classList.contains("dark")
-      : true
-  );
 
   // Chat AI State
   const [chatMessages, setChatMessages] = useState<Array<{ sender: "user" | "ai"; text: string }>>([
@@ -236,11 +229,6 @@ function PainelPage() {
   const [alertThreshold, setAlertThreshold] = useState("20");
   const [enableEmails, setEnableEmails] = useState(true);
 
-  const toggleDark = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    document.documentElement.classList.toggle("dark", next);
-  };
 
   const queries = AGRAVOS.map((a) =>
     useQuery({
@@ -988,15 +976,6 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           </p>
         </div>
         <div className="flex items-center gap-2 self-end sm:self-center">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={toggleDark}
-            title={darkMode ? "Tema Claro" : "Tema Escuro"}
-            className="h-9 w-9 bg-card border-border/80 text-foreground"
-          >
-            {darkMode ? <Sun className="w-4.5 h-4.5 text-yellow-400" /> : <Moon className="w-4.5 h-4.5 text-blue-400" />}
-          </Button>
           <Button asChild className="gap-2 h-9 tech-gradient text-white border-0 hover:opacity-90">
             <Link to="/nova-ficha">
               <FilePlus className="w-4 h-4" /> Cadastrar Ficha
