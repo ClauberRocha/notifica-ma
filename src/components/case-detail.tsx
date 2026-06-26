@@ -573,41 +573,28 @@ export function CaseDetail({
     if (!node) return;
     setExportingPdf(true);
     try {
-      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-        import("html2canvas-pro"),
-        import("jspdf"),
-      ]);
-      const canvas = await html2canvas(node, {
-        scale: 2,
-        backgroundColor: "#ffffff",
-        useCORS: true,
-      });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({ unit: "pt", format: "a4" });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
+      const { exportElementToPdf } = await import("@/lib/pdf-export");
       const nome = (ficha?.nome_paciente as string) || "ficha";
-      const safe = nome.replace(/[^a-z0-9]+/gi, "_").toLowerCase();
-      pdf.save(`${safe}_${id.slice(0, 8)}.pdf`);
-      toast.success("PDF exportado.");
-    } catch (e) {
-      toast.error(`Falha ao exportar PDF: ${(e as Error).message}`);
+      const result = await exportElementToPdf(node, {
+        filename: `${nome}_${id.slice(0, 8)}`,
+      });
+      if (result.ok) {
+        toast.success(`PDF exportado (${result.pages} pág, ${result.totalMs.toFixed(0)}ms).`);
+      } else {
+        const isColor = result.logs.some(
+          (l) => l.step === "fail" && l.meta?.isColorParseError,
+        );
+        toast.error(
+          isColor
+            ? "Falha ao exportar PDF: cor não suportada pelo renderizador. Atualize a página e tente novamente."
+            : `Falha ao exportar PDF: ${result.error}`,
+        );
+      }
     } finally {
       setExportingPdf(false);
     }
   };
+
 
   const setDraftField = (key: string, value: unknown) =>
     setDraft((d) => ({ ...d, [key]: value }));
