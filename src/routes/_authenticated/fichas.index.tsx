@@ -172,6 +172,7 @@ function FichasListPage() {
   const { can } = useAuth();
   const canDelete = can("fichas.delete");
   const canEdit = can("fichas.edit");
+  const canCreate = can("fichas.create");
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ["fichas-all"],
