@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, FilePlus } from "lucide-react";
+import { ArrowLeft, FilePlus, Lock } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/nova-ficha/")({
   head: () => ({ meta: [{ title: "Nova Ficha — Selecionar Agravo" }] }),
@@ -109,6 +110,8 @@ const agravos = [
 
 
 function SelectAgravoPage() {
+  const { can, loading } = useAuth();
+  const canCreate = can("fichas.create");
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <Link to="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
@@ -117,6 +120,15 @@ function SelectAgravoPage() {
       <h1 className="text-2xl font-bold mt-2">Nova notificação</h1>
       <p className="text-sm text-muted-foreground mb-6">Selecione o agravo a notificar.</p>
 
+      {!loading && !canCreate ? (
+        <div className="rounded-2xl border-2 border-dashed border-border bg-muted/30 p-8 text-center">
+          <Lock className="w-8 h-8 mx-auto text-muted-foreground mb-3" />
+          <p className="font-semibold text-foreground">Cadastro de fichas indisponível</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Seu perfil não possui permissão para cadastrar novas fichas.
+          </p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {agravos.map((a) => (
           <Link
@@ -134,6 +146,7 @@ function SelectAgravoPage() {
           </Link>
         ))}
       </div>
+      )}
     </div>
   );
 }

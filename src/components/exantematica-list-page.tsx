@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/use-auth";
 
 type ExantemaAgravo = "sarampo" | "rubeola";
 
@@ -45,6 +46,8 @@ export function ExantematicaListPage({ agravo }: { agravo: ExantemaAgravo }) {
   const [rows, setRows] = useState<CaseRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { can } = useAuth();
+  const canCreate = can("fichas.create");
 
   useEffect(() => {
     let active = true;
@@ -75,11 +78,13 @@ export function ExantematicaListPage({ agravo }: { agravo: ExantemaAgravo }) {
           </Link>
           <h1 className="text-2xl font-bold mt-2">Fichas — {title}</h1>
         </div>
-        <Button asChild>
-          <Link to={novaPath}>
-            <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
-          </Link>
-        </Button>
+        {canCreate && (
+          <Button asChild>
+            <Link to={novaPath}>
+              <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="bg-card border rounded-2xl overflow-hidden">
@@ -92,9 +97,11 @@ export function ExantematicaListPage({ agravo }: { agravo: ExantemaAgravo }) {
         ) : rows.length === 0 ? (
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
-            <Button asChild>
-              <Link to={novaPath}><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
-            </Button>
+            {canCreate && (
+              <Button asChild>
+                <Link to={novaPath}><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
+              </Button>
+            )}
           </div>
         ) : (
           <Table>

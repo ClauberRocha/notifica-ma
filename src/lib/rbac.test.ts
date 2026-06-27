@@ -89,6 +89,7 @@ describe("can — matriz de permissões críticas", () => {
         "logs.view",
         "system.settings",
         "fichas.delete",
+        "fichas.create",
       ],
     },
     {

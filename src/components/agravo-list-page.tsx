@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/use-auth";
 
 type CaseRow = {
   id: string;
@@ -41,6 +42,8 @@ export function AgravoListPage({
   const [rows, setRows] = useState<CaseRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { can } = useAuth();
+  const canCreate = can("fichas.create");
 
   useEffect(() => {
     let active = true;
@@ -69,11 +72,13 @@ export function AgravoListPage({
           </Link>
           <h1 className="text-2xl font-bold mt-2">{title}</h1>
         </div>
-        <Button asChild>
-          <Link to={novaFichaPath}>
-            <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
-          </Link>
-        </Button>
+        {canCreate && (
+          <Button asChild>
+            <Link to={novaFichaPath}>
+              <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="bg-card border rounded-2xl overflow-hidden">
@@ -86,11 +91,13 @@ export function AgravoListPage({
         ) : rows.length === 0 ? (
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
-            <Button asChild>
-              <Link to={novaFichaPath}>
-                <FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha
-              </Link>
-            </Button>
+            {canCreate && (
+              <Button asChild>
+                <Link to={novaFichaPath}>
+                  <FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha
+                </Link>
+              </Button>
+            )}
           </div>
         ) : (
           <Table>

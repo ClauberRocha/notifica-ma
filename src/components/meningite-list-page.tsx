@@ -67,6 +67,8 @@ export function MeningiteListPage({ agravo }: { agravo: MeningiteAgravo }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const { can } = useAuth();
+  const canCreate = can("fichas.create");
 
   useEffect(() => {
     let active = true;
@@ -99,12 +101,14 @@ export function MeningiteListPage({ agravo }: { agravo: MeningiteAgravo }) {
           <h1 className="text-2xl font-bold mt-2">Fichas — {title}</h1>
         </div>
         <div className="flex gap-2">
-          <MeningiteImporter onSuccess={() => setReloadKey((prev) => prev + 1)} />
-          <Button asChild>
-            <Link to={novaPath}>
-              <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
-            </Link>
-          </Button>
+          {canCreate && <MeningiteImporter onSuccess={() => setReloadKey((prev) => prev + 1)} />}
+          {canCreate && (
+            <Button asChild>
+              <Link to={novaPath}>
+                <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -118,9 +122,11 @@ export function MeningiteListPage({ agravo }: { agravo: MeningiteAgravo }) {
         ) : rows.length === 0 ? (
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
-            <Button asChild>
-              <Link to={novaPath}><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
-            </Button>
+            {canCreate && (
+              <Button asChild>
+                <Link to={novaPath}><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
+              </Button>
+            )}
           </div>
         ) : (
           <Table>
