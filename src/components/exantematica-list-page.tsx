@@ -97,9 +97,11 @@ export function ExantematicaListPage({ agravo }: { agravo: ExantemaAgravo }) {
         ) : rows.length === 0 ? (
           <div className="p-10 text-center">
             <p className="text-muted-foreground mb-4">Nenhuma ficha cadastrada ainda.</p>
-            <Button asChild>
-              <Link to={novaPath}><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
-            </Button>
+            {canCreate && (
+              <Button asChild>
+                <Link to={novaPath}><FilePlus className="w-4 h-4 mr-1" /> Cadastrar primeira ficha</Link>
+              </Button>
+            )}
           </div>
         ) : (
           <Table>
