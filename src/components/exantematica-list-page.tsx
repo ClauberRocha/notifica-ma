@@ -46,6 +46,8 @@ export function ExantematicaListPage({ agravo }: { agravo: ExantemaAgravo }) {
   const [rows, setRows] = useState<CaseRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { can } = useAuth();
+  const canCreate = can("fichas.create");
 
   useEffect(() => {
     let active = true;
