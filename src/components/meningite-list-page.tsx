@@ -67,6 +67,8 @@ export function MeningiteListPage({ agravo }: { agravo: MeningiteAgravo }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const { can } = useAuth();
+  const canCreate = can("fichas.create");
 
   useEffect(() => {
     let active = true;
