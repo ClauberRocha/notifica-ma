@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, FilePlus } from "lucide-react";
+import { ArrowLeft, FilePlus, Lock } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/nova-ficha/")({
   head: () => ({ meta: [{ title: "Nova Ficha — Selecionar Agravo" }] }),
