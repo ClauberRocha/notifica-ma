@@ -238,11 +238,13 @@ function FichasListPage() {
             {filtered.length} registro(s)
           </p>
         </div>
-        <Link to="/nova-ficha">
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" /> Nova Ficha
-          </Button>
-        </Link>
+        {canCreate && (
+          <Link to="/nova-ficha">
+            <Button className="gap-2">
+              <Plus className="w-4 h-4" /> Nova Ficha
+            </Button>
+          </Link>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row flex-wrap gap-3">
