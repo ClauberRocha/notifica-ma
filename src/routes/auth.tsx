@@ -199,7 +199,7 @@ function AuthPage() {
         <footer className="mt-6 text-center text-xs text-muted-foreground/70 space-y-0.5">
           <p>Desenvolvido por GERTEC/ConsulTI</p>
           <p>+55 (98) 98600-1270</p>
-          <p>v. 1.0.0</p>
+          <p>v. {import.meta.env.VITE_APP_VERSION ?? "1.0.0"}</p>
         </footer>
       </div>
     </div>
