@@ -78,11 +78,13 @@ export function ExantematicaListPage({ agravo }: { agravo: ExantemaAgravo }) {
           </Link>
           <h1 className="text-2xl font-bold mt-2">Fichas — {title}</h1>
         </div>
-        <Button asChild>
-          <Link to={novaPath}>
-            <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
-          </Link>
-        </Button>
+        {canCreate && (
+          <Button asChild>
+            <Link to={novaPath}>
+              <FilePlus className="w-4 h-4 mr-1" /> Nova ficha
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="bg-card border rounded-2xl overflow-hidden">
