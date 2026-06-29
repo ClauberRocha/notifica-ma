@@ -47,24 +47,6 @@ function Home() {
   return (
     <div className="min-h-[80vh] flex flex-col justify-center">
       <div className="max-w-2xl mx-auto w-full px-2 py-8 relative">
-        <div className="absolute right-2 top-2 flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            Escolha o Tema
-          </span>
-          <button
-            type="button"
-            onClick={toggleDark}
-            aria-label={darkMode ? "Ativar tema claro" : "Ativar tema escuro"}
-            title={darkMode ? "Tema Claro" : "Tema Escuro"}
-            className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-border/80 bg-card text-foreground hover:bg-muted transition-colors"
-          >
-            {darkMode ? (
-              <Sun className="w-4.5 h-4.5 text-yellow-400" />
-            ) : (
-              <Moon className="w-4.5 h-4.5 text-blue-500" />
-            )}
-          </button>
-        </div>
         <div className="mb-8 text-center">
           <img
             src="/logo-ses.png?v=2"
