@@ -31,24 +31,6 @@ function Home() {
   const firstName = (user?.full_name?.trim().split(/\s+/)[0]) || "Usuário";
   const greeting = getGreeting();
 
-  const [darkMode, setDarkMode] = useState(() =>
-    typeof document !== "undefined"
-      ? document.documentElement.classList.contains("dark")
-      : true,
-  );
-  useEffect(() => {
-    setDarkMode(document.documentElement.classList.contains("dark"));
-  }, []);
-  const toggleDark = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    document.documentElement.classList.toggle("dark", next);
-    try {
-      localStorage.setItem("theme", next ? "dark" : "light");
-    } catch {
-      /* ignore */
-    }
-  };
 
 
   const isShortcutDisabled = (path: string) => {
