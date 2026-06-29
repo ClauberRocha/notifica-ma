@@ -462,7 +462,7 @@ function PainelPage() {
         label: "Controlado",
         description: "Situação epidemiológica estável sem oscilações significativas na transmissão.",
         variant: "success",
-        class: "border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400",
+        class: "border-emerald-500/20 bg-emerald-500/5 text-emerald-600",
         dotClass: "bg-emerald-500",
       };
     }
@@ -480,7 +480,7 @@ function PainelPage() {
         label: "Atenção",
         description: `Tendência de alta (+${trendAnalysis.percent}%). É necessário acompanhamento diário nos municípios prioritários.`,
         variant: "warning",
-        class: "border-amber-500/20 bg-amber-500/5 text-amber-700 dark:text-amber-400",
+        class: "border-amber-500/20 bg-amber-500/5 text-amber-700",
         dotClass: "bg-amber-500",
       };
     }
@@ -488,7 +488,7 @@ function PainelPage() {
       label: "Controlado",
       description: `Situação epidemiológica sob controle com queda de -${trendAnalysis.percent}% em novos registros.`,
       variant: "success",
-      class: "border-emerald-500/20 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400",
+      class: "border-emerald-500/20 bg-emerald-500/5 text-emerald-600",
       dotClass: "bg-emerald-500",
     };
   }, [trendAnalysis, filtered, alertThreshold]);
@@ -1202,8 +1202,8 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                 <Card className="glass-card glass-card-hover border-border/50">
                   <CardContent className="p-4 flex flex-col justify-between h-28">
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Em Investigação</p>
-                    <p className="text-2xl font-extrabold text-amber-600 dark:text-amber-500">{emInvestigacao.length}</p>
-                    <p className="text-[10px] text-amber-600/80 dark:text-amber-500/80 font-medium">{pct(emInvestigacao.length, total)} pendentes</p>
+                    <p className="text-2xl font-extrabold text-amber-600">{emInvestigacao.length}</p>
+                    <p className="text-[10px] text-amber-600/80 font-medium">{pct(emInvestigacao.length, total)} pendentes</p>
                   </CardContent>
                 </Card>
 
@@ -1227,13 +1227,13 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   <CardContent className="p-4 flex flex-col justify-between h-28">
                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Tendência</p>
                     <div className="flex items-center gap-1.5">
-                      <p className={`text-2xl font-extrabold ${trendAnalysis.direction === "up" ? "text-destructive" : "text-emerald-600 dark:text-emerald-400"}`}>
+                      <p className={`text-2xl font-extrabold ${trendAnalysis.direction === "up" ? "text-destructive" : "text-emerald-600"}`}>
                         {trendAnalysis.direction === "up" ? "+" : "-"}{trendAnalysis.percent}%
                       </p>
                       {trendAnalysis.direction === "up" ? (
                         <TrendingUp className="w-4 h-4 text-destructive" />
                       ) : (
-                        <TrendingDown className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <TrendingDown className="w-4 h-4 text-emerald-600" />
                       )}
                     </div>
                     <p className="text-[10px] text-muted-foreground">Semanas epidemiológicas</p>

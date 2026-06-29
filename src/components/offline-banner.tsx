@@ -61,8 +61,8 @@ export function OfflineBanner() {
       className={
         "flex items-center justify-between gap-3 px-4 py-2 text-sm border-b " +
         (online
-          ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-800 dark:text-emerald-300"
-          : "bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-300")
+          ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-800"
+          : "bg-amber-500/10 border-amber-500/20 text-amber-800")
       }
     >
       <div className="flex items-center gap-2">
