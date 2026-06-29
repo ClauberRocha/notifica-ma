@@ -123,14 +123,10 @@
     transform: translateY(-2px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
   }
-  &:is(.dark *):hover {
-    background: rgba(20, 24, 35, 0.85);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-  }
 }
 
-/* Custom styles for Leaflet popups to support dark/light theme correctly */
+/* Custom styles for Leaflet popups */
+
 .leaflet-popup-content-wrapper {
   background-color: var(--background) !important;
   color: var(--foreground) !important;
