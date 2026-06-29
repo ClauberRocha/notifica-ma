@@ -130,7 +130,7 @@ export default function SmartMap({ filteredCases, heatmapMode, metric }: SmartMa
                     <span className="font-bold text-destructive text-right">{mun.confirmados}</span>
                     
                     <span className="text-muted-foreground">Em investigação:</span>
-                    <span className="font-bold text-yellow-600 dark:text-yellow-500 text-right">{mun.investigacao}</span>
+                    <span className="font-bold text-yellow-600 text-right">{mun.investigacao}</span>
                   </div>
                 </div>
               </Popup>
