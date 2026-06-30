@@ -106,22 +106,37 @@ function colClass(col?: ColSpan) {
 
 /** Cache de municípios IBGE por UF
  *  - Em memória (Map) para acesso síncrono e instantâneo ao alternar UFs.
- *  - Persistido em sessionStorage para sobreviver a navegações dentro da sessão.
+ *  - Persistido em sessionStorage com TTL (entradas expiradas são removidas).
+ *  - Limpeza automática de entradas antigas no boot do módulo.
  *  - Dedup de requisições em voo: chamadas simultâneas para a mesma UF
  *    compartilham a mesma Promise, evitando hits duplicados ao IBGE.
+ *  - Prefetch das UFs mais prováveis ao abrir o combobox (MA + vizinhas).
  */
 type Municipio = { id: number; nome: string };
 const MUNI_CACHE_PREFIX = "ibge-muni:v1:";
+const MUNI_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 dias
 const muniCache = new Map<string, Municipio[]>();
 const muniInflight = new Map<string, Promise<Municipio[]>>();
+
+type MuniCacheEntry = { ts: number; data: Municipio[] };
 
 function readMuniSession(uf: string): Municipio[] | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.sessionStorage.getItem(MUNI_CACHE_PREFIX + uf);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as Municipio[];
-    return Array.isArray(parsed) ? parsed : null;
+    const parsed = JSON.parse(raw) as MuniCacheEntry | Municipio[];
+    // back-compat: formato antigo era array puro
+    if (Array.isArray(parsed)) {
+      window.sessionStorage.removeItem(MUNI_CACHE_PREFIX + uf);
+      return null;
+    }
+    if (!parsed || typeof parsed.ts !== "number" || !Array.isArray(parsed.data)) return null;
+    if (Date.now() - parsed.ts > MUNI_CACHE_TTL_MS) {
+      window.sessionStorage.removeItem(MUNI_CACHE_PREFIX + uf);
+      return null;
+    }
+    return parsed.data;
   } catch {
     return null;
   }
@@ -129,10 +144,48 @@ function readMuniSession(uf: string): Municipio[] | null {
 function writeMuniSession(uf: string, data: Municipio[]) {
   if (typeof window === "undefined") return;
   try {
-    window.sessionStorage.setItem(MUNI_CACHE_PREFIX + uf, JSON.stringify(data));
+    const entry: MuniCacheEntry = { ts: Date.now(), data };
+    window.sessionStorage.setItem(MUNI_CACHE_PREFIX + uf, JSON.stringify(entry));
   } catch {
     /* quota / privado — ignora */
   }
+}
+
+/** Remove entradas expiradas (ou em formato antigo) do sessionStorage. */
+function cleanupExpiredMuniSession() {
+  if (typeof window === "undefined") return;
+  try {
+    const now = Date.now();
+    const toRemove: string[] = [];
+    for (let i = 0; i < window.sessionStorage.length; i++) {
+      const key = window.sessionStorage.key(i);
+      if (!key || !key.startsWith(MUNI_CACHE_PREFIX)) continue;
+      try {
+        const raw = window.sessionStorage.getItem(key);
+        if (!raw) {
+          toRemove.push(key);
+          continue;
+        }
+        const parsed = JSON.parse(raw) as MuniCacheEntry | Municipio[];
+        if (Array.isArray(parsed)) {
+          toRemove.push(key);
+          continue;
+        }
+        if (!parsed || typeof parsed.ts !== "number" || now - parsed.ts > MUNI_CACHE_TTL_MS) {
+          toRemove.push(key);
+        }
+      } catch {
+        toRemove.push(key);
+      }
+    }
+    toRemove.forEach((k) => window.sessionStorage.removeItem(k));
+  } catch {
+    /* ignora */
+  }
+}
+
+if (typeof window !== "undefined") {
+  cleanupExpiredMuniSession();
 }
 
 async function fetchMunicipios(uf: string): Promise<Municipio[]> {
@@ -168,6 +221,28 @@ async function fetchMunicipios(uf: string): Promise<Municipio[]> {
   muniInflight.set(uf, promise);
   return promise;
 }
+
+/** UFs mais prováveis para prefetch — MA (projeto Notifica-MA) + vizinhas. */
+const PREFETCH_UFS = ["MA", "PI", "TO", "PA", "CE"];
+let muniPrefetchStarted = false;
+function prefetchLikelyMunicipios() {
+  if (muniPrefetchStarted) return;
+  muniPrefetchStarted = true;
+  // dispara em background, sem await; respeita cache/dedup existentes
+  const run = () => {
+    PREFETCH_UFS.forEach((uf) => {
+      if (!muniCache.has(uf) && !muniInflight.has(uf)) {
+        void fetchMunicipios(uf);
+      }
+    });
+  };
+  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+    (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(run);
+  } else {
+    setTimeout(run, 0);
+  }
+}
+
 
 /* ============== UF Select ============== */
 
@@ -232,6 +307,12 @@ export function MunicipioCombobox({
   useEffect(() => {
     setQuery(value);
   }, [value]);
+
+  // Prefetch das UFs mais prováveis assim que o combobox é montado.
+  useEffect(() => {
+    prefetchLikelyMunicipios();
+  }, []);
+
 
   useEffect(() => {
     let cancelled = false;
