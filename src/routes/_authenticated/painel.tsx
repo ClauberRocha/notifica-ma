@@ -706,29 +706,8 @@ function PainelPage() {
       });
 
       return Object.entries(counts);
-    } else {
-      const criterioLabels: Record<string, string> = {
-        cultura: "Cultura",
-        cie: "CIE",
-        ag_latex: "Ag Látex",
-        clinico: "Clínico",
-        bacterioscopia: "Bacterioscopia",
-        quimiocitologico_liquor: "Quimio./Líquor",
-        clinico_epidemiologico: "Clínico-Epidem.",
-        isolamento_viral: "Isol. Viral",
-        pcr: "PCR",
-        outros: "Outros",
-        laboratorial: "Laboratorial",
-      };
-      const criterioCounts: Record<string, number> = {};
-      confirmados.forEach((c) => {
-        const crit = String(c.criterio_confirmacao || "não informado");
-        const label = criterioLabels[crit] || crit;
-        criterioCounts[label] = (criterioCounts[label] || 0) + 1;
-      });
-      return Object.entries(criterioCounts).sort((a, b) => b[1] - a[1]);
     }
-  }, [filtered, confirmados, selectedAgravo]);
+  }, [filtered, selectedAgravo]);
 
   // Faixa Etária counts
   const faixaCounts: Record<string, number> = {
