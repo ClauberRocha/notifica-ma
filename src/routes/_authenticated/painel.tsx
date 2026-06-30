@@ -664,7 +664,8 @@ function PainelPage() {
 
   // Dynamic Confirmation Criteria - strictly mapped
   const criterioData = useMemo(() => {
-    if (selectedAgravo === "meningite") {
+    {
+
       const counts: Record<string, number> = {
         "QUIMIOCITOLOGICO": 0,
         "PCR": 0,
