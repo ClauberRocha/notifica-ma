@@ -826,6 +826,28 @@ export function renderSmartField(field: FieldLike, form: FormState, setForm: Set
     );
   }
 
+  if (name === "nome_hospital") {
+    return (
+      <HospitalAutocomplete
+        key={name}
+        label={f.label}
+        value={form[name] ?? ""}
+        codigoIbgeMunicipio={form.codigo_ibge_hospital ?? ""}
+        uf={form.uf_hospital ?? ""}
+        required={f.required}
+        col={f.col}
+        onChange={(v) => setForm((prev) => ({ ...prev, [name]: v.toUpperCase() }))}
+        onSelect={(nome, codigo) =>
+          setForm((prev) => ({ ...prev, nome_hospital: nome, codigo_hospital: codigo }))
+        }
+      />
+    );
+  }
+
+  if (name === "codigo_hospital") {
+    return <ReadOnlyField key={name} label={f.label} value={form[name] ?? ""} col={f.col} placeholder="Preenchido pelo hospital" />;
+  }
+
   if (name === "cep") {
     return (
       <CepInput key={name} label={f.label} value={form[name] ?? ""} required={f.required} col={f.col}
