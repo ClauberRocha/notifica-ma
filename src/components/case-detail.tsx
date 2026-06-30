@@ -612,6 +612,24 @@ export function CaseDetail({
     if (!editing && ficha) setDraft(ficha);
   }, [ficha, editing]);
 
+  useEffect(() => {
+    if (!ficha) return;
+    const existing = ficha.codigo_ibge_residencia as string | undefined;
+    const muni = ficha.municipio_residencia as string | undefined;
+    if (existing || !muni) {
+      setIbgeResLookup(null);
+      return;
+    }
+    const uf = (ficha.uf_residencia as string | undefined) || "MA";
+    let cancelled = false;
+    fetchIbgeForMunicipio(uf, muni).then((code) => {
+      if (!cancelled) setIbgeResLookup(code);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [ficha]);
+
   // Auto-enter edit mode when navigated with ?edit=1
   useEffect(() => {
     if (typeof window === "undefined") return;
