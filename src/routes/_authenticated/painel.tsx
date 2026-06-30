@@ -288,15 +288,14 @@ function PainelPage() {
             age--;
           }
           if (selectedFaixaEtaria === "<1") return age < 1;
-          if (selectedFaixaEtaria === "1-4") return age >= 1 && age <= 4;
-          if (selectedFaixaEtaria === "5-9") return age >= 5 && age <= 9;
-          if (selectedFaixaEtaria === "10-14") return age >= 10 && age <= 14;
-          if (selectedFaixaEtaria === "15-19") return age >= 15 && age <= 19;
-          if (selectedFaixaEtaria === "20-29") return age >= 20 && age <= 29;
-          if (selectedFaixaEtaria === "30-39") return age >= 30 && age <= 39;
-          if (selectedFaixaEtaria === "40-49") return age >= 40 && age <= 49;
-          if (selectedFaixaEtaria === "50-59") return age >= 50 && age <= 59;
-          if (selectedFaixaEtaria === "60+") return age >= 60;
+          if (selectedFaixaEtaria === "1-10") return age >= 1 && age <= 10;
+          if (selectedFaixaEtaria === "11-20") return age >= 11 && age <= 20;
+          if (selectedFaixaEtaria === "21-30") return age >= 21 && age <= 30;
+          if (selectedFaixaEtaria === "31-40") return age >= 31 && age <= 40;
+          if (selectedFaixaEtaria === "41-50") return age >= 41 && age <= 50;
+          if (selectedFaixaEtaria === "51-60") return age >= 51 && age <= 60;
+          if (selectedFaixaEtaria === "61-70") return age >= 61 && age <= 70;
+          if (selectedFaixaEtaria === "70+") return age > 70;
         } catch {
           return false;
         }
@@ -667,18 +666,15 @@ function PainelPage() {
   const criterioData = useMemo(() => {
     if (selectedAgravo === "meningite") {
       const counts: Record<string, number> = {
-        "AGLUT. P/ LATEX": 0,
-        "BACTERIOSCOPIA": 0,
-        "CIE": 0,
+        "QUIMIOCITOLOGICO": 0,
+        "PCR": 0,
         "CLINICO": 0,
-        "CLÍNICO EPIDEMIOLÓGICO": 0,
         "CULTURA": 0,
-        "EM INVESTIGAÇÃO": 0,
-        "ISOLAMENTO VIRAL": 0,
         "NECROPSIA": 0,
         "OUTROS": 0,
-        "PCR": 0,
-        "QUIMIOCITOLOGICO": 0,
+        "EM INVESTIGAÇÃO": 0,
+        "ISOLAMENTO VIRAL": 0,
+        "BACTERIOSCOPIA": 0,
       };
 
       filtered.forEach((c) => {
@@ -689,16 +685,10 @@ function PainelPage() {
 
         const crit = String(c.criterio_confirmacao || "").toLowerCase().trim();
 
-        if (crit === "ag_latex" || crit === "aglut_latex" || crit === "latex" || crit.includes("latex")) {
-          counts["AGLUT. P/ LATEX"]++;
-        } else if (crit === "bacterioscopia" || crit.includes("bacterio")) {
+        if (crit === "bacterioscopia" || crit.includes("bacterio")) {
           counts["BACTERIOSCOPIA"]++;
-        } else if (crit === "cie") {
-          counts["CIE"]++;
-        } else if (crit === "clinico" && !crit.includes("epidemio")) {
+        } else if (crit === "clinico" || crit === "clinico_epidemiologico" || crit.includes("clinico") || crit.includes("epidemio")) {
           counts["CLINICO"]++;
-        } else if (crit === "clinico_epidemiologico" || crit.includes("epidemio")) {
-          counts["CLÍNICO EPIDEMIOLÓGICO"]++;
         } else if (crit === "cultura") {
           counts["CULTURA"]++;
         } else if (crit === "isolamento_viral" || crit.includes("viral")) {
@@ -714,7 +704,7 @@ function PainelPage() {
         }
       });
 
-      return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      return Object.entries(counts);
     } else {
       const criterioLabels: Record<string, string> = {
         cultura: "Cultura",
@@ -741,16 +731,15 @@ function PainelPage() {
 
   // Faixa Etária counts
   const faixaCounts: Record<string, number> = {
-    "<1 ano": 0,
-    "1-4": 0,
-    "5-9": 0,
-    "10-14": 0,
-    "15-19": 0,
-    "20-29": 0,
-    "30-39": 0,
-    "40-49": 0,
-    "50-59": 0,
-    "60+": 0,
+    "< 1 ano": 0,
+    "1 a 10 anos": 0,
+    "11 a 20 anos": 0,
+    "21 a 30 anos": 0,
+    "31 a 40 anos": 0,
+    "41 a 50 anos": 0,
+    "51 a 60 anos": 0,
+    "61 a 70 anos": 0,
+    "Acima de 70 anos": 0,
   };
   confirmados.forEach((c) => {
     const nasc = c.data_nascimento as string | undefined;
@@ -760,16 +749,15 @@ function PainelPage() {
       (new Date(notif).getTime() - new Date(nasc).getTime()) /
         (365.25 * 24 * 3600 * 1000)
     );
-    if (idade < 1) faixaCounts["<1 ano"]++;
-    else if (idade <= 4) faixaCounts["1-4"]++;
-    else if (idade <= 9) faixaCounts["5-9"]++;
-    else if (idade <= 14) faixaCounts["10-14"]++;
-    else if (idade <= 19) faixaCounts["15-19"]++;
-    else if (idade <= 29) faixaCounts["20-29"]++;
-    else if (idade <= 39) faixaCounts["30-39"]++;
-    else if (idade <= 49) faixaCounts["40-49"]++;
-    else if (idade <= 59) faixaCounts["50-59"]++;
-    else faixaCounts["60+"]++;
+    if (idade < 1) faixaCounts["< 1 ano"]++;
+    else if (idade <= 10) faixaCounts["1 a 10 anos"]++;
+    else if (idade <= 20) faixaCounts["11 a 20 anos"]++;
+    else if (idade <= 30) faixaCounts["21 a 30 anos"]++;
+    else if (idade <= 40) faixaCounts["31 a 40 anos"]++;
+    else if (idade <= 50) faixaCounts["41 a 50 anos"]++;
+    else if (idade <= 60) faixaCounts["51 a 60 anos"]++;
+    else if (idade <= 70) faixaCounts["61 a 70 anos"]++;
+    else faixaCounts["Acima de 70 anos"]++;
   });
   const faixaData = Object.entries(faixaCounts).map(([name, value]) => ({
     name,
@@ -1077,16 +1065,15 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas as faixas</SelectItem>
-                    <SelectItem value="<1">&lt;1 ano</SelectItem>
-                    <SelectItem value="1-4">1-4 anos</SelectItem>
-                    <SelectItem value="5-9">5-9 anos</SelectItem>
-                    <SelectItem value="10-14">10-14 anos</SelectItem>
-                    <SelectItem value="15-19">15-19 anos</SelectItem>
-                    <SelectItem value="20-29">20-29 anos</SelectItem>
-                    <SelectItem value="30-39">30-39 anos</SelectItem>
-                    <SelectItem value="40-49">40-49 anos</SelectItem>
-                    <SelectItem value="50-59">50-59 anos</SelectItem>
-                    <SelectItem value="60+">60+ anos</SelectItem>
+                    <SelectItem value="<1">&lt; 1 ano</SelectItem>
+                    <SelectItem value="1-10">1 a 10 anos</SelectItem>
+                    <SelectItem value="11-20">11 a 20 anos</SelectItem>
+                    <SelectItem value="21-30">21 a 30 anos</SelectItem>
+                    <SelectItem value="31-40">31 a 40 anos</SelectItem>
+                    <SelectItem value="41-50">41 a 50 anos</SelectItem>
+                    <SelectItem value="51-60">51 a 60 anos</SelectItem>
+                    <SelectItem value="61-70">61 a 70 anos</SelectItem>
+                    <SelectItem value="70+">Acima de 70 anos</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
