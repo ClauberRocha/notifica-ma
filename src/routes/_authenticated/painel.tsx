@@ -731,16 +731,15 @@ function PainelPage() {
 
   // Faixa Etária counts
   const faixaCounts: Record<string, number> = {
-    "<1 ano": 0,
-    "1-4": 0,
-    "5-9": 0,
-    "10-14": 0,
-    "15-19": 0,
-    "20-29": 0,
-    "30-39": 0,
-    "40-49": 0,
-    "50-59": 0,
-    "60+": 0,
+    "< 1 ano": 0,
+    "1 a 10 anos": 0,
+    "11 a 20 anos": 0,
+    "21 a 30 anos": 0,
+    "31 a 40 anos": 0,
+    "41 a 50 anos": 0,
+    "51 a 60 anos": 0,
+    "61 a 70 anos": 0,
+    "Acima de 70 anos": 0,
   };
   confirmados.forEach((c) => {
     const nasc = c.data_nascimento as string | undefined;
@@ -750,16 +749,15 @@ function PainelPage() {
       (new Date(notif).getTime() - new Date(nasc).getTime()) /
         (365.25 * 24 * 3600 * 1000)
     );
-    if (idade < 1) faixaCounts["<1 ano"]++;
-    else if (idade <= 4) faixaCounts["1-4"]++;
-    else if (idade <= 9) faixaCounts["5-9"]++;
-    else if (idade <= 14) faixaCounts["10-14"]++;
-    else if (idade <= 19) faixaCounts["15-19"]++;
-    else if (idade <= 29) faixaCounts["20-29"]++;
-    else if (idade <= 39) faixaCounts["30-39"]++;
-    else if (idade <= 49) faixaCounts["40-49"]++;
-    else if (idade <= 59) faixaCounts["50-59"]++;
-    else faixaCounts["60+"]++;
+    if (idade < 1) faixaCounts["< 1 ano"]++;
+    else if (idade <= 10) faixaCounts["1 a 10 anos"]++;
+    else if (idade <= 20) faixaCounts["11 a 20 anos"]++;
+    else if (idade <= 30) faixaCounts["21 a 30 anos"]++;
+    else if (idade <= 40) faixaCounts["31 a 40 anos"]++;
+    else if (idade <= 50) faixaCounts["41 a 50 anos"]++;
+    else if (idade <= 60) faixaCounts["51 a 60 anos"]++;
+    else if (idade <= 70) faixaCounts["61 a 70 anos"]++;
+    else faixaCounts["Acima de 70 anos"]++;
   });
   const faixaData = Object.entries(faixaCounts).map(([name, value]) => ({
     name,
