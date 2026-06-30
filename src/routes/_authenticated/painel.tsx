@@ -1338,7 +1338,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                 <Card className="glass-card border-border/50">
                   <CardHeader>
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">
-                      Critérios de Confirmação {selectedAgravo === "meningite" && "(Meningite)"}
+                      Critérios de Confirmação
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 max-h-[250px] overflow-y-auto pr-1">
