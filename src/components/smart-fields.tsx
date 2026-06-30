@@ -774,6 +774,42 @@ function SemanaEpdField({ name, label, col, form, setForm }: { name: string; lab
   return <ReadOnlyField label={label} value={valueStr} col={col} placeholder="Calculada pela data" />;
 }
 
+function DataNotificacaoTrio({ name, label, required, form, setForm }: { name: string; label: string; required?: boolean; form: FormState; setForm: SetForm }) {
+  const value = form[name] ?? "";
+  useEffect(() => {
+    if (!value) {
+      const t = todayIso();
+      setForm((p) => (p[name] ? p : { ...p, [name]: t }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name]);
+  const ano = value && /^\d{4}/.test(value) ? value.slice(0, 4) : "";
+  const se = useMemo(() => getSemanaEpidemiologica(value), [value]);
+  const seStr = se != null ? String(se) : "";
+  useEffect(() => {
+    if ((form.semana_epidemiologica ?? "") !== seStr) {
+      setForm((p) => ({ ...p, semana_epidemiologica: seStr }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seStr]);
+  return (
+    <div className="sm:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div>
+        <Label className="text-xs">{label}{required ? <span className="text-destructive"> *</span> : null}</Label>
+        <Input type="date" value={value} onChange={(e) => setForm((p) => ({ ...p, [name]: e.target.value }))} className="mt-1" />
+      </div>
+      <div>
+        <Label className="text-xs">Ano</Label>
+        <Input value={ano} readOnly placeholder="Definido pela data" className="mt-1 bg-muted/40" />
+      </div>
+      <div>
+        <Label className="text-xs">Semana Epidemiológica</Label>
+        <Input value={seStr} readOnly placeholder="Calculada pela data" className="mt-1 bg-muted/40" />
+      </div>
+    </div>
+  );
+}
+
 function IdadeAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
   const dn = form.data_nascimento ?? "";
   const idade = useMemo(() => calcIdade(dn), [dn]);
