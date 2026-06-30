@@ -941,7 +941,7 @@ export function CaseDetail({
                       onChange={(v) => setDraftField(k, v)}
                     />
                   ) : (
-                    renderField(k, ficha[k])
+                    renderField(k, enrichedFicha[k])
                   )}
                   {!editing &&
                     (k === "data_notificacao" ||
