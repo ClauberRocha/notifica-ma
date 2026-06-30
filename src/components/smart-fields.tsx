@@ -308,6 +308,12 @@ export function MunicipioCombobox({
     setQuery(value);
   }, [value]);
 
+  // Prefetch das UFs mais prováveis assim que o combobox é montado.
+  useEffect(() => {
+    prefetchLikelyMunicipios();
+  }, []);
+
+
   useEffect(() => {
     let cancelled = false;
     async function load() {
