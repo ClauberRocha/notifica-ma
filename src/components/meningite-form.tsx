@@ -113,8 +113,7 @@ const STEPS: Step[] = [
   {
     title: "Antecedentes",
     fields: [
-      { name: "data_investigacao", label: "Data da investigação", type: "date" },
-      { name: "ocupacao", label: "Ocupação", type: "text", col: 2 },
+      { name: "dummy_antecedentes", label: "", type: "text", col: 3 },
     ],
   },
   { title: "Vacinação", description: "Vacinas recebidas (sim/não/ignorado, doses e data).", custom: "vacinas" },
