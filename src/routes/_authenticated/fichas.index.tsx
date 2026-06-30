@@ -348,7 +348,7 @@ function FichasListPage() {
                   Sem.Epd.
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground hidden md:table-cell">
-                  Nº Ficha
+                  Nº da Notificação
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
                   Status
