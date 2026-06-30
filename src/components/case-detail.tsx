@@ -718,27 +718,6 @@ export function CaseDetail({
     (ficha.faixa_etaria as string | undefined) ||
     calcFaixaEtaria(idadeFinal ?? null);
 
-  const [ibgeResLookup, setIbgeResLookup] = useState<string | null>(null);
-  useEffect(() => {
-    const existing = ficha.codigo_ibge_residencia as string | undefined;
-    const muni = ficha.municipio_residencia as string | undefined;
-    if (existing || !muni) {
-      setIbgeResLookup(null);
-      return;
-    }
-    const uf = (ficha.uf_residencia as string | undefined) || "MA";
-    let cancelled = false;
-    fetchIbgeForMunicipio(uf, muni).then((code) => {
-      if (!cancelled) setIbgeResLookup(code);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    ficha.codigo_ibge_residencia,
-    ficha.municipio_residencia,
-    ficha.uf_residencia,
-  ]);
 
   const enrichedFicha: AnyObj = {
     ...ficha,
