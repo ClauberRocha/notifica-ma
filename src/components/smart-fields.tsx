@@ -216,8 +216,8 @@ export function MunicipioCombobox({
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items.slice(0, 50);
-    return items.filter((m) => m.nome.toLowerCase().includes(q)).slice(0, 50);
+    if (!q) return items;
+    return items.filter((m) => m.nome.toLowerCase().includes(q));
   }, [items, query]);
 
   return (
