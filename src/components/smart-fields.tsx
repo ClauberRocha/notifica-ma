@@ -955,11 +955,15 @@ export function renderSmartField(field: FieldLike, form: FormState, setForm: Set
     );
   }
 
-  if (name === "data_notificacao" || name === "data" || name === "data_diagnostico_notificacao") {
+  if (name === "data_notificacao") {
+    return <DataNotificacaoTrio key={name} name={name} label={f.label} required={f.required} form={form} setForm={setForm} />;
+  }
+  if (name === "data" || name === "data_diagnostico_notificacao") {
     return <AutoDateField key={name} name={name} label={f.label} required={f.required} col={f.col} form={form} setForm={setForm} />;
   }
   if (name === "semana_epidemiologica" || name === "se" || name === "semana_epi") {
-    return <SemanaEpdField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
+    // Rendered inline by DataNotificacaoTrio; suppress the standalone field.
+    return <Fragment key={name} />;
   }
   if (name === "idade") {
     return <IdadeAutoField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
