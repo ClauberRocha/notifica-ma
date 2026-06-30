@@ -86,4 +86,17 @@ function isNetworkError(message: string): boolean {
   );
 }
 
+function friendlyError(message: string): string {
+  const m = message.toLowerCase();
+  if (
+    m.includes("duplicate key") ||
+    m.includes("unique constraint") ||
+    m.includes("numero_ficha")
+  ) {
+    return "Nº da Notificação já cadastrado. Informe um número único.";
+  }
+  return message;
+}
+
+
 export type { PendingOp };
