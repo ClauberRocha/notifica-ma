@@ -704,7 +704,7 @@ function PainelPage() {
         }
       });
 
-      return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      return Object.entries(counts);
     } else {
       const criterioLabels: Record<string, string> = {
         cultura: "Cultura",
