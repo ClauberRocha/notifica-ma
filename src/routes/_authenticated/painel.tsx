@@ -666,7 +666,10 @@ function PainelPage() {
   // Critérios de Confirmação — mapeamento canônico compartilhado
   // (chaves/ordem fixas para TODOS os agravos; validado em runtime e em testes)
   const criterioData = useMemo(() => {
-    const data = buildCriterioData(filtered as Array<{ status?: string | null; criterio_confirmacao?: string | null }>);
+    // Descartados não entram no gráfico de Critérios de Confirmação.
+    const relevantes = (filtered as Array<{ status?: string | null; criterio_confirmacao?: string | null; classificacao_caso?: string | null }>)
+      .filter((r) => String(r.classificacao_caso ?? "").toLowerCase() !== "descartado");
+    const data = buildCriterioData(relevantes);
     if (import.meta.env.DEV) assertCriterioOrder(data);
     return data;
   }, [filtered]);
