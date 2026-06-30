@@ -666,7 +666,7 @@ function PainelPage() {
   // Critérios de Confirmação — mapeamento canônico compartilhado
   // (chaves/ordem fixas para TODOS os agravos; validado em runtime e em testes)
   const criterioData = useMemo(() => {
-    const data = buildCriterioData(filtered);
+    const data = buildCriterioData(filtered as Array<{ status?: string | null; criterio_confirmacao?: string | null }>);
     if (import.meta.env.DEV) assertCriterioOrder(data);
     return data;
   }, [filtered]);
