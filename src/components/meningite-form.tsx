@@ -66,6 +66,8 @@ const STEPS: Step[] = [
       { name: "data_notificacao", label: "Data da notificação", type: "date", required: true },
       { name: "semana_epidemiologica", label: "Semana Epidemiológica", type: "text" },
       { name: "data_primeiros_sintomas", label: "Data dos primeiros sintomas", type: "date" },
+      { name: "data_investigacao", label: "Data da investigação", type: "date" },
+      { name: "ocupacao", label: "Ocupação", type: "text", col: 2 },
       { name: "uf_notificacao", label: "UF da notificação", type: "text" },
       { name: "municipio_notificacao", label: "Município da notificação", type: "text" },
       { name: "codigo_ibge_notificacao", label: "Código IBGE", type: "text" },
@@ -106,13 +108,6 @@ const STEPS: Step[] = [
       { name: "telefone", label: "Telefone", type: "text" },
       { name: "zona", label: "Zona", type: "select", options: ZONA },
       { name: "pais", label: "País", type: "text" },
-    ],
-  },
-  {
-    title: "Antecedentes",
-    fields: [
-      { name: "data_investigacao", label: "Data da investigação", type: "date" },
-      { name: "ocupacao", label: "Ocupação", type: "text", col: 2 },
     ],
   },
   { title: "Vacinação", description: "Vacinas recebidas (sim/não/ignorado, doses e data).", custom: "vacinas" },
