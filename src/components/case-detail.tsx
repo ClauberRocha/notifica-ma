@@ -547,6 +547,7 @@ export function CaseDetail({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<AnyObj>({});
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [ibgeResLookup, setIbgeResLookup] = useState<string | null>(null);
 
   const queryKey = [agravo, "case", id];
   const listKey = [agravo, "cases"];
