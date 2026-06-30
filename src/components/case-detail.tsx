@@ -179,18 +179,77 @@ const LABEL_MAP: Record<string, string> = {
   lesao_pele: "Lesão de pele",
 };
 
+const mapOne = (raw: string): string => {
+  const key = raw.trim().toLowerCase();
+  if (LABEL_MAP[key]) return LABEL_MAP[key];
+  // Title case fallback for plain words (e.g. "feminino" -> "Feminino")
+  return key
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
 const lbl = (v: unknown): string => {
   if (v === null || v === undefined || v === "") return "";
   const s = String(v);
   if (s.includes(",")) {
-    return s
-      .split(",")
-      .map((item) => item.trim())
-      .map((item) => LABEL_MAP[item] ?? item.replace(/_/g, " "))
-      .join(", ");
+    return s.split(",").map(mapOne).join(", ");
   }
-  return LABEL_MAP[s] ?? s.replace(/_/g, " ");
+  return mapOne(s);
 };
+
+function calcIdade(dobIso: string | null | undefined): number | null {
+  if (!dobIso) return null;
+  const dob = new Date(dobIso);
+  if (isNaN(dob.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - dob.getFullYear();
+  const m = now.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--;
+  return age >= 0 ? age : null;
+}
+
+function calcFaixaEtaria(idade: number | null): string | null {
+  if (idade === null) return null;
+  if (idade < 1) return "< 1 ano";
+  if (idade <= 10) return "1 a 10 anos";
+  if (idade <= 20) return "11 a 20 anos";
+  if (idade <= 30) return "21 a 30 anos";
+  if (idade <= 40) return "31 a 40 anos";
+  if (idade <= 50) return "41 a 50 anos";
+  if (idade <= 60) return "51 a 60 anos";
+  if (idade <= 70) return "61 a 70 anos";
+  return "Acima de 70 anos";
+}
+
+const ibgeMuniCache = new Map<string, Map<string, string>>();
+function normMuni(s: string): string {
+  return s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .trim();
+}
+async function fetchIbgeForMunicipio(
+  uf: string,
+  municipio: string,
+): Promise<string | null> {
+  const ufKey = (uf || "MA").toUpperCase();
+  let map = ibgeMuniCache.get(ufKey);
+  if (!map) {
+    try {
+      const res = await fetch(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufKey}/municipios`,
+      );
+      if (!res.ok) return null;
+      const data = (await res.json()) as { id: number; nome: string }[];
+      map = new Map(data.map((d) => [normMuni(d.nome), String(d.id)]));
+      ibgeMuniCache.set(ufKey, map);
+    } catch {
+      return null;
+    }
+  }
+  return map.get(normMuni(municipio)) ?? null;
+}
 
 const humanizeLabel = (key: string): string => {
   return key
@@ -245,6 +304,7 @@ const SECTIONS: Array<{ title: string; match: (k: string) => boolean }> = [
       [
         "data_nascimento",
         "idade",
+        "faixa_etaria",
         "tipo_idade",
         "sexo",
         "gestante",
@@ -487,6 +547,7 @@ export function CaseDetail({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<AnyObj>({});
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [ibgeResLookup, setIbgeResLookup] = useState<string | null>(null);
 
   const queryKey = [agravo, "case", id];
   const listKey = [agravo, "cases"];
@@ -550,6 +611,24 @@ export function CaseDetail({
   useEffect(() => {
     if (!editing && ficha) setDraft(ficha);
   }, [ficha, editing]);
+
+  useEffect(() => {
+    if (!ficha) return;
+    const existing = ficha.codigo_ibge_residencia as string | undefined;
+    const muni = ficha.municipio_residencia as string | undefined;
+    if (existing || !muni) {
+      setIbgeResLookup(null);
+      return;
+    }
+    const uf = (ficha.uf_residencia as string | undefined) || "MA";
+    let cancelled = false;
+    fetchIbgeForMunicipio(uf, muni).then((code) => {
+      if (!cancelled) setIbgeResLookup(code);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [ficha]);
 
   // Auto-enter edit mode when navigated with ?edit=1
   useEffect(() => {
@@ -648,7 +727,28 @@ export function CaseDetail({
   const status = ficha.status as string | undefined;
   const obs = ficha.observacoes_adicionais as string | undefined;
 
-  const allKeys = Object.keys(ficha).filter((k) => !SKIP_KEYS.has(k));
+  // Derived values (display-only)
+  const idadeCalc = calcIdade(ficha.data_nascimento as string | undefined);
+  const idadeFinal =
+    ficha.idade !== null && ficha.idade !== undefined && ficha.idade !== ""
+      ? Number(ficha.idade)
+      : idadeCalc;
+  const faixaEtariaFinal =
+    (ficha.faixa_etaria as string | undefined) ||
+    calcFaixaEtaria(idadeFinal ?? null);
+
+
+  const enrichedFicha: AnyObj = {
+    ...ficha,
+    idade: idadeFinal ?? ficha.idade,
+    faixa_etaria: faixaEtariaFinal ?? ficha.faixa_etaria,
+    codigo_ibge_residencia:
+      (ficha.codigo_ibge_residencia as string | undefined) || ibgeResLookup || "",
+  };
+
+  const allKeys = Array.from(
+    new Set([...Object.keys(ficha), "faixa_etaria", "codigo_ibge_residencia"]),
+  ).filter((k) => !SKIP_KEYS.has(k));
 
   const jsonGroups: Array<{ key: string; title: string; obj: AnyObj }> = [];
   const flatKeys: string[] = [];
@@ -841,7 +941,7 @@ export function CaseDetail({
                       onChange={(v) => setDraftField(k, v)}
                     />
                   ) : (
-                    renderField(k, ficha[k])
+                    renderField(k, enrichedFicha[k])
                   )}
                   {!editing &&
                     (k === "data_notificacao" ||
@@ -881,7 +981,7 @@ export function CaseDetail({
                     onChange={(v) => setDraftField(k, v)}
                   />
                 ) : (
-                  renderField(k, ficha[k])
+                  renderField(k, enrichedFicha[k])
                 ),
               )}
               {!editing && !leftover.includes("data_encerramento") && (
