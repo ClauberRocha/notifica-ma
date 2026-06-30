@@ -981,7 +981,7 @@ export function CaseDetail({
                     onChange={(v) => setDraftField(k, v)}
                   />
                 ) : (
-                  renderField(k, ficha[k])
+                  renderField(k, enrichedFicha[k])
                 ),
               )}
               {!editing && !leftover.includes("data_encerramento") && (
