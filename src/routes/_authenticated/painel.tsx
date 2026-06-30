@@ -1065,16 +1065,15 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas as faixas</SelectItem>
-                    <SelectItem value="<1">&lt;1 ano</SelectItem>
-                    <SelectItem value="1-4">1-4 anos</SelectItem>
-                    <SelectItem value="5-9">5-9 anos</SelectItem>
-                    <SelectItem value="10-14">10-14 anos</SelectItem>
-                    <SelectItem value="15-19">15-19 anos</SelectItem>
-                    <SelectItem value="20-29">20-29 anos</SelectItem>
-                    <SelectItem value="30-39">30-39 anos</SelectItem>
-                    <SelectItem value="40-49">40-49 anos</SelectItem>
-                    <SelectItem value="50-59">50-59 anos</SelectItem>
-                    <SelectItem value="60+">60+ anos</SelectItem>
+                    <SelectItem value="<1">&lt; 1 ano</SelectItem>
+                    <SelectItem value="1-10">1 a 10 anos</SelectItem>
+                    <SelectItem value="11-20">11 a 20 anos</SelectItem>
+                    <SelectItem value="21-30">21 a 30 anos</SelectItem>
+                    <SelectItem value="31-40">31 a 40 anos</SelectItem>
+                    <SelectItem value="41-50">41 a 50 anos</SelectItem>
+                    <SelectItem value="51-60">51 a 60 anos</SelectItem>
+                    <SelectItem value="61-70">61 a 70 anos</SelectItem>
+                    <SelectItem value="70+">Acima de 70 anos</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
