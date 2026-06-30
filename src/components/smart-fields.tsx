@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Loader2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -774,6 +774,42 @@ function SemanaEpdField({ name, label, col, form, setForm }: { name: string; lab
   return <ReadOnlyField label={label} value={valueStr} col={col} placeholder="Calculada pela data" />;
 }
 
+function DataNotificacaoTrio({ name, label, required, form, setForm }: { name: string; label: string; required?: boolean; form: FormState; setForm: SetForm }) {
+  const value = form[name] ?? "";
+  useEffect(() => {
+    if (!value) {
+      const t = todayIso();
+      setForm((p) => (p[name] ? p : { ...p, [name]: t }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name]);
+  const ano = value && /^\d{4}/.test(value) ? value.slice(0, 4) : "";
+  const se = useMemo(() => getSemanaEpidemiologica(value), [value]);
+  const seStr = se != null ? String(se) : "";
+  useEffect(() => {
+    if ((form.semana_epidemiologica ?? "") !== seStr) {
+      setForm((p) => ({ ...p, semana_epidemiologica: seStr }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seStr]);
+  return (
+    <div className="sm:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div>
+        <Label className="text-xs">{label}{required ? <span className="text-destructive"> *</span> : null}</Label>
+        <Input type="date" value={value} onChange={(e) => setForm((p) => ({ ...p, [name]: e.target.value }))} className="mt-1" />
+      </div>
+      <div>
+        <Label className="text-xs">Ano</Label>
+        <Input value={ano} readOnly placeholder="Definido pela data" className="mt-1 bg-muted/40" />
+      </div>
+      <div>
+        <Label className="text-xs">Semana Epidemiológica</Label>
+        <Input value={seStr} readOnly placeholder="Calculada pela data" className="mt-1 bg-muted/40" />
+      </div>
+    </div>
+  );
+}
+
 function IdadeAutoField({ name, label, col, form, setForm }: { name: string; label: string; col?: ColSpan; form: FormState; setForm: SetForm }) {
   const dn = form.data_nascimento ?? "";
   const idade = useMemo(() => calcIdade(dn), [dn]);
@@ -919,11 +955,15 @@ export function renderSmartField(field: FieldLike, form: FormState, setForm: Set
     );
   }
 
-  if (name === "data_notificacao" || name === "data" || name === "data_diagnostico_notificacao") {
+  if (name === "data_notificacao") {
+    return <DataNotificacaoTrio key={name} name={name} label={f.label} required={f.required} form={form} setForm={setForm} />;
+  }
+  if (name === "data" || name === "data_diagnostico_notificacao") {
     return <AutoDateField key={name} name={name} label={f.label} required={f.required} col={f.col} form={form} setForm={setForm} />;
   }
   if (name === "semana_epidemiologica" || name === "se" || name === "semana_epi") {
-    return <SemanaEpdField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
+    // Rendered inline by DataNotificacaoTrio; suppress the standalone field.
+    return <Fragment key={name} />;
   }
   if (name === "idade") {
     return <IdadeAutoField key={name} name={name} label={f.label} col={f.col} form={form} setForm={setForm} />;
