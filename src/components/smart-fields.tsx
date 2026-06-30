@@ -406,6 +406,176 @@ export function UnidadeSaudeAutocomplete({
   );
 }
 
+/* ============== Hospital (CNES/DataSUS) ============== */
+
+type CnesEstab = {
+  codigo_cnes: number;
+  nome_fantasia: string | null;
+  nome_razao_social: string | null;
+};
+type HospitalItem = { codigo: string; nome: string };
+
+const hospitaisCache = new Map<string, HospitalItem[]>();
+
+async function fetchHospitaisPorMunicipio(codigoIbgeMunicipio: string): Promise<HospitalItem[]> {
+  const key = codigoIbgeMunicipio;
+  if (!key) return [];
+  if (hospitaisCache.has(key)) return hospitaisCache.get(key)!;
+  const all: HospitalItem[] = [];
+  const seen = new Set<string>();
+  const LIMIT = 20;
+  const MAX_PAGES = 100; // até 2000 estabelecimentos por município
+  const BATCH = 5;
+  let stop = false;
+  for (let base = 0; base < MAX_PAGES && !stop; base += BATCH) {
+    const offsets = Array.from({ length: BATCH }, (_, i) => (base + i) * LIMIT);
+    const results = await Promise.all(
+      offsets.map(async (offset) => {
+        try {
+          const res = await fetch(
+            `https://apidadosabertos.saude.gov.br/cnes/estabelecimentos?codigo_municipio=${key}&limit=${LIMIT}&offset=${offset}`,
+          );
+          if (!res.ok) return [] as CnesEstab[];
+          const json = (await res.json()) as { estabelecimentos?: CnesEstab[] };
+          return json.estabelecimentos ?? [];
+        } catch {
+          return [] as CnesEstab[];
+        }
+      }),
+    );
+    for (const list of results) {
+      if (list.length < LIMIT) stop = true;
+      for (const e of list) {
+        const nome = (e.nome_fantasia || e.nome_razao_social || "").trim();
+        const codigo = e.codigo_cnes ? String(e.codigo_cnes) : "";
+        if (!nome || !codigo || seen.has(codigo)) continue;
+        seen.add(codigo);
+        all.push({ codigo, nome: nome.toUpperCase() });
+      }
+    }
+  }
+  all.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  hospitaisCache.set(key, all);
+  return all;
+}
+
+export function HospitalAutocomplete({
+  label,
+  value,
+  codigoIbgeMunicipio,
+  uf,
+  onSelect,
+  onChange,
+  col,
+  required,
+}: {
+  label: string;
+  value: string;
+  codigoIbgeMunicipio: string;
+  uf: string;
+  onSelect: (nome: string, codigoCnes: string) => void;
+  onChange: (v: string) => void;
+  col?: ColSpan;
+  required?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<HospitalItem[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!codigoIbgeMunicipio) {
+        setItems([]);
+        return;
+      }
+      setLoading(true);
+      const data = await fetchHospitaisPorMunicipio(codigoIbgeMunicipio);
+      if (!cancelled) {
+        setItems(data);
+        setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [codigoIbgeMunicipio]);
+
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
+
+  const filtered = useMemo(() => {
+    const q = (value || "").trim().toLowerCase();
+    if (!q) return items.slice(0, 50);
+    return items.filter((h) => h.nome.toLowerCase().includes(q) || h.codigo.includes(q)).slice(0, 50);
+  }, [items, value]);
+
+  const ready = Boolean(codigoIbgeMunicipio);
+  const placeholder = ready
+    ? loading
+      ? "Carregando hospitais do município..."
+      : "Digite o nome ou CNES..."
+    : uf
+      ? "Selecione o município do hospital primeiro"
+      : "Selecione UF e município do hospital primeiro";
+
+  return (
+    <div className={colClass(col)} ref={containerRef}>
+      <Label className="text-xs">
+        {label}
+        {required ? <span className="text-destructive"> *</span> : null}
+      </Label>
+      <div className="relative mt-1">
+        <Input
+          value={value}
+          disabled={!ready}
+          placeholder={placeholder}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+        />
+        {loading ? (
+          <Loader2 className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 animate-spin text-muted-foreground" />
+        ) : (
+          <Search className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        )}
+        {open && ready && filtered.length > 0 && (
+          <div className="absolute z-50 mt-1 w-full max-h-64 overflow-auto rounded-md border bg-popover shadow-md">
+            {filtered.map((h) => (
+              <button
+                key={h.codigo}
+                type="button"
+                className="w-full text-left px-3 py-2 text-sm hover:bg-accent"
+                onClick={() => {
+                  onSelect(h.nome, h.codigo);
+                  setOpen(false);
+                }}
+              >
+                <span className="font-medium">{h.nome}</span>
+                <span className="text-muted-foreground ml-2 text-xs">CNES {h.codigo}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        {open && ready && !loading && filtered.length === 0 && (
+          <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md px-3 py-2 text-xs text-muted-foreground">
+            Nenhum estabelecimento encontrado neste município.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ============== CEP (ViaCEP) ============== */
 
 type ViaCepResp = {
