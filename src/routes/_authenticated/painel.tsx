@@ -288,15 +288,14 @@ function PainelPage() {
             age--;
           }
           if (selectedFaixaEtaria === "<1") return age < 1;
-          if (selectedFaixaEtaria === "1-4") return age >= 1 && age <= 4;
-          if (selectedFaixaEtaria === "5-9") return age >= 5 && age <= 9;
-          if (selectedFaixaEtaria === "10-14") return age >= 10 && age <= 14;
-          if (selectedFaixaEtaria === "15-19") return age >= 15 && age <= 19;
-          if (selectedFaixaEtaria === "20-29") return age >= 20 && age <= 29;
-          if (selectedFaixaEtaria === "30-39") return age >= 30 && age <= 39;
-          if (selectedFaixaEtaria === "40-49") return age >= 40 && age <= 49;
-          if (selectedFaixaEtaria === "50-59") return age >= 50 && age <= 59;
-          if (selectedFaixaEtaria === "60+") return age >= 60;
+          if (selectedFaixaEtaria === "1-10") return age >= 1 && age <= 10;
+          if (selectedFaixaEtaria === "11-20") return age >= 11 && age <= 20;
+          if (selectedFaixaEtaria === "21-30") return age >= 21 && age <= 30;
+          if (selectedFaixaEtaria === "31-40") return age >= 31 && age <= 40;
+          if (selectedFaixaEtaria === "41-50") return age >= 41 && age <= 50;
+          if (selectedFaixaEtaria === "51-60") return age >= 51 && age <= 60;
+          if (selectedFaixaEtaria === "61-70") return age >= 61 && age <= 70;
+          if (selectedFaixaEtaria === "70+") return age > 70;
         } catch {
           return false;
         }
