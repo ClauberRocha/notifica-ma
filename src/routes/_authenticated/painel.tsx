@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-ro
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { buildCriterioData, assertCriterioOrder } from "@/lib/criterio-confirmacao";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -662,52 +663,13 @@ function PainelPage() {
     .sort((a, b) => b[1] - a[1])
     .map(([name, value]) => ({ name, value }));
 
-  // Dynamic Confirmation Criteria - strictly mapped
+  // Critérios de Confirmação — mapeamento canônico compartilhado
+  // (chaves/ordem fixas para TODOS os agravos; validado em runtime e em testes)
   const criterioData = useMemo(() => {
-    {
-
-      const counts: Record<string, number> = {
-        "QUIMIOCITOLOGICO": 0,
-        "PCR": 0,
-        "CLINICO": 0,
-        "CULTURA": 0,
-        "NECROPSIA": 0,
-        "OUTROS": 0,
-        "EM INVESTIGAÇÃO": 0,
-        "ISOLAMENTO VIRAL": 0,
-        "BACTERIOSCOPIA": 0,
-      };
-
-      filtered.forEach((c) => {
-        if (c.status === "em_investigacao" || c.status === "EM INVESTIGAÇÃO") {
-          counts["EM INVESTIGAÇÃO"]++;
-          return;
-        }
-
-        const crit = String(c.criterio_confirmacao || "").toLowerCase().trim();
-
-        if (crit === "bacterioscopia" || crit.includes("bacterio")) {
-          counts["BACTERIOSCOPIA"]++;
-        } else if (crit === "clinico" || crit === "clinico_epidemiologico" || crit.includes("clinico") || crit.includes("epidemio")) {
-          counts["CLINICO"]++;
-        } else if (crit === "cultura") {
-          counts["CULTURA"]++;
-        } else if (crit === "isolamento_viral" || crit.includes("viral")) {
-          counts["ISOLAMENTO VIRAL"]++;
-        } else if (crit === "necropsia" || crit.includes("necro")) {
-          counts["NECROPSIA"]++;
-        } else if (crit === "pcr") {
-          counts["PCR"]++;
-        } else if (crit === "quimiocitologico_liquor" || crit.includes("quimio") || crit.includes("liquor")) {
-          counts["QUIMIOCITOLOGICO"]++;
-        } else {
-          counts["OUTROS"]++;
-        }
-      });
-
-      return Object.entries(counts);
-    }
-  }, [filtered, selectedAgravo]);
+    const data = buildCriterioData(filtered);
+    if (import.meta.env.DEV) assertCriterioOrder(data);
+    return data;
+  }, [filtered]);
 
   // Faixa Etária counts
   const faixaCounts: Record<string, number> = {
