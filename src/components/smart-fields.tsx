@@ -104,22 +104,69 @@ function colClass(col?: ColSpan) {
   return col === 3 ? "sm:col-span-3" : col === 2 ? "sm:col-span-2" : "sm:col-span-1";
 }
 
-/** Cache de municípios IBGE por UF */
-const muniCache = new Map<string, { id: number; nome: string }[]>();
-async function fetchMunicipios(uf: string) {
-  if (!uf) return [];
-  if (muniCache.has(uf)) return muniCache.get(uf)!;
+/** Cache de municípios IBGE por UF
+ *  - Em memória (Map) para acesso síncrono e instantâneo ao alternar UFs.
+ *  - Persistido em sessionStorage para sobreviver a navegações dentro da sessão.
+ *  - Dedup de requisições em voo: chamadas simultâneas para a mesma UF
+ *    compartilham a mesma Promise, evitando hits duplicados ao IBGE.
+ */
+type Municipio = { id: number; nome: string };
+const MUNI_CACHE_PREFIX = "ibge-muni:v1:";
+const muniCache = new Map<string, Municipio[]>();
+const muniInflight = new Map<string, Promise<Municipio[]>>();
+
+function readMuniSession(uf: string): Municipio[] | null {
+  if (typeof window === "undefined") return null;
   try {
-    const res = await fetch(
-      `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`,
-    );
-    if (!res.ok) return [];
-    const data = (await res.json()) as { id: number; nome: string }[];
-    muniCache.set(uf, data);
-    return data;
+    const raw = window.sessionStorage.getItem(MUNI_CACHE_PREFIX + uf);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Municipio[];
+    return Array.isArray(parsed) ? parsed : null;
   } catch {
-    return [];
+    return null;
   }
+}
+function writeMuniSession(uf: string, data: Municipio[]) {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(MUNI_CACHE_PREFIX + uf, JSON.stringify(data));
+  } catch {
+    /* quota / privado — ignora */
+  }
+}
+
+async function fetchMunicipios(uf: string): Promise<Municipio[]> {
+  if (!uf) return [];
+  const cached = muniCache.get(uf);
+  if (cached) return cached;
+
+  const persisted = readMuniSession(uf);
+  if (persisted) {
+    muniCache.set(uf, persisted);
+    return persisted;
+  }
+
+  const inflight = muniInflight.get(uf);
+  if (inflight) return inflight;
+
+  const promise = (async () => {
+    try {
+      const res = await fetch(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`,
+      );
+      if (!res.ok) return [];
+      const data = (await res.json()) as Municipio[];
+      muniCache.set(uf, data);
+      writeMuniSession(uf, data);
+      return data;
+    } catch {
+      return [];
+    } finally {
+      muniInflight.delete(uf);
+    }
+  })();
+  muniInflight.set(uf, promise);
+  return promise;
 }
 
 /* ============== UF Select ============== */
