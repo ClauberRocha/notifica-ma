@@ -103,7 +103,7 @@ function FichasTetanoNeonatalPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nº ficha</TableHead>
+                <TableHead>Nº da Notificação</TableHead>
                 <TableHead>Recém-nascido</TableHead>
                 <TableHead>Mãe</TableHead>
                 <TableHead>Data notif.</TableHead>

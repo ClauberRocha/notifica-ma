@@ -772,7 +772,7 @@ function PainelPage() {
     }
     const headers = [
       "ID",
-      "Nº Ficha",
+      "Nº da Notificação",
       "Agravo",
       "Paciente",
       "Data Notificação",
@@ -1748,7 +1748,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                         toast.success("Nenhuma inconsistência de completitude encontrada!");
                         return;
                       }
-                      const headers = ["ID", "Nº Ficha", "Paciente", "Campos Faltantes"];
+                      const headers = ["ID", "Nº da Notificação", "Paciente", "Campos Faltantes"];
                       const csvContent =
                         "data:text/csv;charset=utf-8,\uFEFF" +
                         [

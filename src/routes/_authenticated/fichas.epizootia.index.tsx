@@ -89,7 +89,7 @@ function FichasEpizootiaPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nº ficha</TableHead>
+                <TableHead>Nº da Notificação</TableHead>
                 <TableHead>Município</TableHead>
                 <TableHead>Data notif.</TableHead>
                 <TableHead>Ambiente</TableHead>

@@ -103,7 +103,7 @@ function FichasSragPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nº ficha</TableHead>
+                <TableHead>Nº da Notificação</TableHead>
                 <TableHead>Paciente</TableHead>
                 <TableHead>Data preench.</TableHead>
                 <TableHead>Classificação</TableHead>

@@ -94,7 +94,7 @@ function FichasPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nº ficha</TableHead>
+                <TableHead>Nº da Notificação</TableHead>
                 <TableHead>Paciente</TableHead>
                 <TableHead>Data notif.</TableHead>
                 <TableHead>Status</TableHead>

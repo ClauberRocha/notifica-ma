@@ -27,8 +27,9 @@ export async function insertCase(
       await enqueue({ table, op: "insert", payload, rowId: null });
       return { error: null, localOnly: true };
     }
-    return { error: { message: error.message } };
+    return { error: { message: friendlyError(error.message) } };
   }
+
   await enqueue({ table, op: "insert", payload, rowId: null });
   return { error: null, localOnly: true };
 }
@@ -48,7 +49,8 @@ export async function updateCase(
       await enqueue({ table, op: "update", payload, rowId });
       return { error: null, localOnly: true };
     }
-    return { error: { message: error.message } };
+    return { error: { message: friendlyError(error.message) } };
+
   }
   await enqueue({ table, op: "update", payload, rowId });
   return { error: null, localOnly: true };
@@ -83,5 +85,18 @@ function isNetworkError(message: string): boolean {
     m.includes("load failed")
   );
 }
+
+function friendlyError(message: string): string {
+  const m = message.toLowerCase();
+  if (
+    m.includes("duplicate key") ||
+    m.includes("unique constraint") ||
+    m.includes("numero_ficha")
+  ) {
+    return "Nº da Notificação já cadastrado. Informe um número único.";
+  }
+  return message;
+}
+
 
 export type { PendingOp };
