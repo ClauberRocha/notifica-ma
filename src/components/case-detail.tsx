@@ -304,6 +304,7 @@ const SECTIONS: Array<{ title: string; match: (k: string) => boolean }> = [
       [
         "data_nascimento",
         "idade",
+        "faixa_etaria",
         "tipo_idade",
         "sexo",
         "gestante",
