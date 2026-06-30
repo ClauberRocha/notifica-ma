@@ -666,18 +666,15 @@ function PainelPage() {
   const criterioData = useMemo(() => {
     if (selectedAgravo === "meningite") {
       const counts: Record<string, number> = {
-        "AGLUT. P/ LATEX": 0,
-        "BACTERIOSCOPIA": 0,
-        "CIE": 0,
+        "QUIMIOCITOLOGICO": 0,
+        "PCR": 0,
         "CLINICO": 0,
-        "CLÍNICO EPIDEMIOLÓGICO": 0,
         "CULTURA": 0,
-        "EM INVESTIGAÇÃO": 0,
-        "ISOLAMENTO VIRAL": 0,
         "NECROPSIA": 0,
         "OUTROS": 0,
-        "PCR": 0,
-        "QUIMIOCITOLOGICO": 0,
+        "EM INVESTIGAÇÃO": 0,
+        "ISOLAMENTO VIRAL": 0,
+        "BACTERIOSCOPIA": 0,
       };
 
       filtered.forEach((c) => {
@@ -688,16 +685,10 @@ function PainelPage() {
 
         const crit = String(c.criterio_confirmacao || "").toLowerCase().trim();
 
-        if (crit === "ag_latex" || crit === "aglut_latex" || crit === "latex" || crit.includes("latex")) {
-          counts["AGLUT. P/ LATEX"]++;
-        } else if (crit === "bacterioscopia" || crit.includes("bacterio")) {
+        if (crit === "bacterioscopia" || crit.includes("bacterio")) {
           counts["BACTERIOSCOPIA"]++;
-        } else if (crit === "cie") {
-          counts["CIE"]++;
-        } else if (crit === "clinico" && !crit.includes("epidemio")) {
+        } else if (crit === "clinico" || crit === "clinico_epidemiologico" || crit.includes("clinico") || crit.includes("epidemio")) {
           counts["CLINICO"]++;
-        } else if (crit === "clinico_epidemiologico" || crit.includes("epidemio")) {
-          counts["CLÍNICO EPIDEMIOLÓGICO"]++;
         } else if (crit === "cultura") {
           counts["CULTURA"]++;
         } else if (crit === "isolamento_viral" || crit.includes("viral")) {
