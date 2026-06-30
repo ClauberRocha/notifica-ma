@@ -106,7 +106,7 @@ function buildSteps(agravo: "dengue" | "chikungunya"): Step[] {
       title: "Notificação",
       description: "Dados da notificação e unidade.",
       fields: [
-        { name: "numero_ficha", label: "Nº da ficha", type: "text" },
+        { name: "numero_ficha", label: "Nº da Notificação", type: "text" },
         { name: "data_notificacao", label: "Data da notificação", type: "date", required: true },
         { name: "semana_epidemiologica", label: "Semana Epidemiológica", type: "text" },
         { name: "data_primeiros_sintomas", label: "Data dos primeiros sintomas", type: "date" },

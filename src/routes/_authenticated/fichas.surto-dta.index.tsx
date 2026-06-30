@@ -91,7 +91,7 @@ function FichasSurtoDtaPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nº ficha</TableHead>
+                <TableHead>Nº da Notificação</TableHead>
                 <TableHead>Município notif.</TableHead>
                 <TableHead>Município ocorr.</TableHead>
                 <TableHead>Data notif.</TableHead>

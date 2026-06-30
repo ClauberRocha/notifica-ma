@@ -53,7 +53,7 @@ const STEPS: Step[] = [
   {
     title: "Notificação",
     fields: [
-      { name: "numero_ficha", label: "Nº da ficha", type: "text" },
+      { name: "numero_ficha", label: "Nº da Notificação", type: "text" },
       { name: "data_notificacao", label: "Data da notificação", type: "date", required: true },
       { name: "semana_epidemiologica", label: "Semana Epidemiológica", type: "text" },
       { name: "data_inicio_epizootia", label: "Início da epizootia", type: "date" },

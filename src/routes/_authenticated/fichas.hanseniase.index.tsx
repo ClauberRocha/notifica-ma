@@ -103,7 +103,7 @@ function FichasHanseniasePage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nº ficha</TableHead>
+                <TableHead>Nº da Notificação</TableHead>
                 <TableHead>Paciente</TableHead>
                 <TableHead>Data notif.</TableHead>
                 <TableHead>Forma clínica</TableHead>

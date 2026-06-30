@@ -132,7 +132,7 @@ export function MeningiteListPage({ agravo }: { agravo: MeningiteAgravo }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nº ficha</TableHead>
+                <TableHead>Nº da Notificação</TableHead>
                 <TableHead>Paciente</TableHead>
                 <TableHead>Data notif.</TableHead>
                 <TableHead>Classificação</TableHead>

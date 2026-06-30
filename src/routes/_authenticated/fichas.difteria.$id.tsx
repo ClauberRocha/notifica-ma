@@ -318,7 +318,7 @@ function FichaDifteriaDetalhesPage() {
           label="Data Primeiros Sintomas"
           value={fmtDate(ficha.data_primeiros_sintomas)}
         />
-        <InfoItem label="Nº Ficha" value={ficha.numero_ficha} />
+        <InfoItem label="Nº da Notificação" value={ficha.numero_ficha} />
       </SectionCard>
 
       <SectionCard title="Paciente">
