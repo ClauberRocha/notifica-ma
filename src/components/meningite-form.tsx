@@ -327,9 +327,34 @@ export function MeningiteForm({ agravo }: { agravo: MeningiteAgravo }) {
 
         {current.fields && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {current.fields.map((f) => renderSmartField(f, form, setForm) ?? (
-              <FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />
-            ))}
+            {(() => {
+              const nodes: React.ReactNode[] = [];
+              const fields = current.fields;
+              for (let i = 0; i < fields.length; i++) {
+                const f = fields[i];
+                const next = fields[i + 1];
+                if (f.name === "data_investigacao" && next?.name === "ocupacao") {
+                  nodes.push(
+                    <div key="data_investigacao__ocupacao" className="grid grid-cols-2 gap-4 sm:contents">
+                      {renderSmartField(f, form, setForm) ?? (
+                        <FieldRenderer field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />
+                      )}
+                      {renderSmartField(next, form, setForm) ?? (
+                        <FieldRenderer field={next} value={form[next.name] ?? ""} onChange={(v) => updateField(next.name, v)} />
+                      )}
+                    </div>
+                  );
+                  i++;
+                  continue;
+                }
+                nodes.push(
+                  renderSmartField(f, form, setForm) ?? (
+                    <FieldRenderer key={f.name} field={f} value={form[f.name] ?? ""} onChange={(v) => updateField(f.name, v)} />
+                  )
+                );
+              }
+              return nodes;
+            })()}
           </div>
         )}
 
