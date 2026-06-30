@@ -27,8 +27,9 @@ export async function insertCase(
       await enqueue({ table, op: "insert", payload, rowId: null });
       return { error: null, localOnly: true };
     }
-    return { error: { message: error.message } };
+    return { error: { message: friendlyError(error.message) } };
   }
+
   await enqueue({ table, op: "insert", payload, rowId: null });
   return { error: null, localOnly: true };
 }
