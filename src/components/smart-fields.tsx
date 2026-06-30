@@ -112,81 +112,26 @@ function colClass(col?: ColSpan) {
  *    compartilham a mesma Promise, evitando hits duplicados ao IBGE.
  *  - Prefetch das UFs mais prováveis ao abrir o combobox (MA + vizinhas).
  */
-type Municipio = { id: number; nome: string };
-const MUNI_CACHE_PREFIX = "ibge-muni:v1:";
-const MUNI_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 dias
+import {
+  MUNI_CACHE_PREFIX,
+  MUNI_CACHE_TTL_MS,
+  cleanupExpiredMuniSession,
+  readMuniSession,
+  writeMuniSession,
+  type Municipio,
+} from "@/lib/muni-cache";
+
 const muniCache = new Map<string, Municipio[]>();
 const muniInflight = new Map<string, Promise<Municipio[]>>();
 
-type MuniCacheEntry = { ts: number; data: Municipio[] };
-
-function readMuniSession(uf: string): Municipio[] | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.sessionStorage.getItem(MUNI_CACHE_PREFIX + uf);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as MuniCacheEntry | Municipio[];
-    // back-compat: formato antigo era array puro
-    if (Array.isArray(parsed)) {
-      window.sessionStorage.removeItem(MUNI_CACHE_PREFIX + uf);
-      return null;
-    }
-    if (!parsed || typeof parsed.ts !== "number" || !Array.isArray(parsed.data)) return null;
-    if (Date.now() - parsed.ts > MUNI_CACHE_TTL_MS) {
-      window.sessionStorage.removeItem(MUNI_CACHE_PREFIX + uf);
-      return null;
-    }
-    return parsed.data;
-  } catch {
-    return null;
-  }
-}
-function writeMuniSession(uf: string, data: Municipio[]) {
-  if (typeof window === "undefined") return;
-  try {
-    const entry: MuniCacheEntry = { ts: Date.now(), data };
-    window.sessionStorage.setItem(MUNI_CACHE_PREFIX + uf, JSON.stringify(entry));
-  } catch {
-    /* quota / privado — ignora */
-  }
-}
-
-/** Remove entradas expiradas (ou em formato antigo) do sessionStorage. */
-function cleanupExpiredMuniSession() {
-  if (typeof window === "undefined") return;
-  try {
-    const now = Date.now();
-    const toRemove: string[] = [];
-    for (let i = 0; i < window.sessionStorage.length; i++) {
-      const key = window.sessionStorage.key(i);
-      if (!key || !key.startsWith(MUNI_CACHE_PREFIX)) continue;
-      try {
-        const raw = window.sessionStorage.getItem(key);
-        if (!raw) {
-          toRemove.push(key);
-          continue;
-        }
-        const parsed = JSON.parse(raw) as MuniCacheEntry | Municipio[];
-        if (Array.isArray(parsed)) {
-          toRemove.push(key);
-          continue;
-        }
-        if (!parsed || typeof parsed.ts !== "number" || now - parsed.ts > MUNI_CACHE_TTL_MS) {
-          toRemove.push(key);
-        }
-      } catch {
-        toRemove.push(key);
-      }
-    }
-    toRemove.forEach((k) => window.sessionStorage.removeItem(k));
-  } catch {
-    /* ignora */
-  }
-}
+// Mantém referência viva às constantes (evita tree-shake agressivo em dev).
+void MUNI_CACHE_PREFIX;
+void MUNI_CACHE_TTL_MS;
 
 if (typeof window !== "undefined") {
   cleanupExpiredMuniSession();
 }
+
 
 async function fetchMunicipios(uf: string): Promise<Municipio[]> {
   if (!uf) return [];
