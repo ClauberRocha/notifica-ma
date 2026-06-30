@@ -708,7 +708,49 @@ export function CaseDetail({
   const status = ficha.status as string | undefined;
   const obs = ficha.observacoes_adicionais as string | undefined;
 
-  const allKeys = Object.keys(ficha).filter((k) => !SKIP_KEYS.has(k));
+  // Derived values (display-only)
+  const idadeCalc = calcIdade(ficha.data_nascimento as string | undefined);
+  const idadeFinal =
+    ficha.idade !== null && ficha.idade !== undefined && ficha.idade !== ""
+      ? Number(ficha.idade)
+      : idadeCalc;
+  const faixaEtariaFinal =
+    (ficha.faixa_etaria as string | undefined) ||
+    calcFaixaEtaria(idadeFinal ?? null);
+
+  const [ibgeResLookup, setIbgeResLookup] = useState<string | null>(null);
+  useEffect(() => {
+    const existing = ficha.codigo_ibge_residencia as string | undefined;
+    const muni = ficha.municipio_residencia as string | undefined;
+    if (existing || !muni) {
+      setIbgeResLookup(null);
+      return;
+    }
+    const uf = (ficha.uf_residencia as string | undefined) || "MA";
+    let cancelled = false;
+    fetchIbgeForMunicipio(uf, muni).then((code) => {
+      if (!cancelled) setIbgeResLookup(code);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    ficha.codigo_ibge_residencia,
+    ficha.municipio_residencia,
+    ficha.uf_residencia,
+  ]);
+
+  const enrichedFicha: AnyObj = {
+    ...ficha,
+    idade: idadeFinal ?? ficha.idade,
+    faixa_etaria: faixaEtariaFinal ?? ficha.faixa_etaria,
+    codigo_ibge_residencia:
+      (ficha.codigo_ibge_residencia as string | undefined) || ibgeResLookup || "",
+  };
+
+  const allKeys = Array.from(
+    new Set([...Object.keys(ficha), "faixa_etaria", "codigo_ibge_residencia"]),
+  ).filter((k) => !SKIP_KEYS.has(k));
 
   const jsonGroups: Array<{ key: string; title: string; obj: AnyObj }> = [];
   const flatKeys: string[] = [];
