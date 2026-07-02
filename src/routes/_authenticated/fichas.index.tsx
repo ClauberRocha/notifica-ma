@@ -174,9 +174,11 @@ function FichasListPage() {
   const canEdit = can("fichas.edit");
   const canCreate = can("fichas.create");
 
+  const [agravoFilter_placeholder, _setPh] = useState<string>(""); void agravoFilter_placeholder; void _setPh;
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ["fichas-all"],
     queryFn: fetchAll,
+    enabled: false, // desabilita — busca somente ao selecionar agravo (ver query abaixo)
   });
 
   const [search, setSearch] = useState("");
