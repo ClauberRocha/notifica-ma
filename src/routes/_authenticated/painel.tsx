@@ -1318,25 +1318,28 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               {/* Weekly trend chart and summary side metrics */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2 glass-card border-border/50">
-                  <CardHeader className="pb-2">
+                  <CardHeader className="pb-2 flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Casos por Semana Epidemiológica</CardTitle>
+                    <ChartExportButtons targetRef={seChartRef} filename="casos-por-semana-epidemiologica" />
                   </CardHeader>
                   <CardContent>
                     {seBarData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={seBarData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
-                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
-                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
-                          <Tooltip content={<CustomTooltip categoryLabel="SE" />} />
-                          <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                          <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
-                            <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
-                          </Bar>
-                          <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                            <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                      <div ref={seChartRef} className="bg-background">
+                        <ResponsiveContainer width="100%" height={260}>
+                          <BarChart data={seBarData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
+                            <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
+                            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                            <Tooltip content={<CustomTooltip categoryLabel="SE" />} trigger={isMobile ? "click" : "hover"} />
+                            <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
+                            <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
+                              <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
+                            </Bar>
+                            <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
+                              <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     ) : (
                       <div className="h-64 flex items-center justify-center text-muted-foreground text-xs">Sem registros</div>
                     )}
