@@ -1682,7 +1682,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 4: CENTRAL DE ALERTAS */}
-          {activeTab === "alertas" && (
+          {activeTab === "alertas" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar os Sinais e Alertas.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "alertas" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
