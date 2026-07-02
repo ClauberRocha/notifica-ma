@@ -131,16 +131,18 @@ type CaseRow = {
   _listPath: AgravoDef["listPath"];
 };
 
-async function fetchAll(): Promise<CaseRow[]> {
+async function fetchByAgravo(tipo: string): Promise<CaseRow[]> {
+  if (!tipo) return [];
+  const targets = AGRAVOS.filter((a) => a.tipo === tipo);
   const results = await Promise.all(
-    AGRAVOS.map(async (a) => {
+    targets.map(async (a) => {
       const { data, error } = await supabase
         .from(a.table as never)
         .select(
           `id, numero_ficha, nome_paciente, municipio_notificacao, status, created_at, agravo, ${a.dateField}`,
         )
         .order("created_at", { ascending: false })
-        .limit(200);
+        .limit(500);
       if (error) return [];
       return (data ?? []).map((r: Record<string, unknown>) => {
         const dateVal = (r[a.dateField] as string) ?? null;
@@ -164,6 +166,7 @@ async function fetchAll(): Promise<CaseRow[]> {
   );
   return results.flat();
 }
+
 
 
 function FichasListPage() {
