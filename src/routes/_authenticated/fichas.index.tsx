@@ -555,6 +555,7 @@ function FichasListPage() {
           </div>
         )}
       </Card>
+      )}
     </div>
   );
 }
