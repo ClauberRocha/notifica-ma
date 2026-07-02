@@ -1201,16 +1201,16 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   <CardContent>
                     {seBarData.length > 0 ? (
                       <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={seBarData}>
-                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-                          <Tooltip content={<CustomTooltip />} />
+                        <BarChart data={seBarData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
+                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-35} textAnchor="end" height={45} />
+                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                          <Tooltip content={<CustomTooltip categoryLabel="SE" />} />
                           <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
                           <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
-                            <LabelList dataKey="count" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                            <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} angle={-45} offset={8} />
                           </Bar>
                           <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                            <LabelList dataKey="confirmados" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                            <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} angle={-45} offset={8} />
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
