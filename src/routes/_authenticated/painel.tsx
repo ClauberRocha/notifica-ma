@@ -336,6 +336,16 @@ function PainelPage() {
   const axisAngle = isMobile ? -55 : -30;
   const axisHeight = isMobile ? 60 : 45;
 
+  // Refs para exportação PNG/SVG e dispensa de tooltip por toque fora.
+  const seChartRef = useRef<HTMLDivElement>(null);
+  const faixaChartRef = useRef<HTMLDivElement>(null);
+  const racaChartRef = useRef<HTMLDivElement>(null);
+  const mesChartRef = useRef<HTMLDivElement>(null);
+  useChartOutsideDismiss(seChartRef);
+  useChartOutsideDismiss(faixaChartRef);
+  useChartOutsideDismiss(racaChartRef);
+  useChartOutsideDismiss(mesChartRef);
+
 
   const [selectedAgravo, setSelectedAgravo] = useState("all");
   const [selectedEvolucao, setSelectedEvolucao] = useState("all");
