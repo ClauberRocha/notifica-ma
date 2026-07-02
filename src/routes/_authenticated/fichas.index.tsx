@@ -329,6 +329,20 @@ function FichasListPage() {
             <SelectItem value="asc">Mais antigas primeiro</SelectItem>
           </SelectContent>
         </Select>
+        {agravoFilter && (
+          <Button
+            variant="outline"
+            className="h-10 gap-2"
+            onClick={() => {
+              setSearch("");
+              setAgravoFilter("");
+              setStatusFilter("all");
+              setPage(0);
+            }}
+          >
+            <X className="w-4 h-4" /> Limpar filtros
+          </Button>
+        )}
       </div>
 
       {!agravoFilter ? (
