@@ -166,23 +166,41 @@ function pct(num: number, total: number): string {
   return `${((num / total) * 100).toFixed(1)}%`;
 }
 
+// Formata números no padrão pt-BR, com casas decimais somente quando aplicável.
+function formatValue(v: unknown): string {
+  if (v === null || v === undefined || v === "") return "";
+  const n = typeof v === "number" ? v : Number(v);
+  if (!Number.isFinite(n)) return String(v);
+  const isInt = Number.isInteger(n);
+  return n.toLocaleString("pt-BR", {
+    minimumFractionDigits: isInt ? 0 : 1,
+    maximumFractionDigits: isInt ? 0 : 2,
+  });
+}
+
 type TooltipPayloadItem = { name?: string; value?: number | string; color?: string; fill?: string };
 const CustomTooltip = ({
   active,
   payload,
   label,
+  categoryLabel,
 }: {
   active?: boolean;
   payload?: TooltipPayloadItem[];
   label?: string;
+  categoryLabel?: string;
 }) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-background border border-border rounded-lg shadow-lg p-3 text-xs">
-        {label && <p className="font-semibold mb-1">{label}</p>}
+        {label !== undefined && label !== "" && (
+          <p className="font-semibold mb-1 text-foreground">
+            {categoryLabel ? `${categoryLabel}: ` : ""}{label}
+          </p>
+        )}
         {payload.map((p, i) => (
           <p key={i} style={{ color: p.color || p.fill }}>
-            {p.name}: <strong>{p.value}</strong>
+            {p.name}: <strong>{formatValue(p.value)}</strong>
           </p>
         ))}
       </div>
@@ -190,6 +208,7 @@ const CustomTooltip = ({
   }
   return null;
 };
+
 
 async function fetchAgravo(a: AgravoDef): Promise<CaseRow[]> {
   const { data, error } = await (supabase as any)
