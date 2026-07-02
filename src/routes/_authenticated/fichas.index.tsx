@@ -221,7 +221,7 @@ function FichasListPage() {
         ? "Ficha removida localmente — será apagada do servidor quando a internet voltar."
         : "Ficha excluída.",
     );
-    queryClient.invalidateQueries({ queryKey: ["fichas-all"] });
+    queryClient.invalidateQueries({ queryKey: ["fichas"] });
   }
 
   return (
