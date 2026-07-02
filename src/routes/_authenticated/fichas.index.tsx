@@ -330,6 +330,15 @@ function FichasListPage() {
         </Select>
       </div>
 
+      {!agravoFilter ? (
+        <Card className="p-12 text-center">
+          <Search className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+          <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+          <p className="text-xs text-muted-foreground">
+            Escolha um agravo no filtro acima para listar as fichas correspondentes.
+          </p>
+        </Card>
+      ) : (
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
