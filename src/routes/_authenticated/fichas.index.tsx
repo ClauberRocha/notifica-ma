@@ -271,11 +271,10 @@ function FichasListPage() {
             setPage(0);
           }}
         >
-          <SelectTrigger className="w-52 h-10">
-            <SelectValue />
+          <SelectTrigger className="w-56 h-10">
+            <SelectValue placeholder="Selecione um agravo..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os agravos</SelectItem>
             {AGRAVOS.map((a) => (
               <SelectItem key={a.tipo} value={a.tipo}>
                 {a.label}
