@@ -12,7 +12,11 @@ import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
-import { setGlobalAgravo, __resetGlobalAgravoForTests } from "@/lib/global-agravo";
+import {
+  setGlobalAgravo,
+  getGlobalAgravo,
+  __resetGlobalAgravoForTests,
+} from "@/lib/global-agravo";
 
 // --- Router hook mocks (no RouterProvider in tests) ---------------------
 vi.mock("@tanstack/react-router", async () => {
@@ -136,7 +140,6 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
     );
 
     // Store global limpo (sincronia com o Painel)
-    const { getGlobalAgravo } = await import("@/lib/global-agravo");
     expect(getGlobalAgravo()).toBe("");
 
     // URL sem query params (refresh mantém a tela vazia)
@@ -150,5 +153,62 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
       "Filtros limpos",
       expect.objectContaining({ description: expect.any(String) }),
     );
+  });
+
+  it("Voltar/Avançar do navegador restaura o estado sincronizado com a URL", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    // Seleciona um agravo — cria uma URL com ?agravo=dengue via replaceState
+    await act(async () => {
+      setGlobalAgravo("dengue");
+    });
+    await waitFor(() => expect(document.querySelector("table")).not.toBeNull());
+    // Chip de resumo confirma o filtro aplicado
+    const chips = screen.getByTestId("active-filters");
+    expect(chips.textContent).toMatch(/Dengue/i);
+
+    const filteredUrl = window.location.pathname + window.location.search;
+    expect(filteredUrl).toContain("agravo=dengue");
+
+    // Limpa filtros — pushState cria uma nova entrada no histórico
+    const clearBtn = await screen.findByRole("button", { name: /limpar filtros/i });
+    await user.click(clearBtn);
+    await waitFor(() =>
+      expect(
+        screen.getByRole("heading", { name: /Selecione um agravo/i }),
+      ).toBeTruthy(),
+    );
+    expect(window.location.search).toBe("");
+    expect(screen.queryByTestId("active-filters")).toBeNull();
+
+    // Simula "Voltar": URL volta para o estado filtrado e dispara popstate.
+    // jsdom não navega automaticamente, então repomos a URL antes do evento.
+    await act(async () => {
+      window.history.replaceState(null, "", filteredUrl);
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    await waitFor(() => {
+      expect(getGlobalAgravo()).toBe("dengue");
+    });
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("heading", { name: /Selecione um agravo/i }),
+      ).toBeNull(),
+    );
+    expect(screen.getByTestId("active-filters").textContent).toMatch(/Dengue/i);
+
+    // "Avançar" novamente: volta ao estado limpo, com placeholder e sem loader.
+    await act(async () => {
+      window.history.replaceState(null, "", "/fichas");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    await waitFor(() =>
+      expect(
+        screen.getByRole("heading", { name: /Selecione um agravo/i }),
+      ).toBeTruthy(),
+    );
+    expect(document.querySelectorAll(".animate-pulse").length).toBe(0);
+    expect(screen.queryByTestId("active-filters")).toBeNull();
   });
 });

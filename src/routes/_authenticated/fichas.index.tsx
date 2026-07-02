@@ -226,6 +226,8 @@ export function FichasListPage() {
 
   // Persist current filters to the URL so a refresh restores them (and, with
   // no filters selected, keeps the page in its empty placeholder state).
+  // Uses replaceState to avoid flooding history with every keystroke — the
+  // clear action below intentionally uses pushState so Back/Forward work.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams();
@@ -240,6 +242,25 @@ export function FichasListPage() {
     window.history.replaceState(null, "", url);
   }, [agravoFilter, search, statusFilter, dateSort, pageSize, page]);
 
+  // Restore filter state from the URL whenever the user hits Back/Forward.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    function hydrateFromUrl() {
+      const next = readInitialFilters();
+      setSearch(next.search);
+      setStatusFilter(next.status);
+      setDateSort(next.sort);
+      setPageSize(next.pageSize);
+      setPage(next.page);
+      const fromUrl = readInitialAgravoFromUrl() ?? "";
+      setAgravoFilter(fromUrl);
+    }
+    window.addEventListener("popstate", hydrateFromUrl);
+    return () => window.removeEventListener("popstate", hydrateFromUrl);
+    // setAgravoFilter is stable (module-level setter), other setters are stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function clearAllFilters() {
     setSearch("");
     setAgravoFilter("");
@@ -248,11 +269,34 @@ export function FichasListPage() {
     setPageSize(DEFAULT_PAGE_SIZE);
     setPage(0);
     if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", window.location.pathname);
+      // pushState so the user can go Back to the previous filter state.
+      window.history.pushState(null, "", window.location.pathname);
     }
     toast.success("Filtros limpos", {
       description: "A tela voltou ao estado inicial.",
     });
+  }
+
+  const activeFilterChips: { key: string; label: string }[] = [];
+  if (agravoFilter) {
+    const found = AGRAVOS.find((a) => a.tipo === agravoFilter);
+    activeFilterChips.push({
+      key: "agravo",
+      label: `Agravo: ${found?.label ?? agravoFilter}`,
+    });
+  }
+  if (search) activeFilterChips.push({ key: "q", label: `Busca: "${search}"` });
+  if (statusFilter && statusFilter !== "all") {
+    activeFilterChips.push({
+      key: "status",
+      label: `Status: ${statusFilter === "em_investigacao" ? "Em Aberto" : "Encerrado"}`,
+    });
+  }
+  if (dateSort !== "desc") {
+    activeFilterChips.push({ key: "sort", label: "Ordenação: mais antigas primeiro" });
+  }
+  if (pageSize !== DEFAULT_PAGE_SIZE) {
+    activeFilterChips.push({ key: "size", label: `${pageSize} por página` });
   }
 
   const { data: allCases = [], isLoading } = useQuery({
@@ -409,6 +453,25 @@ export function FichasListPage() {
           </Button>
         )}
       </div>
+
+      {activeFilterChips.length > 0 && (
+        <div
+          className="flex flex-wrap items-center gap-2"
+          aria-label="Filtros ativos"
+          data-testid="active-filters"
+        >
+          <span className="text-xs text-muted-foreground">Filtros ativos:</span>
+          {activeFilterChips.map((chip) => (
+            <Badge
+              key={chip.key}
+              variant="secondary"
+              className="rounded-full px-2.5 py-0.5 text-xs font-normal"
+            >
+              {chip.label}
+            </Badge>
+          ))}
+        </div>
+      )}
 
       {!agravoFilter ? (
         <Card className="p-12 text-center">
