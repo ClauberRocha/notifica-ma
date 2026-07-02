@@ -1403,31 +1403,34 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                 </Card>
 
                 <Card className="glass-card border-border/50">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Distribuição por Gênero</CardTitle>
+                    <ChartExportButtons targetRef={sexoChartRef} filename="distribuicao-por-genero" />
                   </CardHeader>
                   <CardContent className="flex flex-col items-center">
                     {sexoData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height={220}>
-                        <PieChart>
-                          <Pie
-                            data={sexoData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={55}
-                            outerRadius={80}
-                            paddingAngle={3}
-                            dataKey="value"
-                            label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
-                          >
-                            {sexoData.map((_, i) => (
-                              <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                            ))}
-                          </Pie>
-                          <Tooltip content={<CustomTooltip categoryLabel="Gênero" />} />
-                          <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                        </PieChart>
-                      </ResponsiveContainer>
+                      <div ref={sexoChartRef} className="bg-background w-full">
+                        <ResponsiveContainer width="100%" height={220}>
+                          <PieChart>
+                            <Pie
+                              data={sexoData}
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={55}
+                              outerRadius={80}
+                              paddingAngle={3}
+                              dataKey="value"
+                              label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+                            >
+                              {sexoData.map((_, i) => (
+                                <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <Tooltip content={<CustomTooltip categoryLabel="Gênero" />} trigger={isMobile ? "click" : "hover"} />
+                            <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
                     ) : (
                       <p className="text-xs text-muted-foreground py-16">Sem dados</p>
                     )}
