@@ -48,7 +48,7 @@ beforeEach(() => {
   vi.spyOn(document, "createElement").mockImplementation((tag: string) => {
     const el = originalCreate(tag) as HTMLElement;
     if (tag.toLowerCase() === "a") {
-      (el as HTMLAnchorElement).click = clickSpy;
+      (el as HTMLAnchorElement).click = clickSpy as unknown as () => void;
     }
     return el;
   });
