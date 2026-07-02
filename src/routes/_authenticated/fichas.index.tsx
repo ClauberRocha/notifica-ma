@@ -48,29 +48,103 @@ import { deleteCase } from "@/lib/offline/db";
 import { useGlobalAgravo } from "@/lib/global-agravo";
 
 type SortDir = "asc" | "desc";
+type FiltersState = {
+  search: string;
+  status: string;
+  sort: SortDir;
+  pageSize: number;
+  page: number;
+};
 
-function readInitialFilters() {
-  if (typeof window === "undefined") {
-    return { search: "", status: "all", sort: "desc" as SortDir, pageSize: 10, page: 0 };
-  }
-  const p = new URLSearchParams(window.location.search);
-  const sortRaw = p.get("sort");
-  const sort: SortDir = sortRaw === "asc" ? "asc" : "desc";
-  const size = Number(p.get("size"));
-  const pageNum = Number(p.get("page"));
+const FICHAS_FILTERS_KEY = "lovable:fichas-filters";
+const DEFAULT_FILTERS: FiltersState = {
+  search: "",
+  status: "all",
+  sort: "desc",
+  pageSize: 10,
+  page: 0,
+};
+
+function normalizeFilters(raw: Partial<FiltersState> | null | undefined): FiltersState {
+  const sort: SortDir = raw?.sort === "asc" ? "asc" : "desc";
+  const size = Number(raw?.pageSize);
+  const pageNum = Number(raw?.page);
   return {
-    search: p.get("q") ?? "",
-    status: p.get("status") ?? "all",
+    search: typeof raw?.search === "string" ? raw.search : "",
+    status: typeof raw?.status === "string" && raw.status ? raw.status : "all",
     sort,
     pageSize: [5, 10, 20, 50].includes(size) ? size : 10,
     page: Number.isFinite(pageNum) && pageNum > 0 ? pageNum : 0,
   };
 }
 
-function readInitialAgravoFromUrl(): string | null {
-  if (typeof window === "undefined") return null;
+function readFiltersFromUrl(): { hasAny: boolean; filters: FiltersState; agravo: string } {
+  if (typeof window === "undefined") {
+    return { hasAny: false, filters: DEFAULT_FILTERS, agravo: "" };
+  }
   const p = new URLSearchParams(window.location.search);
-  return p.get("agravo");
+  const hasAny = ["agravo", "q", "status", "sort", "size", "page"].some((k) => p.has(k));
+  return {
+    hasAny,
+    agravo: p.get("agravo") ?? "",
+    filters: normalizeFilters({
+      search: p.get("q") ?? "",
+      status: p.get("status") ?? "all",
+      sort: (p.get("sort") as SortDir) ?? "desc",
+      pageSize: Number(p.get("size")),
+      page: Number(p.get("page")),
+    }),
+  };
+}
+
+function readFiltersFromStorage(): { filters: FiltersState; agravo: string } | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(FICHAS_FILTERS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<FiltersState> & { agravo?: string };
+    return {
+      filters: normalizeFilters(parsed),
+      agravo: typeof parsed.agravo === "string" ? parsed.agravo : "",
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeFiltersToStorage(state: FiltersState & { agravo: string }): void {
+  if (typeof window === "undefined") return;
+  try {
+    const isDefault =
+      !state.agravo &&
+      state.search === "" &&
+      state.status === "all" &&
+      state.sort === "desc" &&
+      state.pageSize === DEFAULT_FILTERS.pageSize &&
+      state.page === 0;
+    if (isDefault) {
+      window.sessionStorage.removeItem(FICHAS_FILTERS_KEY);
+    } else {
+      window.sessionStorage.setItem(FICHAS_FILTERS_KEY, JSON.stringify(state));
+    }
+  } catch {
+    /* ignore quota / privacy errors */
+  }
+}
+
+/** Reads URL first, then sessionStorage, then defaults. */
+function readInitialFilters(): FiltersState {
+  const fromUrl = readFiltersFromUrl();
+  if (fromUrl.hasAny) return fromUrl.filters;
+  const fromStorage = readFiltersFromStorage();
+  return fromStorage?.filters ?? DEFAULT_FILTERS;
+}
+
+function readInitialAgravo(): string {
+  const fromUrl = readFiltersFromUrl();
+  if (fromUrl.hasAny && fromUrl.agravo) return fromUrl.agravo;
+  const fromStorage = readFiltersFromStorage();
+  return fromStorage?.agravo ?? "";
 }
 
 function getSE(dateStr: string | null | undefined): string {
