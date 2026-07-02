@@ -346,6 +346,7 @@ function PainelPage() {
   useChartOutsideDismiss(faixaChartRef);
   useChartOutsideDismiss(racaChartRef);
   useChartOutsideDismiss(mesChartRef);
+  useChartOutsideDismiss(sexoChartRef);
 
 
   const [selectedAgravo, setSelectedAgravo] = useState("all");
