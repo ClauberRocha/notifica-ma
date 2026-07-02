@@ -3,6 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState, useRef, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { buildCriterioData, assertCriterioOrder } from "@/lib/criterio-confirmacao";
+import {
+  hasAgravoSelected,
+  shouldRunAgravoQuery,
+} from "@/lib/painel-visibility";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
