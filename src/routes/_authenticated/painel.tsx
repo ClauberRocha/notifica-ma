@@ -166,23 +166,41 @@ function pct(num: number, total: number): string {
   return `${((num / total) * 100).toFixed(1)}%`;
 }
 
+// Formata números no padrão pt-BR, com casas decimais somente quando aplicável.
+function formatValue(v: unknown): string {
+  if (v === null || v === undefined || v === "") return "";
+  const n = typeof v === "number" ? v : Number(v);
+  if (!Number.isFinite(n)) return String(v);
+  const isInt = Number.isInteger(n);
+  return n.toLocaleString("pt-BR", {
+    minimumFractionDigits: isInt ? 0 : 1,
+    maximumFractionDigits: isInt ? 0 : 2,
+  });
+}
+
 type TooltipPayloadItem = { name?: string; value?: number | string; color?: string; fill?: string };
 const CustomTooltip = ({
   active,
   payload,
   label,
+  categoryLabel,
 }: {
   active?: boolean;
   payload?: TooltipPayloadItem[];
   label?: string;
+  categoryLabel?: string;
 }) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-background border border-border rounded-lg shadow-lg p-3 text-xs">
-        {label && <p className="font-semibold mb-1">{label}</p>}
+        {label !== undefined && label !== "" && (
+          <p className="font-semibold mb-1 text-foreground">
+            {categoryLabel ? `${categoryLabel}: ` : ""}{label}
+          </p>
+        )}
         {payload.map((p, i) => (
           <p key={i} style={{ color: p.color || p.fill }}>
-            {p.name}: <strong>{p.value}</strong>
+            {p.name}: <strong>{formatValue(p.value)}</strong>
           </p>
         ))}
       </div>
@@ -190,6 +208,7 @@ const CustomTooltip = ({
   }
   return null;
 };
+
 
 async function fetchAgravo(a: AgravoDef): Promise<CaseRow[]> {
   const { data, error } = await (supabase as any)
@@ -1182,16 +1201,16 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   <CardContent>
                     {seBarData.length > 0 ? (
                       <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={seBarData}>
-                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-                          <Tooltip content={<CustomTooltip />} />
+                        <BarChart data={seBarData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
+                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-35} textAnchor="end" height={45} />
+                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                          <Tooltip content={<CustomTooltip categoryLabel="SE" />} />
                           <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
                           <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
-                            <LabelList dataKey="count" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                            <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} angle={-45} offset={8} />
                           </Bar>
                           <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                            <LabelList dataKey="confirmados" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                            <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} angle={-45} offset={8} />
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
@@ -1242,12 +1261,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={faixaData} layout="vertical">
-                        <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={55} />
-                        <Tooltip content={<CustomTooltip />} />
+                      <BarChart data={faixaData} layout="vertical" margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
+                        <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} tickFormatter={formatValue} />
+                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={55} interval={0} />
+                        <Tooltip content={<CustomTooltip categoryLabel="Faixa etária" />} />
                         <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="right" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={6} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
@@ -1276,7 +1295,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                               <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                             ))}
                           </Pie>
-                          <Tooltip content={<CustomTooltip />} />
+                          <Tooltip content={<CustomTooltip categoryLabel="Gênero" />} />
                           <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
                         </PieChart>
                       </ResponsiveContainer>
@@ -1295,12 +1314,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={racaData}>
-                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-                        <Tooltip content={<CustomTooltip />} />
+                      <BarChart data={racaData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
+                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-25} textAnchor="end" height={50} />
+                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                        <Tooltip content={<CustomTooltip categoryLabel="Raça/Cor" />} />
                         <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={6} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
@@ -1348,17 +1367,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                 <CardContent>
                   {mesData.length > 0 ? (
                     <ResponsiveContainer width="100%" height={260}>
-                      <LineChart data={mesData}>
+                      <LineChart data={mesData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                        <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-                        <Tooltip content={<CustomTooltip />} />
+                        <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-30} textAnchor="end" height={45} />
+                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                        <Tooltip content={<CustomTooltip categoryLabel="Mês" />} />
                         <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
                         <Line type="monotone" dataKey="notificados" stroke="hsl(213,94%,42%)" strokeWidth={2} name="Notificados">
-                          <LabelList dataKey="notificados" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="notificados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={8} />
                         </Line>
                         <Line type="monotone" dataKey="confirmados" stroke="hsl(0,84%,60%)" strokeWidth={2} name="Confirmados">
-                          <LabelList dataKey="confirmados" position="bottom" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="confirmados" position="bottom" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={8} />
                         </Line>
                       </LineChart>
                     </ResponsiveContainer>
