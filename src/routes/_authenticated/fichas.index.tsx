@@ -45,6 +45,33 @@ import { useAuth } from "@/hooks/use-auth";
 import { getSemanaEpidemiologica } from "@/data/semana-epd";
 import { getSeNumber } from "@/lib/seUtils";
 import { deleteCase } from "@/lib/offline/db";
+import { useGlobalAgravo } from "@/lib/global-agravo";
+
+type SortDir = "asc" | "desc";
+
+function readInitialFilters() {
+  if (typeof window === "undefined") {
+    return { search: "", status: "all", sort: "desc" as SortDir, pageSize: 10, page: 0 };
+  }
+  const p = new URLSearchParams(window.location.search);
+  const sortRaw = p.get("sort");
+  const sort: SortDir = sortRaw === "asc" ? "asc" : "desc";
+  const size = Number(p.get("size"));
+  const pageNum = Number(p.get("page"));
+  return {
+    search: p.get("q") ?? "",
+    status: p.get("status") ?? "all",
+    sort,
+    pageSize: [5, 10, 20, 50].includes(size) ? size : 10,
+    page: Number.isFinite(pageNum) && pageNum > 0 ? pageNum : 0,
+  };
+}
+
+function readInitialAgravoFromUrl(): string | null {
+  if (typeof window === "undefined") return null;
+  const p = new URLSearchParams(window.location.search);
+  return p.get("agravo");
+}
 
 function getSE(dateStr: string | null | undefined): string {
   if (!dateStr) return "";
