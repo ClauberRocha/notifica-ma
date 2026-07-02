@@ -140,7 +140,6 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
     );
 
     // Store global limpo (sincronia com o Painel)
-    const { getGlobalAgravo } = await import("@/lib/global-agravo");
     expect(getGlobalAgravo()).toBe("");
 
     // URL sem query params (refresh mantém a tela vazia)
