@@ -1246,7 +1246,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
       ) : (
         <>
           {/* TAB 1: DASHBOARD EXECUTIVO */}
-          {activeTab === "dashboard" && !selectedAgravo && (
+          {activeTab === "dashboard" && !hasAgravoSelected(selectedAgravo) && (
             <Card className="glass-card border-border/50 p-12 text-center">
               <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
               <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
@@ -1256,7 +1256,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
             </Card>
           )}
 
-          {activeTab === "dashboard" && selectedAgravo && (
+          {activeTab === "dashboard" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               {/* Situation banner */}
               <div className={`border rounded-2xl p-4 flex items-start gap-3 transition-colors ${situationStatus.class}`}>
@@ -1394,7 +1394,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 2: ANÁLISE EPIDEMIOLÓGICA */}
-          {activeTab === "analise" && !selectedAgravo && (
+          {activeTab === "analise" && !hasAgravoSelected(selectedAgravo) && (
             <Card className="glass-card border-border/50 p-12 text-center">
               <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
               <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
@@ -1404,7 +1404,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
             </Card>
           )}
 
-          {activeTab === "analise" && selectedAgravo && (
+          {activeTab === "analise" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               {/* Row 1: Faixa Etária and Sexo */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
