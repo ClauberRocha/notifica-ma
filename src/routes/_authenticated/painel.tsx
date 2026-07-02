@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState, lazy, Suspense } from "react";
+import { useMemo, useState, useRef, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { buildCriterioData, assertCriterioOrder } from "@/lib/criterio-confirmacao";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -210,6 +210,109 @@ const CustomTooltip = ({
   return null;
 };
 
+// Dispensa o tooltip do Recharts quando o usuário toca fora da área do gráfico.
+function useChartOutsideDismiss(ref: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    function onPointerDown(e: PointerEvent) {
+      const el = ref.current;
+      if (!el) return;
+      if (el.contains(e.target as Node)) return;
+      const wrapper = el.querySelector(".recharts-wrapper");
+      if (wrapper) {
+        wrapper.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [ref]);
+}
+
+function triggerDownload(url: string, filename: string) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function exportChartPng(el: HTMLElement, filename: string) {
+  try {
+    const mod = await import("html2canvas-pro");
+    const html2canvas = mod.default;
+    const canvas = await html2canvas(el, {
+      backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
+      scale: 2,
+      useCORS: true,
+    });
+    triggerDownload(canvas.toDataURL("image/png"), `${filename}.png`);
+    toast.success("PNG exportado");
+  } catch (err) {
+    console.error(err);
+    toast.error("Falha ao exportar PNG");
+  }
+}
+
+function exportChartSvg(el: HTMLElement, filename: string) {
+  try {
+    const svg = el.querySelector("svg.recharts-surface") as SVGSVGElement | null;
+    if (!svg) {
+      toast.error("Gráfico não encontrado");
+      return;
+    }
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    if (!clone.getAttribute("width")) clone.setAttribute("width", String(svg.clientWidth));
+    if (!clone.getAttribute("height")) clone.setAttribute("height", String(svg.clientHeight));
+    const data = new XMLSerializer().serializeToString(clone);
+    const blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n', data], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    triggerDownload(url, `${filename}.svg`);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast.success("SVG exportado");
+  } catch (err) {
+    console.error(err);
+    toast.error("Falha ao exportar SVG");
+  }
+}
+
+function ChartExportButtons({
+  targetRef,
+  filename,
+}: {
+  targetRef: React.RefObject<HTMLDivElement | null>;
+  filename: string;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <Button
+        type="button"
+        size="sm"
+        variant="ghost"
+        className="h-7 px-2 text-[10px] gap-1"
+        onClick={() => targetRef.current && exportChartPng(targetRef.current, filename)}
+        aria-label={`Exportar ${filename} como PNG`}
+      >
+        <Download className="h-3 w-3" /> PNG
+      </Button>
+      <Button
+        type="button"
+        size="sm"
+        variant="ghost"
+        className="h-7 px-2 text-[10px] gap-1"
+        onClick={() => targetRef.current && exportChartSvg(targetRef.current, filename)}
+        aria-label={`Exportar ${filename} como SVG`}
+      >
+        <Download className="h-3 w-3" /> SVG
+      </Button>
+    </div>
+  );
+}
+
+
+
 
 async function fetchAgravo(a: AgravoDef): Promise<CaseRow[]> {
   const { data, error } = await (supabase as any)
@@ -232,6 +335,16 @@ function PainelPage() {
   const labelOffsetV = isMobile ? 10 : 8;
   const axisAngle = isMobile ? -55 : -30;
   const axisHeight = isMobile ? 60 : 45;
+
+  // Refs para exportação PNG/SVG e dispensa de tooltip por toque fora.
+  const seChartRef = useRef<HTMLDivElement>(null);
+  const faixaChartRef = useRef<HTMLDivElement>(null);
+  const racaChartRef = useRef<HTMLDivElement>(null);
+  const mesChartRef = useRef<HTMLDivElement>(null);
+  useChartOutsideDismiss(seChartRef);
+  useChartOutsideDismiss(faixaChartRef);
+  useChartOutsideDismiss(racaChartRef);
+  useChartOutsideDismiss(mesChartRef);
 
 
   const [selectedAgravo, setSelectedAgravo] = useState("all");
@@ -1205,25 +1318,28 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               {/* Weekly trend chart and summary side metrics */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2 glass-card border-border/50">
-                  <CardHeader className="pb-2">
+                  <CardHeader className="pb-2 flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Casos por Semana Epidemiológica</CardTitle>
+                    <ChartExportButtons targetRef={seChartRef} filename="casos-por-semana-epidemiologica" />
                   </CardHeader>
                   <CardContent>
                     {seBarData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={seBarData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
-                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
-                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
-                          <Tooltip content={<CustomTooltip categoryLabel="SE" />} />
-                          <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                          <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
-                            <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
-                          </Bar>
-                          <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                            <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                      <div ref={seChartRef} className="bg-background">
+                        <ResponsiveContainer width="100%" height={260}>
+                          <BarChart data={seBarData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
+                            <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
+                            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                            <Tooltip content={<CustomTooltip categoryLabel="SE" />} trigger={isMobile ? "click" : "hover"} />
+                            <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
+                            <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
+                              <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
+                            </Bar>
+                            <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
+                              <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     ) : (
                       <div className="h-64 flex items-center justify-center text-muted-foreground text-xs">Sem registros</div>
                     )}
@@ -1266,20 +1382,23 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               {/* Row 1: Faixa Etária and Sexo */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="glass-card border-border/50">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Distribuição por Faixa Etária</CardTitle>
+                    <ChartExportButtons targetRef={faixaChartRef} filename="distribuicao-por-faixa-etaria" />
                   </CardHeader>
                   <CardContent>
-                    <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={faixaData} accessibilityLayer layout="vertical" margin={{ top: 5, right: isMobile ? 44 : 40, left: 0, bottom: 5 }}>
-                        <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} tickFormatter={formatValue} />
-                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={isMobile ? 48 : 55} interval={0} />
-                        <Tooltip content={<CustomTooltip categoryLabel="Faixa etária" />} />
-                        <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} offset={isMobile ? 4 : 6} />
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <div ref={faixaChartRef} className="bg-background">
+                      <ResponsiveContainer width="100%" height={240}>
+                        <BarChart data={faixaData} accessibilityLayer layout="vertical" margin={{ top: 5, right: isMobile ? 44 : 40, left: 0, bottom: 5 }}>
+                          <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} tickFormatter={formatValue} />
+                          <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={isMobile ? 48 : 55} interval={0} />
+                          <Tooltip content={<CustomTooltip categoryLabel="Faixa etária" />} trigger={isMobile ? "click" : "hover"} />
+                          <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
+                            <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} offset={isMobile ? 4 : 6} />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -1319,20 +1438,23 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               {/* Row 2: Raça/Cor and Confirmatory Criteria */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="glass-card border-border/50">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Distribuição por Raça/Cor</CardTitle>
+                    <ChartExportButtons targetRef={racaChartRef} filename="distribuicao-por-raca-cor" />
                   </CardHeader>
                   <CardContent>
-                    <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={racaData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
-                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={axisAngle} textAnchor="end" height={axisHeight} />
-                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
-                        <Tooltip content={<CustomTooltip categoryLabel="Raça/Cor" />} />
-                        <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={isMobile ? 10 : 6} />
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <div ref={racaChartRef} className="bg-background">
+                      <ResponsiveContainer width="100%" height={240}>
+                        <BarChart data={racaData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
+                          <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={axisAngle} textAnchor="end" height={axisHeight} />
+                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                          <Tooltip content={<CustomTooltip categoryLabel="Raça/Cor" />} trigger={isMobile ? "click" : "hover"} />
+                          <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
+                            <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={isMobile ? 10 : 6} />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -1371,26 +1493,29 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
 
               {/* Monthly comparison line chart */}
               <Card className="glass-card border-border/50">
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                   <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Evolução de Casos por Mês</CardTitle>
+                  <ChartExportButtons targetRef={mesChartRef} filename="evolucao-casos-por-mes" />
                 </CardHeader>
                 <CardContent>
                   {mesData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={260}>
-                      <LineChart data={mesData} accessibilityLayer margin={{ top: 24, right: 20, left: 0, bottom: 20 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                        <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
-                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
-                        <Tooltip content={<CustomTooltip categoryLabel="Mês" />} />
-                        <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                        <Line type="monotone" dataKey="notificados" stroke="hsl(213,94%,42%)" strokeWidth={2} name="Notificados">
-                          <LabelList dataKey="notificados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={labelOffsetV} />
-                        </Line>
-                        <Line type="monotone" dataKey="confirmados" stroke="hsl(0,84%,60%)" strokeWidth={2} name="Confirmados">
-                          <LabelList dataKey="confirmados" position="bottom" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={labelOffsetV} />
-                        </Line>
-                      </LineChart>
-                    </ResponsiveContainer>
+                    <div ref={mesChartRef} className="bg-background">
+                      <ResponsiveContainer width="100%" height={260}>
+                        <LineChart data={mesData} accessibilityLayer margin={{ top: 24, right: 20, left: 0, bottom: 20 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
+                          <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
+                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                          <Tooltip content={<CustomTooltip categoryLabel="Mês" />} trigger={isMobile ? "click" : "hover"} />
+                          <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
+                          <Line type="monotone" dataKey="notificados" stroke="hsl(213,94%,42%)" strokeWidth={2} name="Notificados">
+                            <LabelList dataKey="notificados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={labelOffsetV} />
+                          </Line>
+                          <Line type="monotone" dataKey="confirmados" stroke="hsl(0,84%,60%)" strokeWidth={2} name="Confirmados">
+                            <LabelList dataKey="confirmados" position="bottom" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={labelOffsetV} />
+                          </Line>
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   ) : (
                     <div className="h-64 flex items-center justify-center text-muted-foreground text-xs">Sem registros</div>
                   )}
