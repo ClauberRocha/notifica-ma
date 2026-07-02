@@ -1261,12 +1261,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={faixaData} layout="vertical">
-                        <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={55} />
-                        <Tooltip content={<CustomTooltip />} />
+                      <BarChart data={faixaData} layout="vertical" margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
+                        <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} tickFormatter={formatValue} />
+                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={55} interval={0} />
+                        <Tooltip content={<CustomTooltip categoryLabel="Faixa etária" />} />
                         <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="right" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={6} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
