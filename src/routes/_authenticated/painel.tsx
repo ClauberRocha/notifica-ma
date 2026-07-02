@@ -224,6 +224,15 @@ async function fetchAgravo(a: AgravoDef): Promise<CaseRow[]> {
 function PainelPage() {
   const { tab: activeTab = "dashboard" } = Route.useSearch();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  // Ajustes responsivos das labels pretas: no mobile aumentamos o ângulo
+  // e reduzimos fonte/offset para evitar sobreposição em telas estreitas.
+  const labelFontSize = isMobile ? 8 : 9;
+  const labelAngleV = isMobile ? -60 : -45; // labels no topo de barras/linhas
+  const labelOffsetV = isMobile ? 10 : 8;
+  const axisAngle = isMobile ? -55 : -30;
+  const axisHeight = isMobile ? 60 : 45;
+
 
   const [selectedAgravo, setSelectedAgravo] = useState("all");
   const [selectedEvolucao, setSelectedEvolucao] = useState("all");
