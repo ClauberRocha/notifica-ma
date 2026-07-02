@@ -66,6 +66,7 @@ import { getSeNumber } from "@/lib/seUtils";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 
 const SmartMap = lazy(() => import("@/components/SmartMap"));
@@ -223,6 +224,15 @@ async function fetchAgravo(a: AgravoDef): Promise<CaseRow[]> {
 function PainelPage() {
   const { tab: activeTab = "dashboard" } = Route.useSearch();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  // Ajustes responsivos das labels pretas: no mobile aumentamos o ângulo
+  // e reduzimos fonte/offset para evitar sobreposição em telas estreitas.
+  const labelFontSize = isMobile ? 8 : 9;
+  const labelAngleV = isMobile ? -60 : -45; // labels no topo de barras/linhas
+  const labelOffsetV = isMobile ? 10 : 8;
+  const axisAngle = isMobile ? -55 : -30;
+  const axisHeight = isMobile ? 60 : 45;
+
 
   const [selectedAgravo, setSelectedAgravo] = useState("all");
   const [selectedEvolucao, setSelectedEvolucao] = useState("all");
@@ -1201,16 +1211,16 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   <CardContent>
                     {seBarData.length > 0 ? (
                       <ResponsiveContainer width="100%" height={260}>
-                        <BarChart data={seBarData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
-                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-35} textAnchor="end" height={45} />
+                        <BarChart data={seBarData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
+                          <XAxis dataKey="se" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
                           <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
                           <Tooltip content={<CustomTooltip categoryLabel="SE" />} />
                           <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
                           <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
-                            <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} angle={-45} offset={8} />
+                            <LabelList dataKey="count" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
                           </Bar>
                           <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                            <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} angle={-45} offset={8} />
+                            <LabelList dataKey="confirmados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={labelAngleV} offset={labelOffsetV} />
                           </Bar>
                         </BarChart>
                       </ResponsiveContainer>
@@ -1261,12 +1271,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={faixaData} layout="vertical" margin={{ top: 5, right: 40, left: 0, bottom: 5 }}>
+                      <BarChart data={faixaData} accessibilityLayer layout="vertical" margin={{ top: 5, right: isMobile ? 44 : 40, left: 0, bottom: 5 }}>
                         <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} tickFormatter={formatValue} />
-                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={55} interval={0} />
+                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={isMobile ? 48 : 55} interval={0} />
                         <Tooltip content={<CustomTooltip categoryLabel="Faixa etária" />} />
                         <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={6} />
+                          <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} offset={isMobile ? 4 : 6} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
@@ -1314,12 +1324,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={racaData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
-                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-25} textAnchor="end" height={50} />
+                      <BarChart data={racaData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
+                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={axisAngle} textAnchor="end" height={axisHeight} />
                         <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
                         <Tooltip content={<CustomTooltip categoryLabel="Raça/Cor" />} />
                         <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={6} />
+                          <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={isMobile ? 10 : 6} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
@@ -1367,17 +1377,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                 <CardContent>
                   {mesData.length > 0 ? (
                     <ResponsiveContainer width="100%" height={260}>
-                      <LineChart data={mesData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+                      <LineChart data={mesData} accessibilityLayer margin={{ top: 24, right: 20, left: 0, bottom: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                        <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-30} textAnchor="end" height={45} />
+                        <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={isMobile ? "preserveStartEnd" : 0} angle={axisAngle} textAnchor="end" height={axisHeight} />
                         <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
                         <Tooltip content={<CustomTooltip categoryLabel="Mês" />} />
                         <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
                         <Line type="monotone" dataKey="notificados" stroke="hsl(213,94%,42%)" strokeWidth={2} name="Notificados">
-                          <LabelList dataKey="notificados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={8} />
+                          <LabelList dataKey="notificados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={labelOffsetV} />
                         </Line>
                         <Line type="monotone" dataKey="confirmados" stroke="hsl(0,84%,60%)" strokeWidth={2} name="Confirmados">
-                          <LabelList dataKey="confirmados" position="bottom" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={8} />
+                          <LabelList dataKey="confirmados" position="bottom" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={labelOffsetV} />
                         </Line>
                       </LineChart>
                     </ResponsiveContainer>
