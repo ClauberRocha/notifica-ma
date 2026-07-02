@@ -36,6 +36,7 @@ import {
   Syringe,
   Trash2,
   ArrowLeft,
+  X,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
