@@ -202,7 +202,7 @@ function FichasListPage() {
       !q ||
       (c.nome_paciente?.toLowerCase().includes(q) ?? false) ||
       (c.municipio_notificacao?.toLowerCase().includes(q) ?? false);
-    const matchAgravo = agravoFilter === "all" || c._tipo === agravoFilter;
+    const matchAgravo = !agravoFilter || c._tipo === agravoFilter;
     const matchStatus = statusFilter === "all" || c.status === statusFilter;
     return matchSearch && matchAgravo && matchStatus;
   });
