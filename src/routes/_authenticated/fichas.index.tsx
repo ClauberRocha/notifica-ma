@@ -48,29 +48,103 @@ import { deleteCase } from "@/lib/offline/db";
 import { useGlobalAgravo } from "@/lib/global-agravo";
 
 type SortDir = "asc" | "desc";
+type FiltersState = {
+  search: string;
+  status: string;
+  sort: SortDir;
+  pageSize: number;
+  page: number;
+};
 
-function readInitialFilters() {
-  if (typeof window === "undefined") {
-    return { search: "", status: "all", sort: "desc" as SortDir, pageSize: 10, page: 0 };
-  }
-  const p = new URLSearchParams(window.location.search);
-  const sortRaw = p.get("sort");
-  const sort: SortDir = sortRaw === "asc" ? "asc" : "desc";
-  const size = Number(p.get("size"));
-  const pageNum = Number(p.get("page"));
+const FICHAS_FILTERS_KEY = "lovable:fichas-filters";
+const DEFAULT_FILTERS: FiltersState = {
+  search: "",
+  status: "all",
+  sort: "desc",
+  pageSize: 10,
+  page: 0,
+};
+
+function normalizeFilters(raw: Partial<FiltersState> | null | undefined): FiltersState {
+  const sort: SortDir = raw?.sort === "asc" ? "asc" : "desc";
+  const size = Number(raw?.pageSize);
+  const pageNum = Number(raw?.page);
   return {
-    search: p.get("q") ?? "",
-    status: p.get("status") ?? "all",
+    search: typeof raw?.search === "string" ? raw.search : "",
+    status: typeof raw?.status === "string" && raw.status ? raw.status : "all",
     sort,
     pageSize: [5, 10, 20, 50].includes(size) ? size : 10,
     page: Number.isFinite(pageNum) && pageNum > 0 ? pageNum : 0,
   };
 }
 
-function readInitialAgravoFromUrl(): string | null {
-  if (typeof window === "undefined") return null;
+function readFiltersFromUrl(): { hasAny: boolean; filters: FiltersState; agravo: string } {
+  if (typeof window === "undefined") {
+    return { hasAny: false, filters: DEFAULT_FILTERS, agravo: "" };
+  }
   const p = new URLSearchParams(window.location.search);
-  return p.get("agravo");
+  const hasAny = ["agravo", "q", "status", "sort", "size", "page"].some((k) => p.has(k));
+  return {
+    hasAny,
+    agravo: p.get("agravo") ?? "",
+    filters: normalizeFilters({
+      search: p.get("q") ?? "",
+      status: p.get("status") ?? "all",
+      sort: (p.get("sort") as SortDir) ?? "desc",
+      pageSize: Number(p.get("size")),
+      page: Number(p.get("page")),
+    }),
+  };
+}
+
+function readFiltersFromStorage(): { filters: FiltersState; agravo: string } | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(FICHAS_FILTERS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<FiltersState> & { agravo?: string };
+    return {
+      filters: normalizeFilters(parsed),
+      agravo: typeof parsed.agravo === "string" ? parsed.agravo : "",
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeFiltersToStorage(state: FiltersState & { agravo: string }): void {
+  if (typeof window === "undefined") return;
+  try {
+    const isDefault =
+      !state.agravo &&
+      state.search === "" &&
+      state.status === "all" &&
+      state.sort === "desc" &&
+      state.pageSize === DEFAULT_FILTERS.pageSize &&
+      state.page === 0;
+    if (isDefault) {
+      window.sessionStorage.removeItem(FICHAS_FILTERS_KEY);
+    } else {
+      window.sessionStorage.setItem(FICHAS_FILTERS_KEY, JSON.stringify(state));
+    }
+  } catch {
+    /* ignore quota / privacy errors */
+  }
+}
+
+/** Reads URL first, then sessionStorage, then defaults. */
+function readInitialFilters(): FiltersState {
+  const fromUrl = readFiltersFromUrl();
+  if (fromUrl.hasAny) return fromUrl.filters;
+  const fromStorage = readFiltersFromStorage();
+  return fromStorage?.filters ?? DEFAULT_FILTERS;
+}
+
+function readInitialAgravo(): string {
+  const fromUrl = readFiltersFromUrl();
+  if (fromUrl.hasAny && fromUrl.agravo) return fromUrl.agravo;
+  const fromStorage = readFiltersFromStorage();
+  return fromStorage?.agravo ?? "";
 }
 
 function getSE(dateStr: string | null | undefined): string {
@@ -213,21 +287,20 @@ export function FichasListPage() {
   const [page, setPage] = useState(initial.page);
   const [pageSize, setPageSize] = useState(initial.pageSize);
 
-  // Seed the shared agravo filter from ?agravo=... on first mount so that
-  // refreshing / opening a deep link restores the same view.
+  // Seed the shared agravo filter on first mount from the URL, or — when
+  // navigating back to /fichas after switching tabs — from sessionStorage.
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
     seededRef.current = true;
-    const fromUrl = readInitialAgravoFromUrl();
-    if (fromUrl && fromUrl !== agravoFilter) setAgravoFilter(fromUrl);
+    const seeded = readInitialAgravo();
+    if (seeded && seeded !== agravoFilter) setAgravoFilter(seeded);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Persist current filters to the URL so a refresh restores them (and, with
-  // no filters selected, keeps the page in its empty placeholder state).
-  // Uses replaceState to avoid flooding history with every keystroke — the
-  // clear action below intentionally uses pushState so Back/Forward work.
+  // Persist current filters to the URL (for refresh/deep-link) AND to
+  // sessionStorage (so switching to another route and coming back restores
+  // exactly the same view — the URL is lost when the user navigates away).
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams();
@@ -240,24 +313,30 @@ export function FichasListPage() {
     const qs = params.toString();
     const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
     window.history.replaceState(null, "", url);
+    writeFiltersToStorage({
+      agravo: agravoFilter,
+      search,
+      status: statusFilter,
+      sort: dateSort,
+      pageSize,
+      page,
+    });
   }, [agravoFilter, search, statusFilter, dateSort, pageSize, page]);
 
   // Restore filter state from the URL whenever the user hits Back/Forward.
   useEffect(() => {
     if (typeof window === "undefined") return;
     function hydrateFromUrl() {
-      const next = readInitialFilters();
-      setSearch(next.search);
-      setStatusFilter(next.status);
-      setDateSort(next.sort);
-      setPageSize(next.pageSize);
-      setPage(next.page);
-      const fromUrl = readInitialAgravoFromUrl() ?? "";
-      setAgravoFilter(fromUrl);
+      const { filters, agravo } = readFiltersFromUrl();
+      setSearch(filters.search);
+      setStatusFilter(filters.status);
+      setDateSort(filters.sort);
+      setPageSize(filters.pageSize);
+      setPage(filters.page);
+      setAgravoFilter(agravo);
     }
     window.addEventListener("popstate", hydrateFromUrl);
     return () => window.removeEventListener("popstate", hydrateFromUrl);
-    // setAgravoFilter is stable (module-level setter), other setters are stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
