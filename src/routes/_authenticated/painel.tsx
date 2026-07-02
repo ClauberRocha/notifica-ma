@@ -1187,8 +1187,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                           <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
                           <Tooltip content={<CustomTooltip />} />
                           <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                          <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados" />
-                          <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados" />
+                          <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
+                            <LabelList dataKey="count" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          </Bar>
+                          <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
+                            <LabelList dataKey="confirmados" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          </Bar>
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
