@@ -1367,17 +1367,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                 <CardContent>
                   {mesData.length > 0 ? (
                     <ResponsiveContainer width="100%" height={260}>
-                      <LineChart data={mesData}>
+                      <LineChart data={mesData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.5} />
-                        <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-                        <Tooltip content={<CustomTooltip />} />
+                        <XAxis dataKey="mes" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-30} textAnchor="end" height={45} />
+                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                        <Tooltip content={<CustomTooltip categoryLabel="Mês" />} />
                         <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
                         <Line type="monotone" dataKey="notificados" stroke="hsl(213,94%,42%)" strokeWidth={2} name="Notificados">
-                          <LabelList dataKey="notificados" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="notificados" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={8} />
                         </Line>
                         <Line type="monotone" dataKey="confirmados" stroke="hsl(0,84%,60%)" strokeWidth={2} name="Confirmados">
-                          <LabelList dataKey="confirmados" position="bottom" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="confirmados" position="bottom" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={8} />
                         </Line>
                       </LineChart>
                     </ResponsiveContainer>
