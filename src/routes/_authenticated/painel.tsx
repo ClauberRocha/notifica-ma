@@ -340,6 +340,7 @@ function PainelPage() {
   const seChartRef = useRef<HTMLDivElement>(null);
   const faixaChartRef = useRef<HTMLDivElement>(null);
   const racaChartRef = useRef<HTMLDivElement>(null);
+  const sexoChartRef = useRef<HTMLDivElement>(null);
   const mesChartRef = useRef<HTMLDivElement>(null);
   useChartOutsideDismiss(seChartRef);
   useChartOutsideDismiss(faixaChartRef);
