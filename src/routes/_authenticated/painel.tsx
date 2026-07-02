@@ -1246,7 +1246,9 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                         <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
                         <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={55} />
                         <Tooltip content={<CustomTooltip />} />
-                        <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados" />
+                        <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
+                          <LabelList dataKey="value" position="right" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </CardContent>
