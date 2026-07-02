@@ -87,21 +87,21 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
 
   it("mostra o placeholder inicial quando nenhum agravo está selecionado", () => {
     renderPage();
-    expect(screen.getByText(/Selecione um agravo/i)).toBeInTheDocument();
+    expect(screen.getByText(/Selecione um agravo/i)).toBeTruthy();
     // Nenhum skeleton deve aparecer no estado vazio
     expect(document.querySelectorAll(".animate-pulse").length).toBe(0);
   });
 
   it("ao selecionar um agravo pelo store global, o placeholder desaparece", async () => {
     renderPage();
-    expect(screen.getByText(/Selecione um agravo/i)).toBeInTheDocument();
+    expect(screen.getByText(/Selecione um agravo/i)).toBeTruthy();
 
     await act(async () => {
       setGlobalAgravo("dengue");
     });
 
     await waitFor(() =>
-      expect(screen.queryByText(/Selecione um agravo/i)).not.toBeInTheDocument(),
+      expect(screen.queryByText(/Selecione um agravo/i)).toBeNull(),
     );
     // A tabela deve estar montada agora
     expect(document.querySelector("table")).not.toBeNull();
@@ -125,7 +125,7 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
 
     // Placeholder de volta
     await waitFor(() =>
-      expect(screen.getByText(/Selecione um agravo/i)).toBeInTheDocument(),
+      expect(screen.getByText(/Selecione um agravo/i)).toBeTruthy(),
     );
 
     // Store global limpo (sincronia com o Painel)
