@@ -880,7 +880,7 @@ function PainelPage() {
 
   // Active filters check
   const anyFilter =
-    selectedAgravo !== "all" ||
+    (selectedAgravo !== "all" && selectedAgravo !== "") ||
     selectedEvolucao !== "all" ||
     seInicio !== "" ||
     seFim !== "" ||
@@ -890,7 +890,7 @@ function PainelPage() {
     selectedStatus !== "all";
 
   const clearAllFilters = () => {
-    setSelectedAgravo("all");
+    setSelectedAgravo("");
     setSelectedEvolucao("all");
     setSeInicio("");
     setSeFim("");
