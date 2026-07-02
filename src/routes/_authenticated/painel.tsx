@@ -1555,7 +1555,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 3: MAPA DE RISCO */}
-          {activeTab === "mapa" && (
+          {activeTab === "mapa" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar o Mapa Epidemiológico.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "mapa" && hasAgravoSelected(selectedAgravo) && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Map container */}
               <div className="lg:col-span-2 space-y-4">
