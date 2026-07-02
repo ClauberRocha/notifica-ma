@@ -1382,20 +1382,23 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               {/* Row 1: Faixa Etária and Sexo */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="glass-card border-border/50">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Distribuição por Faixa Etária</CardTitle>
+                    <ChartExportButtons targetRef={faixaChartRef} filename="distribuicao-por-faixa-etaria" />
                   </CardHeader>
                   <CardContent>
-                    <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={faixaData} accessibilityLayer layout="vertical" margin={{ top: 5, right: isMobile ? 44 : 40, left: 0, bottom: 5 }}>
-                        <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} tickFormatter={formatValue} />
-                        <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={isMobile ? 48 : 55} interval={0} />
-                        <Tooltip content={<CustomTooltip categoryLabel="Faixa etária" />} />
-                        <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} offset={isMobile ? 4 : 6} />
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <div ref={faixaChartRef} className="bg-background">
+                      <ResponsiveContainer width="100%" height={240}>
+                        <BarChart data={faixaData} accessibilityLayer layout="vertical" margin={{ top: 5, right: isMobile ? 44 : 40, left: 0, bottom: 5 }}>
+                          <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} tickFormatter={formatValue} />
+                          <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={isMobile ? 48 : 55} interval={0} />
+                          <Tooltip content={<CustomTooltip categoryLabel="Faixa etária" />} trigger={isMobile ? "click" : "hover"} />
+                          <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
+                            <LabelList dataKey="value" position="right" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} offset={isMobile ? 4 : 6} />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </CardContent>
                 </Card>
 
