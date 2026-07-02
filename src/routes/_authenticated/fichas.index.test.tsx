@@ -12,7 +12,11 @@ import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as React from "react";
-import { setGlobalAgravo, __resetGlobalAgravoForTests } from "@/lib/global-agravo";
+import {
+  setGlobalAgravo,
+  getGlobalAgravo,
+  __resetGlobalAgravoForTests,
+} from "@/lib/global-agravo";
 
 // --- Router hook mocks (no RouterProvider in tests) ---------------------
 vi.mock("@tanstack/react-router", async () => {
