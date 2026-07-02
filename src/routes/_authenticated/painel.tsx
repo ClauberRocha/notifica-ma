@@ -231,56 +231,24 @@ function useChartOutsideDismiss(ref: React.RefObject<HTMLElement | null>) {
   }, [ref]);
 }
 
-function triggerDownload(url: string, filename: string) {
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
+import {
+  exportChartPng as exportChartPngLib,
+  exportChartSvg as exportChartSvgLib,
+} from "@/lib/chart-export";
 
 async function exportChartPng(el: HTMLElement, filename: string) {
-  try {
-    const mod = await import("html2canvas-pro");
-    const html2canvas = mod.default;
-    const canvas = await html2canvas(el, {
-      backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
-      scale: 2,
-      useCORS: true,
-    });
-    triggerDownload(canvas.toDataURL("image/png"), `${filename}.png`);
-    toast.success("PNG exportado");
-  } catch (err) {
-    console.error(err);
-    toast.error("Falha ao exportar PNG");
-  }
+  const r = await exportChartPngLib(el, filename);
+  if (r.ok) toast.success("PNG exportado");
+  else toast.error("Falha ao exportar PNG");
 }
 
 function exportChartSvg(el: HTMLElement, filename: string) {
-  try {
-    const svg = el.querySelector("svg.recharts-surface") as SVGSVGElement | null;
-    if (!svg) {
-      toast.error("Gráfico não encontrado");
-      return;
-    }
-    const clone = svg.cloneNode(true) as SVGSVGElement;
-    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    if (!clone.getAttribute("width")) clone.setAttribute("width", String(svg.clientWidth));
-    if (!clone.getAttribute("height")) clone.setAttribute("height", String(svg.clientHeight));
-    const data = new XMLSerializer().serializeToString(clone);
-    const blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n', data], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    triggerDownload(url, `${filename}.svg`);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast.success("SVG exportado");
-  } catch (err) {
-    console.error(err);
-    toast.error("Falha ao exportar SVG");
-  }
+  const r = exportChartSvgLib(el, filename);
+  if (r.ok) toast.success("SVG exportado");
+  else if (r.reason === "no-svg") toast.error("Gráfico não encontrado");
+  else toast.error("Falha ao exportar SVG");
 }
+
 
 function ChartExportButtons({
   targetRef,
