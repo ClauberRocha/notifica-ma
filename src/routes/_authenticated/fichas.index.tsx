@@ -403,12 +403,7 @@ export function FichasListPage() {
           <Button
             variant="outline"
             className="h-10 gap-2"
-            onClick={() => {
-              setSearch("");
-              setAgravoFilter("");
-              setStatusFilter("all");
-              setPage(0);
-            }}
+            onClick={clearAllFilters}
           >
             <X className="w-4 h-4" /> Limpar filtros
           </Button>
