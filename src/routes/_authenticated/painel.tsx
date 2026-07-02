@@ -349,7 +349,7 @@ function PainelPage() {
   useChartOutsideDismiss(sexoChartRef);
 
 
-  const [selectedAgravo, setSelectedAgravo] = useState("all");
+  const [selectedAgravo, setSelectedAgravo] = useState("");
   const [selectedEvolucao, setSelectedEvolucao] = useState("all");
   const [seInicio, setSeInicio] = useState("");
   const [seFim, setSeFim] = useState("");
