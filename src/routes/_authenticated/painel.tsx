@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState, lazy, Suspense } from "react";
+import { useMemo, useState, useRef, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { buildCriterioData, assertCriterioOrder } from "@/lib/criterio-confirmacao";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
