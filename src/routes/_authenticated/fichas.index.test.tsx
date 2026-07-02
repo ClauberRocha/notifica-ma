@@ -212,4 +212,42 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
     expect(document.querySelectorAll(".animate-pulse").length).toBe(0);
     expect(screen.queryByTestId("active-filters")).toBeNull();
   });
+
+  it("restaura os filtros ao voltar para /fichas depois de trocar de aba (URL perdida)", async () => {
+    // Primeira visita: usuário aplica filtros
+    const first = renderPage();
+    await act(async () => {
+      setGlobalAgravo("dengue");
+    });
+    await waitFor(() => expect(document.querySelector("table")).not.toBeNull());
+    // Confirma que os filtros foram persistidos em sessionStorage
+    await waitFor(() =>
+      expect(window.sessionStorage.getItem("lovable:fichas-filters")).toContain(
+        "dengue",
+      ),
+    );
+
+    // Simula navegação para outra rota: desmonta a página e "perde" a URL
+    first.unmount();
+    __resetGlobalAgravoForTests(); // outra tela poderia ter zerado o store em memória
+    window.history.replaceState(null, "", "/outra-rota");
+
+    // Simula volta para /fichas — a URL não tem mais os query params
+    window.history.replaceState(null, "", "/fichas");
+    renderPage();
+
+    // Placeholder NÃO deve aparecer: filtros foram restaurados do storage
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("heading", { name: /Selecione um agravo/i }),
+      ).toBeNull(),
+    );
+    expect(document.querySelector("table")).not.toBeNull();
+    expect(screen.getByTestId("active-filters").textContent).toMatch(/Dengue/i);
+
+    // E a URL deve ter sido re-hidratada com os params restaurados
+    await waitFor(() =>
+      expect(window.location.search).toContain("agravo=dengue"),
+    );
+  });
 });
