@@ -454,6 +454,25 @@ export function FichasListPage() {
         )}
       </div>
 
+      {activeFilterChips.length > 0 && (
+        <div
+          className="flex flex-wrap items-center gap-2"
+          aria-label="Filtros ativos"
+          data-testid="active-filters"
+        >
+          <span className="text-xs text-muted-foreground">Filtros ativos:</span>
+          {activeFilterChips.map((chip) => (
+            <Badge
+              key={chip.key}
+              variant="secondary"
+              className="rounded-full px-2.5 py-0.5 text-xs font-normal"
+            >
+              {chip.label}
+            </Badge>
+          ))}
+        </div>
+      )}
+
       {!agravoFilter ? (
         <Card className="p-12 text-center">
           <Search className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
