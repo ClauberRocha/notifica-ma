@@ -287,21 +287,20 @@ export function FichasListPage() {
   const [page, setPage] = useState(initial.page);
   const [pageSize, setPageSize] = useState(initial.pageSize);
 
-  // Seed the shared agravo filter from ?agravo=... on first mount so that
-  // refreshing / opening a deep link restores the same view.
+  // Seed the shared agravo filter on first mount from the URL, or — when
+  // navigating back to /fichas after switching tabs — from sessionStorage.
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
     seededRef.current = true;
-    const fromUrl = readInitialAgravoFromUrl();
-    if (fromUrl && fromUrl !== agravoFilter) setAgravoFilter(fromUrl);
+    const seeded = readInitialAgravo();
+    if (seeded && seeded !== agravoFilter) setAgravoFilter(seeded);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Persist current filters to the URL so a refresh restores them (and, with
-  // no filters selected, keeps the page in its empty placeholder state).
-  // Uses replaceState to avoid flooding history with every keystroke — the
-  // clear action below intentionally uses pushState so Back/Forward work.
+  // Persist current filters to the URL (for refresh/deep-link) AND to
+  // sessionStorage (so switching to another route and coming back restores
+  // exactly the same view — the URL is lost when the user navigates away).
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams();
@@ -314,24 +313,30 @@ export function FichasListPage() {
     const qs = params.toString();
     const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
     window.history.replaceState(null, "", url);
+    writeFiltersToStorage({
+      agravo: agravoFilter,
+      search,
+      status: statusFilter,
+      sort: dateSort,
+      pageSize,
+      page,
+    });
   }, [agravoFilter, search, statusFilter, dateSort, pageSize, page]);
 
   // Restore filter state from the URL whenever the user hits Back/Forward.
   useEffect(() => {
     if (typeof window === "undefined") return;
     function hydrateFromUrl() {
-      const next = readInitialFilters();
-      setSearch(next.search);
-      setStatusFilter(next.status);
-      setDateSort(next.sort);
-      setPageSize(next.pageSize);
-      setPage(next.page);
-      const fromUrl = readInitialAgravoFromUrl() ?? "";
-      setAgravoFilter(fromUrl);
+      const { filters, agravo } = readFiltersFromUrl();
+      setSearch(filters.search);
+      setStatusFilter(filters.status);
+      setDateSort(filters.sort);
+      setPageSize(filters.pageSize);
+      setPage(filters.page);
+      setAgravoFilter(agravo);
     }
     window.addEventListener("popstate", hydrateFromUrl);
     return () => window.removeEventListener("popstate", hydrateFromUrl);
-    // setAgravoFilter is stable (module-level setter), other setters are stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
