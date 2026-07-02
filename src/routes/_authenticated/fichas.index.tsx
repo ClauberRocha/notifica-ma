@@ -180,7 +180,7 @@ function FichasListPage() {
   });
 
   const [search, setSearch] = useState("");
-  const [agravoFilter, setAgravoFilter] = useState<string>("all");
+  const [agravoFilter, setAgravoFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [dateSort, setDateSort] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(0);
