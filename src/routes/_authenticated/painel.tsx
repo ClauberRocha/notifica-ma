@@ -1187,8 +1187,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                           <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
                           <Tooltip content={<CustomTooltip />} />
                           <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                          <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados" />
-                          <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados" />
+                          <Bar dataKey="count" fill="hsl(213,94%,42%)" radius={[3, 3, 0, 0]} name="Notificados">
+                            <LabelList dataKey="count" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          </Bar>
+                          <Bar dataKey="confirmados" fill="hsl(0,84%,60%)" radius={[3, 3, 0, 0]} name="Confirmados">
+                            <LabelList dataKey="confirmados" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          </Bar>
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
@@ -1242,7 +1246,9 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                         <XAxis type="number" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
                         <YAxis type="category" dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} width={55} />
                         <Tooltip content={<CustomTooltip />} />
-                        <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados" />
+                        <Bar dataKey="value" fill="hsl(213,94%,42%)" radius={[0, 3, 3, 0]} name="Confirmados">
+                          <LabelList dataKey="value" position="right" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </CardContent>
@@ -1293,7 +1299,9 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                         <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
                         <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
                         <Tooltip content={<CustomTooltip />} />
-                        <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados" />
+                        <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
+                          <LabelList dataKey="value" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </CardContent>
@@ -1346,8 +1354,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                         <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
                         <Tooltip content={<CustomTooltip />} />
                         <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                        <Line type="monotone" dataKey="notificados" stroke="hsl(213,94%,42%)" strokeWidth={2} name="Notificados" />
-                        <Line type="monotone" dataKey="confirmados" stroke="hsl(0,84%,60%)" strokeWidth={2} name="Confirmados" />
+                        <Line type="monotone" dataKey="notificados" stroke="hsl(213,94%,42%)" strokeWidth={2} name="Notificados">
+                          <LabelList dataKey="notificados" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                        </Line>
+                        <Line type="monotone" dataKey="confirmados" stroke="hsl(0,84%,60%)" strokeWidth={2} name="Confirmados">
+                          <LabelList dataKey="confirmados" position="bottom" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                        </Line>
                       </LineChart>
                     </ResponsiveContainer>
                   ) : (
