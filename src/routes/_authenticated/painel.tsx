@@ -388,7 +388,7 @@ function PainelPage() {
   const allCases = useMemo<CaseRow[]>(() => allData, [JSON.stringify(allData.map((c) => c.id))]);
 
   const byAgravo =
-    selectedAgravo === "all"
+    !selectedAgravo || selectedAgravo === "all"
       ? allCases
       : allCases.filter((c) => c._tipo === selectedAgravo);
 
