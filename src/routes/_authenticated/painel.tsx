@@ -1866,7 +1866,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 6: MUNICÍPIOS */}
-          {activeTab === "municipios" && (
+          {activeTab === "municipios" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar o Relatório por Município.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "municipios" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
