@@ -3,6 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState, useRef, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { buildCriterioData, assertCriterioOrder } from "@/lib/criterio-confirmacao";
+import {
+  hasAgravoSelected,
+  shouldRunAgravoQuery,
+} from "@/lib/painel-visibility";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -377,20 +381,22 @@ function PainelPage() {
 
   const queries = AGRAVOS.map((a) =>
     useQuery({
-      queryKey: ["painel", a.key],
+      queryKey: ["painel", a.key, selectedAgravo],
       queryFn: () => fetchAgravo(a),
       staleTime: 60_000,
+      enabled: shouldRunAgravoQuery(selectedAgravo, a.key),
     })
   );
 
-  const isLoading = queries.some((q) => q.isLoading);
+  const isLoading =
+    hasAgravoSelected(selectedAgravo) && queries.some((q) => q.isLoading);
   const allData = queries.flatMap((q) => q.data ?? []);
   const allCases = useMemo<CaseRow[]>(() => allData, [JSON.stringify(allData.map((c) => c.id))]);
 
-  const byAgravo =
-    !selectedAgravo || selectedAgravo === "all"
-      ? allCases
-      : allCases.filter((c) => c._tipo === selectedAgravo);
+  const byAgravo = !hasAgravoSelected(selectedAgravo)
+    ? []
+    : allCases.filter((c) => c._tipo === selectedAgravo);
+
 
   const byEvolucao = useMemo(() => {
     if (selectedEvolucao === "all") return byAgravo;
@@ -1240,7 +1246,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
       ) : (
         <>
           {/* TAB 1: DASHBOARD EXECUTIVO */}
-          {activeTab === "dashboard" && !selectedAgravo && (
+          {activeTab === "dashboard" && !hasAgravoSelected(selectedAgravo) && (
             <Card className="glass-card border-border/50 p-12 text-center">
               <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
               <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
@@ -1250,7 +1256,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
             </Card>
           )}
 
-          {activeTab === "dashboard" && selectedAgravo && (
+          {activeTab === "dashboard" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               {/* Situation banner */}
               <div className={`border rounded-2xl p-4 flex items-start gap-3 transition-colors ${situationStatus.class}`}>
@@ -1388,7 +1394,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 2: ANÁLISE EPIDEMIOLÓGICA */}
-          {activeTab === "analise" && !selectedAgravo && (
+          {activeTab === "analise" && !hasAgravoSelected(selectedAgravo) && (
             <Card className="glass-card border-border/50 p-12 text-center">
               <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
               <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
@@ -1398,7 +1404,7 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
             </Card>
           )}
 
-          {activeTab === "analise" && selectedAgravo && (
+          {activeTab === "analise" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               {/* Row 1: Faixa Etária and Sexo */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1549,7 +1555,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 3: MAPA DE RISCO */}
-          {activeTab === "mapa" && (
+          {activeTab === "mapa" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar o Mapa Epidemiológico.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "mapa" && hasAgravoSelected(selectedAgravo) && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Map container */}
               <div className="lg:col-span-2 space-y-4">
@@ -1666,7 +1682,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 4: CENTRAL DE ALERTAS */}
-          {activeTab === "alertas" && (
+          {activeTab === "alertas" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar os Sinais e Alertas.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "alertas" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -1722,7 +1748,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 5: INDICADORES DE GESTÃO */}
-          {activeTab === "indicadores" && (
+          {activeTab === "indicadores" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar os Indicadores.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "indicadores" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               {/* Opportunity and data completeness charts */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1830,7 +1866,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 6: MUNICÍPIOS */}
-          {activeTab === "municipios" && (
+          {activeTab === "municipios" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar o Relatório por Município.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "municipios" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
@@ -1890,7 +1936,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 7: RELATÓRIOS & EXPORTAÇÕES */}
-          {activeTab === "relatorios" && (
+          {activeTab === "relatorios" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para gerar Relatórios.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "relatorios" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="glass-card border-border/50 p-5 flex flex-col justify-between min-h-[190px]">
