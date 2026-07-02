@@ -210,6 +210,109 @@ const CustomTooltip = ({
   return null;
 };
 
+// Dispensa o tooltip do Recharts quando o usuário toca fora da área do gráfico.
+function useChartOutsideDismiss(ref: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    function onPointerDown(e: PointerEvent) {
+      const el = ref.current;
+      if (!el) return;
+      if (el.contains(e.target as Node)) return;
+      const wrapper = el.querySelector(".recharts-wrapper");
+      if (wrapper) {
+        wrapper.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown, true);
+    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+  }, [ref]);
+}
+
+function triggerDownload(url: string, filename: string) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function exportChartPng(el: HTMLElement, filename: string) {
+  try {
+    const mod = await import("html2canvas-pro");
+    const html2canvas = mod.default;
+    const canvas = await html2canvas(el, {
+      backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
+      scale: 2,
+      useCORS: true,
+    });
+    triggerDownload(canvas.toDataURL("image/png"), `${filename}.png`);
+    toast.success("PNG exportado");
+  } catch (err) {
+    console.error(err);
+    toast.error("Falha ao exportar PNG");
+  }
+}
+
+function exportChartSvg(el: HTMLElement, filename: string) {
+  try {
+    const svg = el.querySelector("svg.recharts-surface") as SVGSVGElement | null;
+    if (!svg) {
+      toast.error("Gráfico não encontrado");
+      return;
+    }
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    if (!clone.getAttribute("width")) clone.setAttribute("width", String(svg.clientWidth));
+    if (!clone.getAttribute("height")) clone.setAttribute("height", String(svg.clientHeight));
+    const data = new XMLSerializer().serializeToString(clone);
+    const blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n', data], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    triggerDownload(url, `${filename}.svg`);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast.success("SVG exportado");
+  } catch (err) {
+    console.error(err);
+    toast.error("Falha ao exportar SVG");
+  }
+}
+
+function ChartExportButtons({
+  targetRef,
+  filename,
+}: {
+  targetRef: React.RefObject<HTMLDivElement | null>;
+  filename: string;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <Button
+        type="button"
+        size="sm"
+        variant="ghost"
+        className="h-7 px-2 text-[10px] gap-1"
+        onClick={() => targetRef.current && exportChartPng(targetRef.current, filename)}
+        aria-label={`Exportar ${filename} como PNG`}
+      >
+        <Download className="h-3 w-3" /> PNG
+      </Button>
+      <Button
+        type="button"
+        size="sm"
+        variant="ghost"
+        className="h-7 px-2 text-[10px] gap-1"
+        onClick={() => targetRef.current && exportChartSvg(targetRef.current, filename)}
+        aria-label={`Exportar ${filename} como SVG`}
+      >
+        <Download className="h-3 w-3" /> SVG
+      </Button>
+    </div>
+  );
+}
+
+
+
 
 async function fetchAgravo(a: AgravoDef): Promise<CaseRow[]> {
   const { data, error } = await (supabase as any)
