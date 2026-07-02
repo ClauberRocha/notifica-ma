@@ -377,20 +377,22 @@ function PainelPage() {
 
   const queries = AGRAVOS.map((a) =>
     useQuery({
-      queryKey: ["painel", a.key],
+      queryKey: ["painel", a.key, selectedAgravo],
       queryFn: () => fetchAgravo(a),
       staleTime: 60_000,
+      enabled: shouldRunAgravoQuery(selectedAgravo, a.key),
     })
   );
 
-  const isLoading = queries.some((q) => q.isLoading);
+  const isLoading =
+    hasAgravoSelected(selectedAgravo) && queries.some((q) => q.isLoading);
   const allData = queries.flatMap((q) => q.data ?? []);
   const allCases = useMemo<CaseRow[]>(() => allData, [JSON.stringify(allData.map((c) => c.id))]);
 
-  const byAgravo =
-    !selectedAgravo || selectedAgravo === "all"
-      ? allCases
-      : allCases.filter((c) => c._tipo === selectedAgravo);
+  const byAgravo = !hasAgravoSelected(selectedAgravo)
+    ? []
+    : allCases.filter((c) => c._tipo === selectedAgravo);
+
 
   const byEvolucao = useMemo(() => {
     if (selectedEvolucao === "all") return byAgravo;
