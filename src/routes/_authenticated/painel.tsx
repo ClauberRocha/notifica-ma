@@ -340,14 +340,16 @@ function PainelPage() {
   const seChartRef = useRef<HTMLDivElement>(null);
   const faixaChartRef = useRef<HTMLDivElement>(null);
   const racaChartRef = useRef<HTMLDivElement>(null);
+  const sexoChartRef = useRef<HTMLDivElement>(null);
   const mesChartRef = useRef<HTMLDivElement>(null);
   useChartOutsideDismiss(seChartRef);
   useChartOutsideDismiss(faixaChartRef);
   useChartOutsideDismiss(racaChartRef);
   useChartOutsideDismiss(mesChartRef);
+  useChartOutsideDismiss(sexoChartRef);
 
 
-  const [selectedAgravo, setSelectedAgravo] = useState("all");
+  const [selectedAgravo, setSelectedAgravo] = useState("");
   const [selectedEvolucao, setSelectedEvolucao] = useState("all");
   const [seInicio, setSeInicio] = useState("");
   const [seFim, setSeFim] = useState("");
@@ -386,7 +388,7 @@ function PainelPage() {
   const allCases = useMemo<CaseRow[]>(() => allData, [JSON.stringify(allData.map((c) => c.id))]);
 
   const byAgravo =
-    selectedAgravo === "all"
+    !selectedAgravo || selectedAgravo === "all"
       ? allCases
       : allCases.filter((c) => c._tipo === selectedAgravo);
 
@@ -1071,11 +1073,10 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               <div className="space-y-1">
                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Agravo</Label>
                 <Select value={selectedAgravo} onValueChange={setSelectedAgravo}>
-                  <SelectTrigger className="w-48 h-8.5 bg-background/50 text-xs border-border/70">
-                    <SelectValue placeholder="Selecione..." />
+                  <SelectTrigger className="w-56 h-8.5 bg-background/50 text-xs border-border/70">
+                    <SelectValue placeholder="Selecione um agravo..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todos os Agravos</SelectItem>
                     {Object.entries(LABELS).map(([k, v]) => (
                       <SelectItem key={k} value={k}>
                         {v}
@@ -1239,7 +1240,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
       ) : (
         <>
           {/* TAB 1: DASHBOARD EXECUTIVO */}
-          {activeTab === "dashboard" && (
+          {activeTab === "dashboard" && !selectedAgravo && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar o Dashboard Executivo.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "dashboard" && selectedAgravo && (
             <div className="space-y-6">
               {/* Situation banner */}
               <div className={`border rounded-2xl p-4 flex items-start gap-3 transition-colors ${situationStatus.class}`}>
@@ -1377,7 +1388,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 2: ANÁLISE EPIDEMIOLÓGICA */}
-          {activeTab === "analise" && (
+          {activeTab === "analise" && !selectedAgravo && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar a Análise Epidemiológica.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "analise" && selectedAgravo && (
             <div className="space-y-6">
               {/* Row 1: Faixa Etária and Sexo */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1403,31 +1424,34 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                 </Card>
 
                 <Card className="glass-card border-border/50">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Distribuição por Gênero</CardTitle>
+                    <ChartExportButtons targetRef={sexoChartRef} filename="distribuicao-por-genero" />
                   </CardHeader>
                   <CardContent className="flex flex-col items-center">
                     {sexoData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height={220}>
-                        <PieChart>
-                          <Pie
-                            data={sexoData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={55}
-                            outerRadius={80}
-                            paddingAngle={3}
-                            dataKey="value"
-                            label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
-                          >
-                            {sexoData.map((_, i) => (
-                              <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                            ))}
-                          </Pie>
-                          <Tooltip content={<CustomTooltip categoryLabel="Gênero" />} />
-                          <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
-                        </PieChart>
-                      </ResponsiveContainer>
+                      <div ref={sexoChartRef} className="bg-background w-full">
+                        <ResponsiveContainer width="100%" height={220}>
+                          <PieChart>
+                            <Pie
+                              data={sexoData}
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={55}
+                              outerRadius={80}
+                              paddingAngle={3}
+                              dataKey="value"
+                              label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+                            >
+                              {sexoData.map((_, i) => (
+                                <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <Tooltip content={<CustomTooltip categoryLabel="Gênero" />} trigger={isMobile ? "click" : "hover"} />
+                            <Legend wrapperStyle={{ fontSize: 10 }} formatter={(value) => <span className="text-muted-foreground font-medium text-[10px]">{value}</span>} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
                     ) : (
                       <p className="text-xs text-muted-foreground py-16">Sem dados</p>
                     )}

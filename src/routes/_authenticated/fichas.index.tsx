@@ -131,16 +131,18 @@ type CaseRow = {
   _listPath: AgravoDef["listPath"];
 };
 
-async function fetchAll(): Promise<CaseRow[]> {
+async function fetchByAgravo(tipo: string): Promise<CaseRow[]> {
+  if (!tipo) return [];
+  const targets = AGRAVOS.filter((a) => a.tipo === tipo);
   const results = await Promise.all(
-    AGRAVOS.map(async (a) => {
+    targets.map(async (a) => {
       const { data, error } = await supabase
         .from(a.table as never)
         .select(
           `id, numero_ficha, nome_paciente, municipio_notificacao, status, created_at, agravo, ${a.dateField}`,
         )
         .order("created_at", { ascending: false })
-        .limit(200);
+        .limit(500);
       if (error) return [];
       return (data ?? []).map((r: Record<string, unknown>) => {
         const dateVal = (r[a.dateField] as string) ?? null;
@@ -166,6 +168,7 @@ async function fetchAll(): Promise<CaseRow[]> {
 }
 
 
+
 function FichasListPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -174,17 +177,18 @@ function FichasListPage() {
   const canEdit = can("fichas.edit");
   const canCreate = can("fichas.create");
 
-  const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ["fichas-all"],
-    queryFn: fetchAll,
-  });
-
   const [search, setSearch] = useState("");
-  const [agravoFilter, setAgravoFilter] = useState<string>("all");
+  const [agravoFilter, setAgravoFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [dateSort, setDateSort] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+
+  const { data: allCases = [], isLoading } = useQuery({
+    queryKey: ["fichas", agravoFilter],
+    queryFn: () => fetchByAgravo(agravoFilter),
+    enabled: !!agravoFilter,
+  });
 
   const sorted = [...allCases].sort((a, b) => {
     const da = new Date(a.data_notificacao || a.created_at || 0).getTime();
@@ -198,7 +202,7 @@ function FichasListPage() {
       !q ||
       (c.nome_paciente?.toLowerCase().includes(q) ?? false) ||
       (c.municipio_notificacao?.toLowerCase().includes(q) ?? false);
-    const matchAgravo = agravoFilter === "all" || c._tipo === agravoFilter;
+    const matchAgravo = !agravoFilter || c._tipo === agravoFilter;
     const matchStatus = statusFilter === "all" || c.status === statusFilter;
     return matchSearch && matchAgravo && matchStatus;
   });
@@ -217,7 +221,7 @@ function FichasListPage() {
         ? "Ficha removida localmente — será apagada do servidor quando a internet voltar."
         : "Ficha excluída.",
     );
-    queryClient.invalidateQueries({ queryKey: ["fichas-all"] });
+    queryClient.invalidateQueries({ queryKey: ["fichas"] });
   }
 
   return (
@@ -267,11 +271,10 @@ function FichasListPage() {
             setPage(0);
           }}
         >
-          <SelectTrigger className="w-52 h-10">
-            <SelectValue />
+          <SelectTrigger className="w-56 h-10">
+            <SelectValue placeholder="Selecione um agravo..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos os agravos</SelectItem>
             {AGRAVOS.map((a) => (
               <SelectItem key={a.tipo} value={a.tipo}>
                 {a.label}
@@ -327,6 +330,15 @@ function FichasListPage() {
         </Select>
       </div>
 
+      {!agravoFilter ? (
+        <Card className="p-12 text-center">
+          <Search className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+          <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+          <p className="text-xs text-muted-foreground">
+            Escolha um agravo no filtro acima para listar as fichas correspondentes.
+          </p>
+        </Card>
+      ) : (
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -543,6 +555,7 @@ function FichasListPage() {
           </div>
         )}
       </Card>
+      )}
     </div>
   );
 }
