@@ -7,6 +7,7 @@ import {
   hasAgravoSelected,
   shouldRunAgravoQuery,
 } from "@/lib/painel-visibility";
+import { logAction } from "@/lib/log-service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -231,56 +232,24 @@ function useChartOutsideDismiss(ref: React.RefObject<HTMLElement | null>) {
   }, [ref]);
 }
 
-function triggerDownload(url: string, filename: string) {
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
+import {
+  exportChartPng as exportChartPngLib,
+  exportChartSvg as exportChartSvgLib,
+} from "@/lib/chart-export";
 
 async function exportChartPng(el: HTMLElement, filename: string) {
-  try {
-    const mod = await import("html2canvas-pro");
-    const html2canvas = mod.default;
-    const canvas = await html2canvas(el, {
-      backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
-      scale: 2,
-      useCORS: true,
-    });
-    triggerDownload(canvas.toDataURL("image/png"), `${filename}.png`);
-    toast.success("PNG exportado");
-  } catch (err) {
-    console.error(err);
-    toast.error("Falha ao exportar PNG");
-  }
+  const r = await exportChartPngLib(el, filename);
+  if (r.ok) toast.success("PNG exportado");
+  else toast.error("Falha ao exportar PNG");
 }
 
 function exportChartSvg(el: HTMLElement, filename: string) {
-  try {
-    const svg = el.querySelector("svg.recharts-surface") as SVGSVGElement | null;
-    if (!svg) {
-      toast.error("Gráfico não encontrado");
-      return;
-    }
-    const clone = svg.cloneNode(true) as SVGSVGElement;
-    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    if (!clone.getAttribute("width")) clone.setAttribute("width", String(svg.clientWidth));
-    if (!clone.getAttribute("height")) clone.setAttribute("height", String(svg.clientHeight));
-    const data = new XMLSerializer().serializeToString(clone);
-    const blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n', data], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    triggerDownload(url, `${filename}.svg`);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast.success("SVG exportado");
-  } catch (err) {
-    console.error(err);
-    toast.error("Falha ao exportar SVG");
-  }
+  const r = exportChartSvgLib(el, filename);
+  if (r.ok) toast.success("SVG exportado");
+  else if (r.reason === "no-svg") toast.error("Gráfico não encontrado");
+  else toast.error("Falha ao exportar SVG");
 }
+
 
 function ChartExportButtons({
   targetRef,
@@ -388,6 +357,11 @@ function PainelPage() {
     })
   );
 
+  // Loader gating: skeletons only appear when an agravo is selected AND the
+  // matching query is actually fetching. When the agravo is cleared, all
+  // queries are disabled (enabled=false), isLoading is false, and the
+  // placeholders render directly — no flicker between skeleton and empty
+  // state.
   const isLoading =
     hasAgravoSelected(selectedAgravo) && queries.some((q) => q.isLoading);
   const allData = queries.flatMap((q) => q.data ?? []);
@@ -396,6 +370,56 @@ function PainelPage() {
   const byAgravo = !hasAgravoSelected(selectedAgravo)
     ? []
     : allCases.filter((c) => c._tipo === selectedAgravo);
+
+  // Telemetry: log every select/clear + which agravo query fires and which
+  // tab was active at that moment. Fires only on transitions so we don't
+  // spam the log for unrelated re-renders.
+  const previousAgravoRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (previousAgravoRef.current === selectedAgravo) return;
+    const prev = previousAgravoRef.current;
+    previousAgravoRef.current = selectedAgravo;
+    // Skip the very first mount when both prev and current are the initial "".
+    if (prev === null && !selectedAgravo) return;
+
+    const runningQueries = AGRAVOS.filter((a) =>
+      shouldRunAgravoQuery(selectedAgravo, a.key),
+    ).map((a) => a.key);
+
+    const kind = hasAgravoSelected(selectedAgravo)
+      ? "painel.agravo.selected"
+      : "painel.agravo.cleared";
+
+    void logAction({
+      action: "other",
+      description: hasAgravoSelected(selectedAgravo)
+        ? `Agravo selecionado no painel: ${selectedAgravo}`
+        : "Filtro de agravo do painel limpo",
+      entity_type: "painel_filter",
+      entity_id: selectedAgravo || undefined,
+      metadata: {
+        event: kind,
+        previous_agravo: prev,
+        current_agravo: selectedAgravo || null,
+        active_tab: activeTab,
+        queries_dispatched: runningQueries,
+        tabs_showing_placeholder: hasAgravoSelected(selectedAgravo)
+          ? []
+          : [
+              "dashboard",
+              "analise",
+              "mapa",
+              "alertas",
+              "indicadores",
+              "municipios",
+              "relatorios",
+            ],
+        timestamp: new Date().toISOString(),
+      },
+    });
+  }, [selectedAgravo, activeTab]);
+
+
 
 
   const byEvolucao = useMemo(() => {
