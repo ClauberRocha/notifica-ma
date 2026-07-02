@@ -1748,7 +1748,17 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
           )}
 
           {/* TAB 5: INDICADORES DE GESTÃO */}
-          {activeTab === "indicadores" && (
+          {activeTab === "indicadores" && !hasAgravoSelected(selectedAgravo) && (
+            <Card className="glass-card border-border/50 p-12 text-center">
+              <Filter className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+              <h3 className="text-sm font-bold text-foreground mb-1">Selecione um agravo</h3>
+              <p className="text-xs text-muted-foreground">
+                Escolha um agravo no filtro acima para visualizar os Indicadores.
+              </p>
+            </Card>
+          )}
+
+          {activeTab === "indicadores" && hasAgravoSelected(selectedAgravo) && (
             <div className="space-y-6">
               {/* Opportunity and data completeness charts */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
