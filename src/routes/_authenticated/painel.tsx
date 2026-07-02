@@ -1438,20 +1438,23 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               {/* Row 2: Raça/Cor and Confirmatory Criteria */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="glass-card border-border/50">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                     <CardTitle className="text-xs uppercase font-bold text-muted-foreground">Distribuição por Raça/Cor</CardTitle>
+                    <ChartExportButtons targetRef={racaChartRef} filename="distribuicao-por-raca-cor" />
                   </CardHeader>
                   <CardContent>
-                    <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={racaData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
-                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={axisAngle} textAnchor="end" height={axisHeight} />
-                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
-                        <Tooltip content={<CustomTooltip categoryLabel="Raça/Cor" />} />
-                        <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={isMobile ? 10 : 6} />
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
+                    <div ref={racaChartRef} className="bg-background">
+                      <ResponsiveContainer width="100%" height={240}>
+                        <BarChart data={racaData} accessibilityLayer margin={{ top: 24, right: 10, left: 0, bottom: 20 }}>
+                          <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={axisAngle} textAnchor="end" height={axisHeight} />
+                          <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                          <Tooltip content={<CustomTooltip categoryLabel="Raça/Cor" />} trigger={isMobile ? "click" : "hover"} />
+                          <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
+                            <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: labelFontSize, fontWeight: 600 }} angle={isMobile ? -45 : 0} offset={isMobile ? 10 : 6} />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
                   </CardContent>
                 </Card>
 
