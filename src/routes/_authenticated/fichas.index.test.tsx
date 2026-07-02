@@ -85,6 +85,7 @@ function renderPage() {
 describe("FichasListPage — filtro global + limpar filtros", () => {
   beforeEach(() => {
     __resetGlobalAgravoForTests();
+    window.sessionStorage.clear();
     window.history.replaceState(null, "", "/fichas");
     vi.clearAllMocks();
   });
