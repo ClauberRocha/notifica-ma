@@ -1314,12 +1314,12 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={240}>
-                      <BarChart data={racaData}>
-                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} />
-                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-                        <Tooltip content={<CustomTooltip />} />
+                      <BarChart data={racaData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
+                        <XAxis dataKey="name" tick={{ fill: "var(--muted-foreground)", fontSize: 9 }} interval={0} angle={-25} textAnchor="end" height={50} />
+                        <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickFormatter={formatValue} />
+                        <Tooltip content={<CustomTooltip categoryLabel="Raça/Cor" />} />
                         <Bar dataKey="value" fill="hsl(167,72%,40%)" radius={[3, 3, 0, 0]} name="Confirmados">
-                          <LabelList dataKey="value" position="top" style={{ fill: "#000", fontSize: 10, fontWeight: 600 }} />
+                          <LabelList dataKey="value" position="top" formatter={formatValue} style={{ fill: "#000", fontSize: 9, fontWeight: 600 }} offset={6} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
