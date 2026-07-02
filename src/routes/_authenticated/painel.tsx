@@ -356,6 +356,11 @@ function PainelPage() {
     })
   );
 
+  // Loader gating: skeletons only appear when an agravo is selected AND the
+  // matching query is actually fetching. When the agravo is cleared, all
+  // queries are disabled (enabled=false), isLoading is false, and the
+  // placeholders render directly — no flicker between skeleton and empty
+  // state.
   const isLoading =
     hasAgravoSelected(selectedAgravo) && queries.some((q) => q.isLoading);
   const allData = queries.flatMap((q) => q.data ?? []);
@@ -364,6 +369,56 @@ function PainelPage() {
   const byAgravo = !hasAgravoSelected(selectedAgravo)
     ? []
     : allCases.filter((c) => c._tipo === selectedAgravo);
+
+  // Telemetry: log every select/clear + which agravo query fires and which
+  // tab was active at that moment. Fires only on transitions so we don't
+  // spam the log for unrelated re-renders.
+  const previousAgravoRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (previousAgravoRef.current === selectedAgravo) return;
+    const prev = previousAgravoRef.current;
+    previousAgravoRef.current = selectedAgravo;
+    // Skip the very first mount when both prev and current are the initial "".
+    if (prev === null && !selectedAgravo) return;
+
+    const runningQueries = AGRAVOS.filter((a) =>
+      shouldRunAgravoQuery(selectedAgravo, a.key),
+    ).map((a) => a.key);
+
+    const kind = hasAgravoSelected(selectedAgravo)
+      ? "painel.agravo.selected"
+      : "painel.agravo.cleared";
+
+    void logAction({
+      action: "other",
+      description: hasAgravoSelected(selectedAgravo)
+        ? `Agravo selecionado no painel: ${selectedAgravo}`
+        : "Filtro de agravo do painel limpo",
+      entity_type: "painel_filter",
+      entity_id: selectedAgravo || null,
+      metadata: {
+        event: kind,
+        previous_agravo: prev,
+        current_agravo: selectedAgravo || null,
+        active_tab: activeTab,
+        queries_dispatched: runningQueries,
+        tabs_showing_placeholder: hasAgravoSelected(selectedAgravo)
+          ? []
+          : [
+              "dashboard",
+              "analise",
+              "mapa",
+              "alertas",
+              "indicadores",
+              "municipios",
+              "relatorios",
+            ],
+        timestamp: new Date().toISOString(),
+      },
+    });
+  }, [selectedAgravo, activeTab]);
+
+
 
 
   const byEvolucao = useMemo(() => {
