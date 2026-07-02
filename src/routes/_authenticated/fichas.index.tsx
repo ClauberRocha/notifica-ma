@@ -174,19 +174,18 @@ function FichasListPage() {
   const canEdit = can("fichas.edit");
   const canCreate = can("fichas.create");
 
-  const [agravoFilter_placeholder, _setPh] = useState<string>(""); void agravoFilter_placeholder; void _setPh;
-  const { data: allCases = [], isLoading } = useQuery({
-    queryKey: ["fichas-all"],
-    queryFn: fetchAll,
-    enabled: false, // desabilita — busca somente ao selecionar agravo (ver query abaixo)
-  });
-
   const [search, setSearch] = useState("");
   const [agravoFilter, setAgravoFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [dateSort, setDateSort] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+
+  const { data: allCases = [], isLoading } = useQuery({
+    queryKey: ["fichas", agravoFilter],
+    queryFn: () => fetchByAgravo(agravoFilter),
+    enabled: !!agravoFilter,
+  });
 
   const sorted = [...allCases].sort((a, b) => {
     const da = new Date(a.data_notificacao || a.created_at || 0).getTime();
