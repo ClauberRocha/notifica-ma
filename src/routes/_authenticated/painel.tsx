@@ -7,6 +7,7 @@ import {
   hasAgravoSelected,
   shouldRunAgravoQuery,
 } from "@/lib/painel-visibility";
+import { logAction } from "@/lib/log-service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
