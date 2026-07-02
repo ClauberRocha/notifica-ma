@@ -396,7 +396,7 @@ function PainelPage() {
         ? `Agravo selecionado no painel: ${selectedAgravo}`
         : "Filtro de agravo do painel limpo",
       entity_type: "painel_filter",
-      entity_id: selectedAgravo || null,
+      entity_id: selectedAgravo || undefined,
       metadata: {
         event: kind,
         previous_agravo: prev,
