@@ -1073,11 +1073,10 @@ ${criterioData.slice(0, 5).map(([name, count]) => `- **${name}**: ${count} casos
               <div className="space-y-1">
                 <Label className="text-[10px] uppercase font-bold text-muted-foreground">Agravo</Label>
                 <Select value={selectedAgravo} onValueChange={setSelectedAgravo}>
-                  <SelectTrigger className="w-48 h-8.5 bg-background/50 text-xs border-border/70">
-                    <SelectValue placeholder="Selecione..." />
+                  <SelectTrigger className="w-56 h-8.5 bg-background/50 text-xs border-border/70">
+                    <SelectValue placeholder="Selecione um agravo..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todos os Agravos</SelectItem>
                     {Object.entries(LABELS).map(([k, v]) => (
                       <SelectItem key={k} value={k}>
                         {v}
