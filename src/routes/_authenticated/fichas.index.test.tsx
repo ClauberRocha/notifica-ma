@@ -189,7 +189,6 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
       window.dispatchEvent(new PopStateEvent("popstate"));
     });
     await waitFor(() => {
-      const { getGlobalAgravo } = require("@/lib/global-agravo") as typeof import("@/lib/global-agravo");
       expect(getGlobalAgravo()).toBe("dengue");
     });
     await waitFor(() =>
