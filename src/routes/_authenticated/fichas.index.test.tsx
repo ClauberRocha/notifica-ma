@@ -85,25 +85,33 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    cleanup();
+  });
+
   it("mostra o placeholder inicial quando nenhum agravo está selecionado", () => {
     renderPage();
-    expect(screen.getByText(/Selecione um agravo/i)).toBeTruthy();
-    // Nenhum skeleton deve aparecer no estado vazio
+    expect(
+      screen.getByRole("heading", { name: /Selecione um agravo/i }),
+    ).toBeTruthy();
     expect(document.querySelectorAll(".animate-pulse").length).toBe(0);
   });
 
   it("ao selecionar um agravo pelo store global, o placeholder desaparece", async () => {
     renderPage();
-    expect(screen.getByText(/Selecione um agravo/i)).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { name: /Selecione um agravo/i }),
+    ).toBeTruthy();
 
     await act(async () => {
       setGlobalAgravo("dengue");
     });
 
     await waitFor(() =>
-      expect(screen.queryByText(/Selecione um agravo/i)).toBeNull(),
+      expect(
+        screen.queryByRole("heading", { name: /Selecione um agravo/i }),
+      ).toBeNull(),
     );
-    // A tabela deve estar montada agora
     expect(document.querySelector("table")).not.toBeNull();
   });
 
@@ -114,18 +122,17 @@ describe("FichasListPage — filtro global + limpar filtros", () => {
     await act(async () => {
       setGlobalAgravo("dengue");
     });
-    // Aguarda a tabela renderizar
     await waitFor(() => expect(document.querySelector("table")).not.toBeNull());
 
-    // Simula filtros extras persistidos na URL para validar o reset completo
     window.history.replaceState(null, "", "/fichas?agravo=dengue&q=maria&status=encerrado");
 
     const clearBtn = await screen.findByRole("button", { name: /limpar filtros/i });
     await user.click(clearBtn);
 
-    // Placeholder de volta
     await waitFor(() =>
-      expect(screen.getByText(/Selecione um agravo/i)).toBeTruthy(),
+      expect(
+        screen.getByRole("heading", { name: /Selecione um agravo/i }),
+      ).toBeTruthy(),
     );
 
     // Store global limpo (sincronia com o Painel)
