@@ -7,6 +7,7 @@ import {
   hasAgravoSelected,
   shouldRunAgravoQuery,
 } from "@/lib/painel-visibility";
+import { useGlobalAgravo } from "@/lib/global-agravo";
 import { logAction } from "@/lib/log-service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -322,7 +323,7 @@ function PainelPage() {
   useChartOutsideDismiss(sexoChartRef);
 
 
-  const [selectedAgravo, setSelectedAgravo] = useState("");
+  const [selectedAgravo, setSelectedAgravo] = useGlobalAgravo();
   const [selectedEvolucao, setSelectedEvolucao] = useState("all");
   const [seInicio, setSeInicio] = useState("");
   const [seFim, setSeFim] = useState("");

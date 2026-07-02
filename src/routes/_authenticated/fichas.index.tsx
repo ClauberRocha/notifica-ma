@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,33 @@ import { useAuth } from "@/hooks/use-auth";
 import { getSemanaEpidemiologica } from "@/data/semana-epd";
 import { getSeNumber } from "@/lib/seUtils";
 import { deleteCase } from "@/lib/offline/db";
+import { useGlobalAgravo } from "@/lib/global-agravo";
+
+type SortDir = "asc" | "desc";
+
+function readInitialFilters() {
+  if (typeof window === "undefined") {
+    return { search: "", status: "all", sort: "desc" as SortDir, pageSize: 10, page: 0 };
+  }
+  const p = new URLSearchParams(window.location.search);
+  const sortRaw = p.get("sort");
+  const sort: SortDir = sortRaw === "asc" ? "asc" : "desc";
+  const size = Number(p.get("size"));
+  const pageNum = Number(p.get("page"));
+  return {
+    search: p.get("q") ?? "",
+    status: p.get("status") ?? "all",
+    sort,
+    pageSize: [5, 10, 20, 50].includes(size) ? size : 10,
+    page: Number.isFinite(pageNum) && pageNum > 0 ? pageNum : 0,
+  };
+}
+
+function readInitialAgravoFromUrl(): string | null {
+  if (typeof window === "undefined") return null;
+  const p = new URLSearchParams(window.location.search);
+  return p.get("agravo");
+}
 
 function getSE(dateStr: string | null | undefined): string {
   if (!dateStr) return "";
@@ -170,7 +197,7 @@ async function fetchByAgravo(tipo: string): Promise<CaseRow[]> {
 
 
 
-function FichasListPage() {
+export function FichasListPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { can } = useAuth();
@@ -178,12 +205,55 @@ function FichasListPage() {
   const canEdit = can("fichas.edit");
   const canCreate = can("fichas.create");
 
-  const [search, setSearch] = useState("");
-  const [agravoFilter, setAgravoFilter] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [dateSort, setDateSort] = useState<"asc" | "desc">("desc");
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const initial = useRef(readInitialFilters()).current;
+  const [search, setSearch] = useState(initial.search);
+  const [agravoFilter, setAgravoFilter] = useGlobalAgravo();
+  const [statusFilter, setStatusFilter] = useState<string>(initial.status);
+  const [dateSort, setDateSort] = useState<"asc" | "desc">(initial.sort);
+  const [page, setPage] = useState(initial.page);
+  const [pageSize, setPageSize] = useState(initial.pageSize);
+
+  // Seed the shared agravo filter from ?agravo=... on first mount so that
+  // refreshing / opening a deep link restores the same view.
+  const seededRef = useRef(false);
+  useEffect(() => {
+    if (seededRef.current) return;
+    seededRef.current = true;
+    const fromUrl = readInitialAgravoFromUrl();
+    if (fromUrl && fromUrl !== agravoFilter) setAgravoFilter(fromUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist current filters to the URL so a refresh restores them (and, with
+  // no filters selected, keeps the page in its empty placeholder state).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams();
+    if (agravoFilter) params.set("agravo", agravoFilter);
+    if (search) params.set("q", search);
+    if (statusFilter && statusFilter !== "all") params.set("status", statusFilter);
+    if (dateSort !== "desc") params.set("sort", dateSort);
+    if (pageSize !== DEFAULT_PAGE_SIZE) params.set("size", String(pageSize));
+    if (page > 0) params.set("page", String(page));
+    const qs = params.toString();
+    const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    window.history.replaceState(null, "", url);
+  }, [agravoFilter, search, statusFilter, dateSort, pageSize, page]);
+
+  function clearAllFilters() {
+    setSearch("");
+    setAgravoFilter("");
+    setStatusFilter("all");
+    setDateSort("desc");
+    setPageSize(DEFAULT_PAGE_SIZE);
+    setPage(0);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    toast.success("Filtros limpos", {
+      description: "A tela voltou ao estado inicial.",
+    });
+  }
 
   const { data: allCases = [], isLoading } = useQuery({
     queryKey: ["fichas", agravoFilter],
@@ -333,12 +403,7 @@ function FichasListPage() {
           <Button
             variant="outline"
             className="h-10 gap-2"
-            onClick={() => {
-              setSearch("");
-              setAgravoFilter("");
-              setStatusFilter("all");
-              setPage(0);
-            }}
+            onClick={clearAllFilters}
           >
             <X className="w-4 h-4" /> Limpar filtros
           </Button>
