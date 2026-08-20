@@ -62,8 +62,20 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/auth" });
     }
 
+    // Conta bloqueada: encerra a sessão imediatamente.
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("blocked")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (profile?.blocked) {
+      await supabase.auth.signOut();
+      throw redirect({ to: "/auth" });
+    }
+
     const role = await getRoleCached(user.id);
     const path = location.pathname;
+
 
     if (role === "user") {
       if (
