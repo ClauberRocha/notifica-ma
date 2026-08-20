@@ -477,7 +477,13 @@ const CheckEmailSchema = z.object({
   email: z.string().trim().email(),
 });
 
+/**
+ * Verifica se um e-mail já possui cadastro.
+ * Requer autenticação: sem o guard, qualquer pessoa na internet poderia
+ * enumerar os e-mails registrados na plataforma.
+ */
 export const checkEmailExists = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => CheckEmailSchema.parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import(
@@ -496,4 +502,5 @@ export const checkEmailExists = createServerFn({ method: "POST" })
 
     return { exists: !!existing };
   });
+
 
