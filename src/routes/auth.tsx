@@ -16,12 +16,47 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+type AuthErrorType = "credentials" | "rate_limit" | "network" | "unknown";
+
+const errorMessages: Record<AuthErrorType, string> = {
+  credentials:
+    "E-mail ou senha incorretos. Verifique os dados e tente novamente. Se esqueceu a senha, clique em \"Esqueci minha senha\" para redefini-la.",
+  rate_limit:
+    "Muitas tentativas seguidas. Aguarde alguns minutos antes de tentar novamente.",
+  network:
+    "Não foi possível conectar ao servidor. Verifique sua conexão com a internet e tente novamente.",
+  unknown:
+    "Não foi possível entrar. Verifique os dados e tente novamente.",
+};
+
+function classifyAuthError(err: unknown): AuthErrorType {
+  if (!(err instanceof Error)) return "unknown";
+  const msg = err.message.toLowerCase();
+  if (
+    msg.includes("invalid login credentials") ||
+    msg.includes("invalid email or password") ||
+    msg.includes("user not found") ||
+    msg.includes("email not confirmed") ||
+    msg.includes("invalid credentials")
+  ) {
+    return "credentials";
+  }
+  if (msg.includes("rate limit") || msg.includes("too many requests") || msg.includes("over_email_send_rate_limit")) {
+    return "rate_limit";
+  }
+  if (msg.includes("network") || msg.includes("fetch") || msg.includes("failed to fetch")) {
+    return "network";
+  }
+  return "unknown";
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [authError, setAuthError] = useState<AuthErrorType | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -31,13 +66,16 @@ function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthError(null);
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       navigate({ to: "/" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Erro ao autenticar");
+      const type = classifyAuthError(err);
+      setAuthError(type);
+      toast.error(errorMessages[type]);
     } finally {
       setLoading(false);
     }
@@ -132,6 +170,16 @@ function AuthPage() {
               </button>
             </div>
           </div>
+
+          {authError && (
+            <div
+              role="alert"
+              aria-live="polite"
+              className="rounded-md bg-destructive/10 p-3 text-sm text-destructive border border-destructive/20"
+            >
+              {errorMessages[authError]}
+            </div>
+          )}
 
           <button
             type="button"
