@@ -42,6 +42,23 @@ function AuthPage() {
       setLoading(false);
     }
   };
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast.error("Informe seu e-mail para receber o link de redefinição");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Se o e-mail estiver cadastrado, você receberá o link de redefinição.");
+  };
+
 
 
   const handleGoogle = async () => {
