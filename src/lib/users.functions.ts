@@ -360,6 +360,15 @@ export const toggleBlockUser = createServerFn({ method: "POST" })
       .eq("id", data.id);
     if (error) throw new Error(error.message);
 
+    // Bloqueio real: invalida a sessão/JWT no provedor de autenticação.
+    // Sem isto, o usuário bloqueado continuaria acessando o sistema.
+    const { error: banErr } = await supabaseAdmin.auth.admin.updateUserById(
+      data.id,
+      { ban_duration: data.blocked ? "876000h" : "none" },
+    );
+    if (banErr) throw new Error(banErr.message);
+
+
     await audit(
       "block_user",
       `${data.blocked ? "Bloqueou" : "Desbloqueou"} usuário`,
